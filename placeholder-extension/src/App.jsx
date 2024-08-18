@@ -18,14 +18,14 @@ function App() {
           <svg className="transition-all duration-1000 size-20 hover:size-24 hover:opacity-50" xmlns="http://www.w3.org/2000/svg" width="80px" height="80px" viewBox="0 0 24 24"><path fill="#538ddf" d="M12 6c-2.67 0-4.33 1.33-5 4c1-1.33 2.17-1.83 3.5-1.5c.76.19 1.31.74 1.91 1.35c.98 1 2.09 2.15 4.59 2.15c2.67 0 4.33-1.33 5-4c-1 1.33-2.17 1.83-3.5 1.5c-.76-.19-1.3-.74-1.91-1.35C15.61 7.15 14.5 6 12 6m-5 6c-2.67 0-4.33 1.33-5 4c1-1.33 2.17-1.83 3.5-1.5c.76.19 1.3.74 1.91 1.35C8.39 16.85 9.5 18 12 18c2.67 0 4.33-1.33 5-4c-1 1.33-2.17 1.83-3.5 1.5c-.76-.19-1.3-.74-1.91-1.35C10.61 13.15 9.5 12 7 12"/></svg>
         </a>
       </div>
-      <h1 className="text-3xl">Vite + React + Tailwindcss</h1>
+      <h1 className="text-3xl">Vite + React + Tailwindcss Template</h1>
       <div className="card">
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
       <p>
-        A simple bookmark template created by Dooma
+        A simple extension template created by Dooma
       </p>
       <p className="read-the-docs">
         Click on the Vite, React, and Tailwindcss logos to learn more
