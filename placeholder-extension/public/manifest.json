@@ -1,0 +1,14 @@
+{
+    "name": "PlaceHolder",
+    "description": "Basic PlaceHolder React Extension for forking and building on",
+    "version": "0.1",
+    "author": "Lordcat, 2024",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "index.html",
+      "default_title": "Placeholder React extension"
+    },
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+    }
+}
