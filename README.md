@@ -1,5 +1,6 @@
 # PlaceHolder Chrome/FireFox Vite-React Extension w/ tailwindcss
 
+Hello discord!
 
 Install dependencies:
 npm i
