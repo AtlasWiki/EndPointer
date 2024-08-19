@@ -64,10 +64,10 @@ export function URLS(){
                 </table>
             </div>
             <div className="m-4">
-                <button>Download as TXT</button>
-                <button>Download as JSON</button>
-                <button>Copy as absolute URLs</button>
-                <button>Copy All</button>
+                <button className="m-0.5">Download as TXT</button>
+                <button className="m-0.5">Download as JSON</button>
+                <button className="m-0.5">Copy as absolute URLs</button>
+                <button className="m-0.5">Copy All</button>
             </div>
           
             <p className="mt-2">
