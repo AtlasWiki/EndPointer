@@ -6,6 +6,7 @@
     "manifest_version": 3,
     "action": {
       "default_popup": "index.html",
+      "devtools_page": "devtools.html",
       "default_title": "Placeholder React extension"
     },
     "content_security_policy": {
