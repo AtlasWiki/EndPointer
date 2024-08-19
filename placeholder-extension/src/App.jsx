@@ -5,7 +5,7 @@ import './App.css'
 function App() {
 
   return (
-    <div className="w-full mx-0 main">
+    <div className="w-full m-0 flex flex-col items-center">
       <div className="mb-10">
         <h1 className="text-3xl mb-1">JS-Parser Toolkit</h1>
         <p className="text-gray-400/60">A JS-Parsing Toolkit with many flexible features by mrunoriginal and Dooma</p>
