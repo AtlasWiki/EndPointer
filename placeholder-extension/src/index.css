@@ -22,14 +22,6 @@ a {
   text-decoration: inherit;
 }
 
-/* body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-} */
-
 body {
   margin: 0;
   display: flex;
@@ -53,10 +45,9 @@ button, .a-item {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
+button:hover, a:hover {
   border-color: #495057;
 }
-
 
 @media (prefers-color-scheme: light) {
   :root {
