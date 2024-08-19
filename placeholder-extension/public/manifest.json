@@ -4,9 +4,9 @@
     "version": "0.1",
     "author": "Lordcat, 2024",
     "manifest_version": 3,
+    "devtools_page": "devtools.html",
     "action": {
       "default_popup": "index.html",
-      "devtools_page": "devtools.html",
       "default_title": "Placeholder React extension"
     },
     "content_security_policy": {
