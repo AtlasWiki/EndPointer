@@ -33,8 +33,8 @@ function App() {
                <button>
                   <div className="flex">
                       <div className="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#82e467" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-                        <span className="text-green-400 font-semibold">ON</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e63946" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
+                        <span className="text-red-400 font-semibold">OFF</span>
                       </div>
                   </div>
                </button>  
