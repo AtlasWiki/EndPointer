@@ -9,67 +9,56 @@ export function URLS(){
                     <tr>
                         <th>Endpoint</th>
                         <th>Location</th>
-                        <th>Extension</th>
                         <th>Code Snippet</th>
                     </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                    <tr>
                         <td>/admin</td>
                         <td>{ window.location.pathname }</td>
-                        <td>path</td>
                         <a href="#" target="_blank">View here</a>
                    </tr>
                 </table>
