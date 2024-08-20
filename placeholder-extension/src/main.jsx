@@ -17,8 +17,6 @@ createRoot(document.getElementById('root')).render(
     <Router>
       <Routes>
         <Route path="" element={<PopUpApp />} />
-        <Route path="urls" element={<URLS />} />
-        <Route path="js-files" element={<JSFiles />} />
       </Routes>
     </Router>
   </StrictMode>
