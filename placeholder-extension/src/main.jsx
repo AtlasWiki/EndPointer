@@ -7,8 +7,6 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import { URLS } from './routes/urls'
-import { JSFiles } from './routes/js-files' 
 import './index.css'
 
 
