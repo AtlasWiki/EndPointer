@@ -7,13 +7,18 @@ import React from 'react';
 chrome.devtools.panels.create(
   "Placeholder Extension",
   "",
-  "devtools.html",
+  "devtools.html",  // Change this from "devtools.tsx" to "devtools.html"
   (panel) => {
-    panel.onShown.addListener(() => {
-      const root = document.getElementById('root')
+    console.log("DevTools panel created");
+    panel.onShown.addListener((panelWindow) => {
+      console.log("Panel shown");
+      const root = panelWindow.document.getElementById('root');
       if (root && !root.hasChildNodes()) {
-        createRoot(root).render(<DevToolsApp />)
+        console.log("Root element found, rendering React component");
+        createRoot(root).render(<DevToolsApp />);
+      } else {
+        console.log("Root element not found or already has children");
       }
     });
   }
-)
+);
