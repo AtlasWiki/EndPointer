@@ -6,6 +6,7 @@ https://developer.chrome.com/docs/extensions/how-to/devtools/extend-devtools
 
 /// <reference types="chrome"/>
 
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import DevToolsApp from './DevTool/DevtoolsApp'
@@ -16,6 +17,7 @@ import {
   Routes,
 } from 'react-router-dom'
 import React from 'react';
+
 import browser from 'webextension-polyfill';
 
 
