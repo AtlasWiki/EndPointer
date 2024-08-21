@@ -17,6 +17,8 @@ import {
   Routes,
 } from 'react-router-dom'
 import React from 'react';
+import { URLS } from './DevTool/routes/urls'
+import { JSFiles } from './DevTool/routes/js-files' 
 
 import browser from 'webextension-polyfill';
 
@@ -25,7 +27,7 @@ import browser from 'webextension-polyfill';
 const api = typeof chrome !== 'undefined' ? chrome : browser;
 
 api.devtools.panels.create(
-  "Placeholder Extension",  //CHANGE HERE TO ADJUST TAB NAME IN DEV TOOLS
+  "JS-Toolkit",  //CHANGE HERE TO ADJUST TAB NAME IN DEV TOOLS
   "",
   "devtools.html",
   (panel) => {
@@ -41,6 +43,8 @@ api.devtools.panels.create(
               <Routes>
                 <Route path="" element={<DevToolsApp />} />
                 <Route path="example" element={<Example />} />
+                <Route path="urls" element={<URLS />} />
+                <Route path="js-files" element={<JSFiles />} />
               </Routes>
             </Router>
           </StrictMode>
