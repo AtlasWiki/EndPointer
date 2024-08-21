@@ -1,36 +1,63 @@
-# PlaceHolder Chrome/FireFox Vite-React Extension w/ tailwindcss
+# Chrome/FireFox Vite-React w/ tailwindcss Extension Template
 
-Hello discord!
+A basic extension template to fork and build from, using Vite, React, and Tailwind CSS, created by LordCat and AtlasWiki/mrunoriginal. Comes with three UI templates - developer tools tab/panel, extension popup, and accessible webpage through `chrome-extension` url.
 
-Install dependencies:
-npm i
+<br>
 
-Build project:
+
+https://github.com/user-attachments/assets/216ab206-27f3-402d-8153-8c05458f431d
+
+
+## Key Features
+- **Accessbility** - Accessible in the extension popup, devtools, and `chrome-extension` url as a webpage.
+- **Modularity** - Comes with an organized structure that can be expand upon.
+- **Routing** - Includes page routing/navigation throgh react components.
+- **Easy Template Use** - Allows you to use reactjs, tailwindcss, and even expand this simple structure, simplifying the intial extension set up allowing you to focus on building your extension!
+- **Typescript Support** - Prefer your type definitions at compile time? Typescript support included.
+
+<br>
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm installed on your system
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/LordCat/PlaceHolder-Extension.git
+cd PlaceHolder-Extension
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Build the Project
+
+```bash
 npm run build
+```
 
-Load extension via extension manager in chrome based webrowser
-Set developer mode to on.
-Select "Load unpacked"
-Select "dist" as folder to import
+### Load the Extension
 
+1. Open your Chrome-based web browser
+2. Go to the Extensions page (chrome://extensions)
+3. Enable "Developer mode" (top right corner)
+4. Click "Load unpacked"
+5. Select the `dist` folder in your project directory
 
+## Resources
 
-# Brief
-This is placeholder extension containing an intial basic extension to fork and build from
-
-
-# Resource
-Place resources that assisted in building this, Some are out of date, but between mdn and chrome docs I got this to work. Please log anan issue if this breaks for some reason or another in the future
-
-https://dev.to/ibukunfolay/how-to-build-a-chrome-extension-using-react-and-tailwindcss-55pa
-https://blog.logrocket.com/creating-chrome-extension-react-typescript/
-
-
-https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions
+- [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/)
+- [Vite Documentation](https://vitejs.dev/guide/)
+- [React Documentation](https://reactjs.org/docs/getting-started.html)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
 
+## License
 
-
-Future basic core features:
-Debug/Production modes to hide console.logs
-Change build to create unpacked development version and Production builds into packed zip files.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.

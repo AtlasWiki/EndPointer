@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
-import '../index.css'
-import './App.css'
+import { Link } from 'react-router-dom';
+import { NavBar } from '../../components/navbar'
+function Example(){
 
-function DevToolsApp() {
-  return (
+    return (
     <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
+        <NavBar />
       <div className="mt-5 mb-10">
         <h1 className="text-3xl md:text-6xl mb-1">JS-Parser Toolkit</h1>
         <p className="text-gray-400/60 md:text-lg">A JS-Parsing Toolkit with many flexible features by mrunoriginal and Dooma</p>
@@ -49,4 +49,4 @@ function DevToolsApp() {
   )
 }
 
-export default DevToolsApp;
+export default Example;

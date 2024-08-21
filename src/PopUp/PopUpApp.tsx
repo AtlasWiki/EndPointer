@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom'
-import '../index.css'
-import './App.css'
 
-function DevToolsApp() {
+import { Link } from 'react-router-dom'
+import "./App.css"
+
+
+function PopUpApp() {
+
   return (
     <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
       <div className="mt-5 mb-10">
@@ -49,4 +51,4 @@ function DevToolsApp() {
   )
 }
 
-export default DevToolsApp;
+export default PopUpApp;
