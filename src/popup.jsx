@@ -5,9 +5,9 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import PopUpApp from './PopUpApp'
-import { URLS } from './routes/urls'
-import { JSFiles } from './routes/js-files' 
+import PopUpApp from './PopUp/PopUpApp'
+import { URLS } from './PopUp/routes/urls'
+import { JSFiles } from './PopUp/routes/js-files' 
 import './index.css'
 
 createRoot(document.getElementById('root')).render(

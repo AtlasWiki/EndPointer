@@ -1,13 +1,13 @@
 {
-    "name": "PlaceHolder",
-    "description": "Basic PlaceHolder React Extension for forking and building on",
+    "name": "JS-Toolkit",
+    "description": "Currently for parsing endpoints and downloading js files into a merged file",
     "version": "0.1",
-    "author": "Lordcat, 2024",
+    "author": "Lordcat & mrunoriginal/AtlasWiki, 2024",
     "manifest_version": 3,
     "devtools_page": "devtools.html",
     "action": {
       "default_popup": "index.html",
-      "default_title": "Placeholder React extension"
+      "default_title": "JS Toolkit for Hackers"
     },
     "content_security_policy": {
       "extension_pages": "script-src 'self'; object-src 'self'"
