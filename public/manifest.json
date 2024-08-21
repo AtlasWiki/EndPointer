@@ -2,7 +2,7 @@
     "name": "PlaceHolder",
     "description": "Basic PlaceHolder React Extension for forking and building on",
     "version": "0.1",
-    "author": "Lordcat, 2024",
+    "author": "LordCat, mrunoriginal/AtlasWiki, 2024",
     "manifest_version": 3,
     "devtools_page": "devtools.html",
     "action": {
