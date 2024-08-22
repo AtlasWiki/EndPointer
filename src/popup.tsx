@@ -1,15 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Example from './PopUp/routes/example' 
-
-import PopUpApp from './PopUp/PopUpApp'
 import {
   HashRouter as Router,
   Route,
   Routes,
 } from 'react-router-dom'
+import PopUpApp from './PopUp/PopUpApp'
+import { URLS } from './PopUp/routes/urls'
+import { JSFiles } from './PopUp/routes/js-files' 
 import './index.css'
-
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -18,7 +17,8 @@ if (rootElement) {
       <Router>
         <Routes>
           <Route path="" element={<PopUpApp />} />
-          <Route path="example" element={<Example />} />
+          <Route path="urls" element={<URLS />} />
+          <Route path="js-files" element={<JSFiles />} />
         </Routes>
       </Router>
     </StrictMode>
@@ -26,4 +26,3 @@ if (rootElement) {
   } else {
   console.error('Root element not found');
 }
-
