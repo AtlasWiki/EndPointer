@@ -5,6 +5,8 @@ import './App.css'
 function PopUpApp() {
   const [urlParser, setURLParser] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
+  const [urlCount, setURLCount] = useState(0)
+  const [fileCount, setFileCount] = useState(0)
 
   function displayFileDownloaderState(){
     if (fileDownloader){
@@ -57,10 +59,10 @@ function PopUpApp() {
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-                <button onClick={() => setURLParser(!urlParser)}>
+               <button onClick={() => setURLParser(!urlParser)}>
                   {displayURLParserState()}
                </button>
-               <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> (57)</Link>
+               <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
           </div>
         </div>
 
@@ -70,7 +72,7 @@ function PopUpApp() {
                <button onClick={() => setFileDownloader(!fileDownloader)}>
                   {displayFileDownloaderState()}
                </button>
-               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> (17)</Link>
+               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import './App.css'
 function DevToolsApp() {
   const [urlParser, setURLParser] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
+  const [urlCount, setURLCount] = useState(0)
 
   function displayFileDownloaderState(){
     if (fileDownloader){
