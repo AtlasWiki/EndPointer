@@ -69,17 +69,7 @@ export function URLS(){
                 <button className="m-0.5">Copy as absolute URLs</button>
                 <button className="m-0.5">Copy All</button>
             </div>
-
-            <h1 className="mb-1">Visited</h1>
-            <div className="py-1 bg-gray-950/20 overflow-y-auto max-h-40">
-               <ul className="flex flex-col gap-3">
-                    <li>{document.location.href}</li>
-                    <li>{document.location.href}</li>
-                    <li>{document.location.href}</li>
-                    <li>{document.location.href}</li>
-               </ul>
-            </div>
-            
+          
             <p className="mt-2">
                 Located at  { document.location.href }
             </p>
