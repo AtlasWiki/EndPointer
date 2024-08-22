@@ -10,15 +10,18 @@ function PopUpApp() {
   const [fileCount, setFileCount] = useState(0) //place holder  TODO: Function to grab js files and another to count the files. 
 
   useEffect(() => {
-    // Retrieve the state when the component mounts
+    // Retrieve the state from localStorage
     chrome.storage.local.get(['urlParser', 'fileDownloader'], (result) => {
       setURLParser(result.urlParser || false)
       setFileDownloader(result.fileDownloader || false)
     })
   }, [])
 
+  //manage the urlParser button state. 
   function urlParserState() {
+    //set default state to false
     const newState = !urlParser
+    //if button clicked set state to true and update state
     setURLParser(newState)
     chrome.storage.local.set({ urlParser: newState }, () => {
       console.log('URL Parser state saved:', newState)
@@ -26,6 +29,7 @@ function PopUpApp() {
     chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
   }
 
+//manage the urlParser button state. 
   function fileDownloaderState() {
     const newState = !fileDownloader
     setFileDownloader(newState)
@@ -35,6 +39,7 @@ function PopUpApp() {
     chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
   }
 
+  
   function displayState(state: boolean) {
     return (
       <div className="flex">
