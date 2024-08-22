@@ -1,52 +1,8 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
 import '../index.css'
 import './App.css'
 
 function DevToolsApp() {
-  const [urlParser, setURLParser] = useState(false)
-  const [fileDownloader, setFileDownloader] = useState(false)
-
-  function displayFileDownloaderState(){
-    if (fileDownloader){
-      return(
-        <div className="flex">
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#82e467" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-            <span className="text-green-400 font-semibold">ON</span>
-          </div>
-        </div>)
-    } else{
-        return(
-          <div className="flex">
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e63946" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-              <span className="text-red-400 font-semibold">OFF</span>
-            </div>
-          </div>)
-    }
-  }
-
-  function displayURLParserState(){
-    if (urlParser){
-      return(
-        <div className="flex">
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#82e467" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-            <span className="text-green-400 font-semibold">ON</span>
-          </div>
-        </div>)
-    } else{
-        return(
-          <div className="flex">
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e63946" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-              <span className="text-red-400 font-semibold">OFF</span>
-            </div>
-          </div>)
-    }
-  }
-
   return (
     <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
       <div className="mt-5 mb-10">
@@ -58,8 +14,13 @@ function DevToolsApp() {
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-               <button onClick={() => setURLParser(!urlParser)}>
-                  {displayURLParserState()}
+               <button>
+                  <div className="flex">
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#82e467" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
+                        <span className="text-green-400 font-semibold">ON</span>
+                      </div>
+                  </div>
                </button>
                <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> (57)</Link>
           </div>
@@ -68,8 +29,13 @@ function DevToolsApp() {
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">JS Downloader</h2>
           <div className="text-md flex gap-2">
-               <button onClick={() => setFileDownloader(!fileDownloader)}>
-                  {displayFileDownloaderState()}
+               <button>
+                  <div className="flex">
+                      <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e63946" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
+                        <span className="text-red-400 font-semibold">OFF</span>
+                      </div>
+                  </div>
                </button>  
                <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> (17)</Link>
           </div>
