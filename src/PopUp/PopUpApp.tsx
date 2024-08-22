@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react';
 import { useState } from "react"
 import './App.css'
 
@@ -7,7 +8,13 @@ function PopUpApp() {
   const [fileDownloader, setFileDownloader] = useState(false)
   const [urlCount, setURLCount] = useState(0)
   const [fileCount, setFileCount] = useState(0)
-
+  console.log("hi")
+  const handleClick = () => {
+    // Send a message to the background script
+    chrome.runtime.sendMessage({ action: 'popupClicked' }, (response) => {
+      console.log('Response from background:', response);
+    });
+  };
   function displayFileDownloaderState(){
     if (fileDownloader){
       return(
@@ -18,6 +25,9 @@ function PopUpApp() {
           </div>
         </div>)
     } else{
+      // chrome.storage.local.set({ "urlParser": false }).then(() => {
+      //   console.log("Value is set");
+      // });
         return(
           <div className="flex">
             <div className="flex items-center">
@@ -54,12 +64,12 @@ function PopUpApp() {
         <h1 className="text-3xl md:text-6xl mb-1">JS-Parser Toolkit</h1>
         <p className="text-gray-400/60 md:text-lg">A JS-Parsing Toolkit with many flexible features by mrunoriginal and Dooma</p>
       </div>
-      
+      <button onClick={handleClick}>Send Message to Background</button>
       <div className="flex flex-col justify-left gap-10 mx-0">
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-               <button onClick={() => setURLParser(!urlParser)}>
+               <button onClick={() => {setURLParser(!urlParser); console.log("toggeled urlParser")}}>
                   {displayURLParserState()}
                </button>
                <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
