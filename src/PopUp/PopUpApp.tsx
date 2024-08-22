@@ -13,14 +13,15 @@ function PopUpApp() {
 
   console.log("hi")
 
-  const handleClick = () => {
-    // Send a message to the background script
-    chrome.runtime.sendMessage({ action: 'popupClicked' }, (response) => {
+  function urlParserState(){
+    setURLParser(!urlParser)
+    chrome.runtime.sendMessage({ action: urlParser }, (response) => {
       console.log('Response from background:', response);
     });
-  };
+  }
   
   function displayFileDownloaderState(){
+     
     if (fileDownloader){
       return(
         <div className="flex">
@@ -30,9 +31,6 @@ function PopUpApp() {
           </div>
         </div>)
     } else{
-      // chrome.storage.local.set({ "urlParser": false }).then(() => {
-      //   console.log("Value is set");
-      // });
         return(
           <div className="flex">
             <div className="flex items-center">
@@ -44,6 +42,16 @@ function PopUpApp() {
   }
 
   function displayURLParserState(){
+    useEffect(() => {
+      chrome.runtime.sendMessage({ action: "grab url parser state" }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('Error sending message:', chrome.runtime.lastError);
+        } else {
+          console.log('Response from background:', response);
+          setURLParser(response);
+        }
+      });
+    }, [urlParser]);
     if (urlParser){
       return(
         <div className="flex">
@@ -69,12 +77,11 @@ function PopUpApp() {
         <h1 className="text-3xl md:text-6xl mb-1">JS-Parser Toolkit</h1>
         <p className="text-gray-400/60 md:text-lg">A JS-Parsing Toolkit with many flexible features by mrunoriginal and Dooma</p>
       </div>
-      <button onClick={handleClick}>Send Message to Background</button>
       <div className="flex flex-col justify-left gap-10 mx-0">
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-               <button onClick={() => {setURLParser(!urlParser); console.log("toggeled urlParser")}}>
+               <button onClick={() => {urlParserState}}>
                   {displayURLParserState()}
                </button>
                <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>

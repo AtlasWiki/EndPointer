@@ -1,11 +1,11 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Background script received message:', message);
-  sendResponse({ response: 'Response from background' });
-  chrome.storage.local.set({ message: "test" }).then(() => {
+  chrome.storage.local.set({ urlParser: message }).then(() => {
     console.log("Cache has been set");
   });
-  chrome.storage.local.get(["message"]).then((result) => {
-    console.log("Cache is " + result.message);
+  chrome.storage.local.get(["urlParser"]).then((result) => {
+    console.log("Cache is " + result.urlParser);
   });
+  sendResponse({ response: result.urlParser });
 });
 
