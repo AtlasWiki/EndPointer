@@ -3,18 +3,23 @@ import { useEffect } from 'react';
 import { useState } from "react"
 import './App.css'
 
+
 function PopUpApp() {
+
   const [urlParser, setURLParser] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
   const [urlCount, setURLCount] = useState(0)
   const [fileCount, setFileCount] = useState(0)
+
   console.log("hi")
+
   const handleClick = () => {
     // Send a message to the background script
     chrome.runtime.sendMessage({ action: 'popupClicked' }, (response) => {
       console.log('Response from background:', response);
     });
   };
+  
   function displayFileDownloaderState(){
     if (fileDownloader){
       return(
