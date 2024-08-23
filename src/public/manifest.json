@@ -8,17 +8,8 @@
     "activeTab",
     "tabs"
   ],
-  "background": {
-    "service_worker": "src/background/index.js"
-  },
   "action": {
-    "default_popup": "src/PopUp/index.html",
+    "default_popup": "PopUp/popup.html",
     "default_title": "JS Toolkit for Hackers"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["src/content/index.js"]
-    }
-  ]
+  }
 }
