@@ -1,28 +1,24 @@
 {
-    "name": "JS-Toolkit",
-    "description": "Currently for parsing endpoints and downloading js files into a merged file",
-    "version": "0.1",
-    "author": "Lordcat & mrunoriginal/AtlasWiki, 2024",
-    "manifest_version": 3,
-    "devtools_page": "devtools.html",
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_popup": "index.html",
-      "default_title": "JS Toolkit for Hackers"
-    },
-    "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'"
-    },
-    "permissions": [
-      "storage",
-      "activeTab"
-    ],
-    "content_scripts": [
+  "manifest_version": 3,
+  "name": "JS-Toolkit",
+  "version": "1.0.0",
+  "description": "A JS-Parsing Toolkit with many flexible features",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "src/background/index.js"
+  },
+  "action": {
+    "default_popup": "src/PopUp/index.html",
+    "default_title": "JS Toolkit for Hackers"
+  },
+  "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["src/content/index.js"]
     }
   ]
 }

@@ -1,20 +1,34 @@
 
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import './App.css'
 
 function PopUpApp() {
   const [urlParser, setURLParser] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
   const [urlCount, setURLCount] = useState(0) //placeholders TODO: Function to grab URLS and Another to count them
-  const [fileCount, setFileCount] = useState(0) //place holder  TODO: Function to grab js files and another to count the files. 
-
+  const [jsFileCount, setJSFileCount] = useState(0) //place holder  TODO: Function to grab js files and another to count the files. 
+  const [jsFileCounter, setJSFileCounter] = useState(false)
+  
   useEffect(() => {
     // Retrieve the state from localStorage
-    chrome.storage.local.get(['urlParser', 'fileDownloader'], (result) => {
+    chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
       setURLParser(result.urlParser || false)
       setFileDownloader(result.fileDownloader || false)
+      setJSFileCounter(result.jsFileCounter || false)
+      setJSFileCount(result.jsFileCount || 0)
     })
+
+    // Listen for updates to the JS file count
+    const listener = (message: { action: string; count: SetStateAction<number> }) => {
+      if (message.action === 'jsFileCountUpdated') {
+        setJSFileCount(message.count)
+      }
+    }
+    chrome.runtime.onMessage.addListener(listener)
+
+    // Cleanup listener on unmount
+    return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
 
   //manage the urlParser button state. 
@@ -37,6 +51,16 @@ function PopUpApp() {
       console.log('File Downloader state saved:', newState)
     })
     chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
+  }
+
+  //manage the jsFileCounter button state. 
+  function jsFileCounterState() {
+    const newState = !jsFileCounter
+    setJSFileCounter(newState)
+    chrome.storage.local.set({ jsFileCounter: newState }, () => {
+      console.log('JS File Counter state saved:', newState)
+    })
+    chrome.runtime.sendMessage({ action: 'jsFileCounterChanged', state: newState })
   }
 
   
@@ -78,7 +102,7 @@ function PopUpApp() {
             <button onClick={fileDownloaderState}>
               {displayState(fileDownloader)}
             </button>
-            <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
+            <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({jsFileCount})</Link>
           </div>
         </div>
       </div>
