@@ -6,6 +6,8 @@ import './App.css'
 function DevToolsApp() {
   const [urlParser, setURLParser] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
+  const [urlCount, setURLCount] = useState(0)
+  const [fileCount, setFileCount] = useState(0)
 
   function displayFileDownloaderState(){
     if (fileDownloader){
@@ -61,7 +63,7 @@ function DevToolsApp() {
                <button onClick={() => setURLParser(!urlParser)}>
                   {displayURLParserState()}
                </button>
-               <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> (57)</Link>
+               <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
           </div>
         </div>
 
@@ -71,7 +73,7 @@ function DevToolsApp() {
                <button onClick={() => setFileDownloader(!fileDownloader)}>
                   {displayFileDownloaderState()}
                </button>  
-               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> (17)</Link>
+               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
           </div>
         </div>
       </div>
