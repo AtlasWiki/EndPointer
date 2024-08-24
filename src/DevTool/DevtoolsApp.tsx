@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import '../PopUp/index.css'
+import './index.css'
 import './App.css'
 
 function DevToolsApp() {

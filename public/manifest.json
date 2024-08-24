@@ -8,18 +8,22 @@
     "activeTab",
     "tabs"
   ],
+  "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "PopUp/popup.html",
     "default_title": "JS Toolkit for Hackers"
   },
   "background": {
-    "service_worker": "popup/background.js"
+    "service_worker": "PopUp/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["popup/content.js"]
+      "js": ["PopUp/content.js"]
     }
   ],
-  "devtools_page": "devtool/devtool.html"
+  "devtools_page": "DevTool/DevTool.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
