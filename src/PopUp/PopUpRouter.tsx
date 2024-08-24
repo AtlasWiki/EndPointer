@@ -9,7 +9,7 @@ import PopUpApp from './PopUpApp'
 import { URLS } from './routes/urls'
 import { JSFiles } from './routes/js-files' 
 import './index.css'
-import React from 'react'
+
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

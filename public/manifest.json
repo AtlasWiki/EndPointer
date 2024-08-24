@@ -9,7 +9,16 @@
     "tabs"
   ],
   "action": {
-    "default_popup": "PopUp/popup.html",
+    "default_popup": "popup/popup.html",
     "default_title": "JS Toolkit for Hackers"
-  }
+  },
+  "background": {
+    "service_worker": "popup/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["popup/content.js"]
+    }
+  ]
 }
