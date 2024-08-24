@@ -3,18 +3,28 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import fs from 'fs'
 
-// Define paths
 const root = resolve(__dirname, 'src');
 const outDir = resolve(__dirname, 'dist');
 const publicDir = resolve(__dirname, 'public');
 
+// Function to get feature directories, excluding 'components'
+const getFeatureDirectories = () => {
+  return fs.readdirSync(root, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory() && dirent.name !== 'components')
+    .map(dirent => dirent.name);
+};
+
 export default defineConfig({
-  // Set the root directory to 'src'
   root,
   plugins: [
-    // Add React support
     react(),
-    // Custom plugin to modify and copy manifest.json
+    {
+      name: 'html-transform',
+      transformIndexHtml(html) {
+        // Transform .tsx imports to .js
+        return html.replace(/(['"])(.+)\.tsx(['"])/g, '$1$2.js$3');
+      }
+    },
     {
       name: 'manifest-copier',
       generateBundle() {
@@ -32,8 +42,10 @@ export default defineConfig({
           if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
             manifest.content_scripts[0].js = ['popup/content.js'];
           }
+          if (manifest.devtools_page) {
+            manifest.devtools_page = 'devtool/devtool.html';
+          }
           
-          // Emit modified manifest.json to output
           this.emitFile({
             type: 'asset',
             fileName: 'manifest.json',
@@ -44,32 +56,42 @@ export default defineConfig({
     }
   ],
   build: {
-    // Set output directory
     outDir,
-    // Clear the output directory before each build
     emptyOutDir: true,
     rollupOptions: {
-      // Define entry points
-      input: {
-        popup: resolve(__dirname, 'src/PopUp/popup.html'),
-        background: resolve(__dirname, 'src/PopUp/background.ts'),
-        content: resolve(__dirname, 'src/PopUp/content.ts'),
-      },
+      input: getFeatureDirectories().reduce((acc, feature) => {
+        acc[`${feature}/index`] = resolve(__dirname, `src/${feature}/${feature}.html`);
+        if (feature === 'DevTool') {
+          acc[`${feature}/devtools`] = resolve(__dirname, `src/${feature}/${feature}Router.tsx`);
+        }
+        acc[`${feature}/background`] = resolve(__dirname, `src/${feature}/background.ts`);
+        acc[`${feature}/content`] = resolve(__dirname, `src/${feature}/content.ts`);
+        return acc;
+      }, {}),
       output: {
-        // Set output directory
         dir: outDir,
-        // Place JS files in popup subdirectory
-        entryFileNames: 'popup/[name].js',
-        // Place chunk files in popup subdirectory
-        chunkFileNames: 'popup/[name].[hash].js',
-        // Configure asset output paths
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].[hash].js',
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'popup.html') {
-            return 'popup/[name][extname]';
+          const info = assetInfo.name.split('/');
+          const feature = info[0];
+          if (getFeatureDirectories().includes(feature)) {
+            if (assetInfo.name.endsWith('.html')) {
+              return `${feature}/[name][extname]`;
+            }
+            return `${feature}/[name][extname]`;
           }
-          return 'popup/assets/[name][extname]';
+          if (assetInfo.name.startsWith('assets/')) {
+            return '[name][extname]';
+          }
+          return `[name][extname]`;
         },
       },
+    },
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
     },
   },
 })

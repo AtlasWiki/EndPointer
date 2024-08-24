@@ -20,5 +20,6 @@
       "matches": ["<all_urls>"],
       "js": ["popup/content.js"]
     }
-  ]
+  ],
+  "devtools_page": "devtool/devtool.html"
 }
