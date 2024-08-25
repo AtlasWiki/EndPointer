@@ -36,6 +36,7 @@ function renderApp() {
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/creds" element={<Creds />} />
             <Route path="/apikeys" element={<APIKeys />} />
+            <Route path="/urlsvisited" element={<APIKeys />} />
           </Routes>
         </Router>
       </StrictMode>
