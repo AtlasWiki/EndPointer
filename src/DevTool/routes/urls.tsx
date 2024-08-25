@@ -6,7 +6,7 @@ export function URLS(){
     return(
         <div className="w-full">
             <NavBar />
-            <div className="flex flex-col w-full gap-5">
+            <div className="mt-5 flex flex-col w-full gap-5">
                <div className="w-full"> 
                     <h1 className="text-2xl">Location:</h1>
                     <select className="mt-5 p-5 bg-gray-500/80 text-lg w-full">
