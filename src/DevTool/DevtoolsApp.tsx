@@ -1,78 +1,39 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import '../index.css'
+import './index.css'
 import './App.css'
+
 
 function DevToolsApp() {
   const [urlParser, setURLParser] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
   const [urlCount, setURLCount] = useState(0)
+  const [credCount, setCredCount] = useState(0)
+  const [apiKeyCount, setApiKeyCount] = useState(0)
   const [fileCount, setFileCount] = useState(0)
 
-  function displayFileDownloaderState(){
-    if (fileDownloader){
-      return(
-        <div className="flex">
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#82e467" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-            <span className="text-green-400 font-semibold">ON</span>
-          </div>
-        </div>)
-    } else{
-        return(
-          <div className="flex">
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e63946" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-              <span className="text-red-400 font-semibold">OFF</span>
-            </div>
-          </div>)
-    }
-  }
-
-  function displayURLParserState(){
-    if (urlParser){
-      return(
-        <div className="flex">
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#82e467" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-            <span className="text-green-400 font-semibold">ON</span>
-          </div>
-        </div>)
-    } else{
-        return(
-          <div className="flex">
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#e63946" d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/></svg>
-              <span className="text-red-400 font-semibold">OFF</span>
-            </div>
-          </div>)
-    }
-  }
-
+  
   return (
-    <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
-      <div className="mt-5 mb-10">
-        <h1 className="text-3xl md:text-6xl mb-1">JS-Parser Toolkit</h1>
-        <p className="text-gray-400/60 md:text-lg">A JS-Parsing Toolkit with many flexible features by mrunoriginal and Dooma</p>
+    <div className="w-full md:h-screen m-0 flex flex-col">
+      <div className="mt-10 mb-10 w-full">
+        <h1 className="text-3xl md:text-6xl mb-3">JS-Toolkit Dashboard</h1>
+        <p className="text-gray-400/60 md:text-lg mb-3">A JS-Parsing Toolkit with many flexible features by mrunoriginal/AtlasWiki and LordCat</p>
+        <hr className="w-full"></hr>
       </div>
 
-      <div className="flex flex-col justify-left gap-10 mx-0">
+      <div className="mt-10 flex flex-col gap-20 mx-0">
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-               <button onClick={() => setURLParser(!urlParser)}>
-                  {displayURLParserState()}
-               </button>
                <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
+               <Link className="a-item font-semibold" to="urls"><span className="text-rose-500">Creds</span> ({credCount})</Link>
+               <Link className="a-item font-semibold" to="urls"><span className="text-emerald-500">API Tokens</span> ({apiKeyCount})</Link>
           </div>
         </div>
 
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">JS Downloader</h2>
           <div className="text-md flex gap-2">
-               <button onClick={() => setFileDownloader(!fileDownloader)}>
-                  {displayFileDownloaderState()}
-               </button>  
                <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
           </div>
         </div>
