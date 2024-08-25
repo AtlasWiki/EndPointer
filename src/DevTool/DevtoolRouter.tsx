@@ -10,6 +10,7 @@ import {
 import { URLS } from './routes/urls'
 import { JSFiles } from './routes/js-files'
 import { Creds } from './routes/creds'
+import { APIKeys } from './routes/apikeys'
 
 // Create the DevTools panel
 chrome.devtools.panels.create(
@@ -34,6 +35,7 @@ function renderApp() {
             <Route path="/urls" element={<URLS />} />
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/creds" element={<Creds />} />
+            <Route path="/apikeys" element={<APIKeys />} />
           </Routes>
         </Router>
       </StrictMode>
