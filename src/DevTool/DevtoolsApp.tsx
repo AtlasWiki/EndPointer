@@ -26,7 +26,7 @@ function DevToolsApp() {
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
                <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
-               <Link className="a-item font-semibold" to="urls"><span className="text-rose-500">Creds</span> ({credCount})</Link>
+               <Link className="a-item font-semibold" to="creds"><span className="text-rose-500">Creds</span> ({credCount})</Link>
                <Link className="a-item font-semibold" to="urls"><span className="text-emerald-500">API keys</span> ({apiKeyCount})</Link>
           </div>
         </div>

@@ -8,7 +8,8 @@ import {
   Routes,
 } from 'react-router-dom'
 import { URLS } from './routes/urls'
-import { JSFiles } from './routes/js-files' 
+import { JSFiles } from './routes/js-files'
+import { Creds } from './routes/creds'
 
 // Create the DevTools panel
 chrome.devtools.panels.create(
@@ -32,6 +33,7 @@ function renderApp() {
             <Route path="/example" element={<Example />} />
             <Route path="/urls" element={<URLS />} />
             <Route path="/js-files" element={<JSFiles />} />
+            <Route path="/creds" element={<Creds />} />
           </Routes>
         </Router>
       </StrictMode>
