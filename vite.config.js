@@ -84,7 +84,7 @@ export default defineConfig({
         },
       },
     },
-    target: ['chrome', 'firefox'],
+    target: ['chrome89', 'firefox89'],
     minify: false,
   },
   resolve: {

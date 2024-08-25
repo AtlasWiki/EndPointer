@@ -92,7 +92,7 @@ function PopUpApp() {
             <button onClick={urlParserState}>
               {displayState(urlParser)}
             </button>
-            <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
+            <button className="a-item font-semibold text-blue-500"><span className="text-violet-500">URLs</span> ({urlCount})</button>
           </div>
         </div>
 
@@ -102,7 +102,7 @@ function PopUpApp() {
             <button onClick={fileDownloaderState}>
               {displayState(fileDownloader)}
             </button>
-            <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({jsFileCount})</Link>
+            <button className="a-item font-semibold text-blue-500"><span className="text-violet-500">JS FILES</span> ({jsFileCount})</button>
           </div>
         </div>
       </div>

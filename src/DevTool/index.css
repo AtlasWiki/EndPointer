@@ -24,7 +24,7 @@ a {
 
 body {
   margin: 0;
-  display: flex;
+  /* display: flex; */
   min-height: 100vh;
   min-width: 320px;
 }
