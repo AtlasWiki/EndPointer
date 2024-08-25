@@ -25,7 +25,7 @@ export function URLS(){
                          </tr>
                          <div className="mt-20"></div>
                          <tr>
-                              <td><input className="p-1 pb-3 text-lg rounded-md bg-gray-500/80" type="text"/></td>
+                              <td><input className="p-2 pb-3 text-lg rounded-md bg-gray-500/80" type="text"/></td>
                          </tr>
                          <tr className="">
                               <td>/admin</td>
