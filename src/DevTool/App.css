@@ -14,14 +14,20 @@
 }
 
 td, tr {
-  padding-bottom: 40px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 20px;
   text-align: center;
+  /* border: 1px black solid; */ /* for testing the spacing and alignment */
 }
 
 td {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
-th {
+
+/* for testing the spacing and alignment
+/* th {
   padding-bottom: 50px;
-}
+  border: 1px black solid;
+} */

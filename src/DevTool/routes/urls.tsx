@@ -4,7 +4,7 @@ import "../index.css"
 
 export function URLS(){
     return(
-        <div className="w-full">
+        <div className="w-full min-h-screen">
             <NavBar />
             <div className="mt-5 flex flex-col w-full gap-5">
                <div className="w-full mb-5"> 
@@ -21,64 +21,39 @@ export function URLS(){
                          <tr className="text-4xl mb-20">
                               <th className="border-b-2">Endpoint</th>
                               <th className="border-b-2">Location</th>
-                              <th className="border-b-2">Code Snippet</th>
+                              <th className="border-b-2">Linked</th>
+                              <th className="border-b-2">Code</th>
                          </tr>
                          <div className="mt-20"></div>
-                         <tr>
+                         {/* <tr>
                               <td><input className="p-2 pb-3 text-lg rounded-md bg-gray-500/80" type="text"/></td>
-                         </tr>
+                         </tr> */}
                          <tr className="">
                               <td>/admin</td>
                               <td>{ window.location.href }</td>
+                              <td>{ window.location.host + window.location.pathname } </td>
                               <td><a href="#" target="_blank">View here</a></td>
                          </tr>
                          <tr className="">
                               <td>/admin</td>
                               <td>{ window.location.href }</td>
+                              <td>{ window.location.host + window.location.pathname } </td>
                               <td><a href="#" target="_blank">View here</a></td>
                          </tr>
                          <tr className="">
                               <td>/admin</td>
                               <td>{ window.location.href }</td>
+                              <td>{ window.location.host + window.location.pathname } </td>
                               <td><a href="#" target="_blank">View here</a></td>
                          </tr>
                          <tr className="">
                               <td>/admin</td>
                               <td>{ window.location.href }</td>
-                              <td><a href="#" target="_blank">View here</a></td>
-                         </tr>
-                         <tr className="">
-                              <td>/admin</td>
-                              <td>{ window.location.href }</td>
-                              <td><a href="#" target="_blank">View here</a></td>
-                         </tr>
-                         <tr className="">
-                              <td>/admin</td>
-                              <td>{ window.location.href }</td>
-                              <td><a href="#" target="_blank">View here</a></td>
-                         </tr>
-                         <tr className="">
-                              <td>/admin</td>
-                              <td>{ window.location.href }</td>
-                              <td><a href="#" target="_blank">View here</a></td>
-                         </tr>
-                         <tr className="">
-                              <td>/admin</td>
-                              <td>{ window.location.href }</td>
-                              <td><a href="#" target="_blank">View here</a></td>
-                         </tr>
-                         <tr className="">
-                              <td>/admin</td>
-                              <td>{ window.location.href }</td>
-                              <td><a href="#" target="_blank">View here</a></td>
-                         </tr>
-                         <tr className="">
-                              <td>/admin</td>
-                              <td>{ window.location.href }</td>
+                              <td>{ window.location.host + window.location.pathname } </td>
                               <td><a href="#" target="_blank">View here</a></td>
                          </tr>
                     </table>
-                    <div className="text-lg">
+                    <div className="mt-5 text-lg flex justify-content items-center">
                          <a href={document.location.href} target="_blank" className="m-2 bg-gray-950 p-3 rounded-md">Open in New Tab</a>
                          <button className="m-0.5">Download as TXT</button>
                          <button className="m-0.5">Download as JSON</button>
