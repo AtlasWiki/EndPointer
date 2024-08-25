@@ -1,26 +1,25 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  /* text-align: center; */
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-td, tr {
-  padding-bottom: 40px;
+td, th {
+  padding: 15px 20px;
+  text-align: center;
 }
 
 td {
   font-size: 1rem;
 }
 
-th {
-  padding: 50px;
+/* table {
+  border-collapse: collapse;
+} */
+
+/* tr:nth-child(even) {
+  background-color: #f2f2f2;
+} */
+
+.bg-gray-950 {
+  background-color: #1a1a1a;
 }
+
+.bg-gray-800 {
+  background-color: #333;
+}
+
