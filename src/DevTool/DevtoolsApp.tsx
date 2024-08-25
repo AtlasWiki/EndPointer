@@ -14,7 +14,7 @@ function DevToolsApp() {
 
   
   return (
-    <div className="w-full md:h-screen m-0 flex flex-col">
+    <div className="w-full md:h-screen m-0 flex flex-col px-5 mt-5">
       <div className="mt-10 mb-10 w-full">
         <h1 className="text-3xl md:text-6xl mb-3">JS-Toolkit Dashboard</h1>
         <p className="text-gray-400/60 md:text-lg mb-3">A JS-Parsing Toolkit with many flexible features by mrunoriginal/AtlasWiki and LordCat</p>
