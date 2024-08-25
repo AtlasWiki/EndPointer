@@ -82,8 +82,8 @@ function PopUpApp() {
   return (
     <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
       <div className="mt-5 mb-10">
-        <h1 className="text-3xl md:text-6xl mb-1">JS-Parser Toolkit</h1>
-        <p className="text-gray-400/60 md:text-lg">A JS-Parsing Toolkit with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
+        <h1 className="text-3xl md:text-6xl mb-1">JS Toolkit</h1>
+        <p className="text-gray-400/60 md:text-lg">A JS Toolkit with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
       </div>
       <div className="flex flex-col justify-left gap-10 mx-0">
         <div className="flex flex-col gap-1 md:gap-5">
