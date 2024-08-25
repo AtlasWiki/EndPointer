@@ -85,7 +85,7 @@ export default defineConfig({
       },
     },
     target: ['chrome89', 'firefox89'],
-    minify: false,
+    minify: true,
   },
   resolve: {
     alias: {
