@@ -7,15 +7,6 @@ export function URLS() {
         <div className="w-full min-h-screen">
             <NavBar />
             <div className="mt-5 flex flex-col w-full gap-5">
-                <div className="w-full mb-5 px-5"> 
-                    <h1 className="text-2xl">Location:</h1>
-                    <select className="mt-5 p-5 bg-gray-500/80 text-lg w-full">
-                        <option value="all">ALL</option>
-                        <option value={document.location.href}>{document.location.href}</option>
-                        <option value={document.location.href}>{document.location.href}</option>
-                        <option value={document.location.pathname}>{document.location.pathname}</option>
-                    </select>
-                </div>
                 <div className="py-1 w-full flex flex-col gap-10">
                     <table className="w-full mb-5 border-collapse">
                         <thead>
@@ -28,6 +19,26 @@ export function URLS() {
                         </thead>
                         <div className="mt-20"></div>
                         <tbody>
+                            <tr>
+                              <td>
+                                   <div className="w-full mb-5 px-5"> 
+                                        {/* <h1 className="text-2xl">Location:</h1> */}
+                                       <input type="text" className="mt-5 p-1 bg-gray-500/80 text-lg w-full" />
+                                   </div>
+                              </td>
+                              <td>
+                                   <div className="w-full mb-5 px-5"> 
+                                        {/* <h1 className="text-2xl">Location:</h1> */}
+                                        <select className="mt-5 p-1 bg-gray-500/80 text-lg w-full">
+                                             <option value="all">ALL</option>
+                                             <option value={document.location.href}>{document.location.href}</option>
+                                             <option value={document.location.href}>{document.location.href}</option>
+                                             <option value={document.location.pathname}>{document.location.pathname}</option>
+                                        </select>
+                                   </div>
+                              </td>
+                            
+                            </tr>
                             <tr>
                                 <td>/admin</td>
                                 <td>{window.location.href}</td>
