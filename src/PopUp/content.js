@@ -119,6 +119,11 @@ chrome.storage.local.get("urlParser", (urlParserState) => {
   }
 })
 
+chrome.storage.local.get(null, (data) => {
+  console.log(data); 
+  console.log(JSON.stringify(data, null, 2)); 
+});
+
 function parseURLs(){
   let scope_input = prompt("list scopes in spaces.  Ex: example.com github.com OR use a null/blank value for all domains", parse_fqdn())
   let scopes = scope_input.split(' ')
