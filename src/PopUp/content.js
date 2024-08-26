@@ -113,11 +113,21 @@
 // })
 // alert(1)
 
+
+// parse urls on refresh if parser is enabled
 chrome.storage.local.get("urlParser", (urlParserState) => {
   if (urlParserState.urlParser){
     parseURLs()
   }
 })
+
+// parse urls when receiving message
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'getCurrTabData') {
+    parseURLs()
+    sendResponse({ data: 'parsed urls' });
+  }
+});
 
 chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
   console.log('Bytes in use:', bytesInUse);
@@ -148,19 +158,34 @@ function parseURLs(){
                         // console.log(Array.from(jsFileURLs))
                         // console.log("worked")
 
-                        chrome.storage.local.get("URLParser", (result) => {
-                          const urlParser = result.URLParser || {};  
-                          urlParser[encodedURL] = Array.from(jsFileURLs);
-                          chrome.storage.local.set({ URLParser: urlParser }, () => {
-                              console.log("Saved endpoints from external files");
-                          });
-                      });
-                      
-                        // chrome.storage.local.set({URLParser: {[encodedURL]: Array.from(jsFileURLs)}}, () => {
-                        //   console.log("saved endpoints from external files")
-                        // })
-
+                        chrome.storage.local.get("current", (result) => {
+                          const currentURL = result.current || '';
+                          chrome.storage.local.get("URL-PARSER", (result) => {
+                            const urlParser = result["URL-PARSER"] || {};
+                            if (!urlParser[currentURL]) {
+                              urlParser[currentURL] = { currPage: [], externalJSFiles: {} };
+                            }
+                            // Save the JS file URLs
+                            const encodedURL = encodeURIComponent(js_file);
+                            urlParser[currentURL].externalJSFiles[encodedURL] = Array.from(jsFileURLs);
                         
+                            chrome.storage.local.set({ "URL-PARSER": urlParser }, () => {
+                              console.log("Saved endpoints from external files");
+                            });
+                          });
+                        });
+
+                        // chrome.storage.local.get('URL-PARSER', (result) => {
+                        //   const urlParser = result['URL-PARSER'] || {};
+                        //   if (!urlParser[encodedURL]) {
+                        //     urlParser[encodedURL] = { currPage: [], externalJSFiles: {} };
+                        //   }
+                        //   urlParser[encodedURL].externalJSFiles[encodedURL] = Array.from(jsFileURLs);
+                        //   chrome.storage.local.set({ 'URL-PARSER': urlParser }, () => {
+                        //     console.log("Saved endpoints from external files");
+                        //   });
+                        // });
+  
                     })
                     .catch(error => {
                         console.error('Error fetching script:', error);
@@ -177,23 +202,33 @@ function parseURLs(){
       const relPageURLs = Array.from(pageContent.matchAll(relRegex), match => match[1]);
       const pageURLs = new Set([...abPageURLs, ...relPageURLs])
       const currPage = encodeURIComponent(document.location.href)
-      parse_external_files()
       console.log(pageURLs)
       console.log("from current page ^")
-      chrome.storage.local.set({ currPage: Array.from(pageURLs) }, () => {
-        console.log("saved endpoints from current page")
-      })
-      // chrome.storage.local.set({URLParser: {[currPage]: Array.from(pageURLs)}}, () => {
-      //   console.log("saved endpoints from current page")
-      // })
 
-      chrome.storage.local.get("URLParser", (result) => {
-        const urlParser = result.URLParser || {};  
-        urlParser[currPage] = Array.from(pageURLs);
-        chrome.storage.local.set({ URLParser: urlParser }, () => {
-            console.log("Saved endpoints from external files");
+    //   // add urls to urlParser total url count
+      // chrome.storage.local.get("URLParser", (result) => {
+      //   const urlParser = result.URLParser || {};  
+      //   urlParser[currPage] = Array.from(pageURLs);
+      //   chrome.storage.local.set({ URLParser: urlParser }, () => {
+      //       console.log("Saved endpoints from current files");
+      //     });
+      // });
+
+      chrome.storage.local.get('URL-PARSER', (result) => {
+        const urlParser = result['URL-PARSER'] || {};
+        const currPage = encodeURIComponent(document.location.href);
+      
+        if (!urlParser[currPage]) {
+          urlParser[currPage] = { currPage: [], externalJSFiles: {} };
+        }
+        urlParser[currPage].currPage = Array.from(pageURLs);
+      
+        chrome.storage.local.set({ 'URL-PARSER': urlParser }, () => {
+          console.log("Saved endpoints from current page");
         });
-    });
+      });
+      parse_external_files()
+   
   }
 
   async function fetch_file(file) {

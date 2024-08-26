@@ -33,6 +33,8 @@ function PopUpApp() {
       setURLCount(urlAmt);
     });
 
+    
+
     // Listen for updates to the JS file count
     // const listener = (message: { action: string; count: SetStateAction<number> }) => {
     //   if (message.action === 'jsFileCountUpdated') {
