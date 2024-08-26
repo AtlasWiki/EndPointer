@@ -156,12 +156,9 @@ function parseURLs(){
             .then(code => {
                 const jsFileRelURLs = Array.from(code.matchAll(relRegex), match => match[1]);
                 const jsFileAbURLs = Array.from(code.matchAll(abRegex), match => match[1]);
-                // const urls = new Set([...jsFileRelUrls, ...jsFileAbUrls, ...abPageUrls, ...relPageUrls]);
                 const jsFileURLs = new Set([...jsFileRelURLs, ...jsFileAbURLs]);
                 let currEndpointCount =  (Array.from(jsFileURLs).length).toString() + " urls found in: "+ js_file 
                 const encodedURL = encodeURIComponent(js_file)
-                // console.log(Array.from(jsFileURLs))
-                // console.log("worked")
                 console.log(currEndpointCount)
 
                 chrome.storage.local.get("URL-PARSER", (result) => {
@@ -173,16 +170,6 @@ function parseURLs(){
                   });
                 });
 
-                // chrome.storage.local.get('URL-PARSER', (result) => {
-                //   const urlParser = result['URL-PARSER'] || {};
-                //   if (!urlParser[encodedURL]) {
-                //     urlParser[encodedURL] = { currPage: [], externalJSFiles: {} };
-                //   }
-                //   urlParser[encodedURL].externalJSFiles[encodedURL] = Array.from(jsFileURLs);
-                //   chrome.storage.local.set({ 'URL-PARSER': urlParser }, () => {
-                //     console.log("Saved endpoints from external files");
-                //   });
-                // });
 
             })
             .catch(error => {
@@ -203,16 +190,7 @@ function parseURLs(){
       const currPage = encodeURIComponent(document.location.href)
       console.log(pageURLs)
       console.log("from current page ^")
-
-    //   // add urls to urlParser total url count
-      // chrome.storage.local.get("URLParser", (result) => {
-      //   const urlParser = result.URLParser || {};  
-      //   urlParser[currPage] = Array.from(pageURLs);
-      //   chrome.storage.local.set({ URLParser: urlParser }, () => {
-      //       console.log("Saved endpoints from current files");
-      //     });
-      // });
-
+      
       chrome.storage.local.get('URL-PARSER', (result) => {
         const urlParser = result['URL-PARSER'] || {};
         if (!urlParser[currPage]) {

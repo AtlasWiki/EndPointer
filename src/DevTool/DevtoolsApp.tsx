@@ -13,15 +13,28 @@ function DevToolsApp() {
   const [fileCount, setFileCount] = useState(0)
 
   useEffect(() => {
-    chrome.storage.local.get("URLParser", (data) => {
-      const urlParser = data.URLParser;
-      let totalCount = 0;
-      for (const encodedURL in urlParser) {
-        const endpoints = urlParser[encodedURL];
-        console.log(`Endpoints for ${decodeURIComponent(encodedURL)}:`, endpoints);
-        totalCount += endpoints.length;
-      }
-      setURLCount(totalCount);
+    chrome.storage.local.get("URL-PARSER", (data) => {
+      const urlParser = data["URL-PARSER"];
+      let totalURLCount = 0;
+  
+      // Iterate through each key in URL-PARSER
+      Object.keys(urlParser).forEach((key) => {
+        if (key !== "current") {
+          const currURLEndpoints = urlParser[key]["currPage"];
+          const currURLExtJSFiles = urlParser[key]["externalJSFiles"];
+  
+          // Calculate the number of URLs in currPage and externalJSFiles
+          const totalEndpointsInCurrPage = currURLEndpoints.length;
+          const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
+            .flat().length;
+  
+          // Accumulate the total URL count
+          totalURLCount += totalEndpointsInCurrPage + totalEndpointsInExtJSFiles;
+        }
+      });
+  
+      // Set the total URL count
+      setURLCount(totalURLCount);
     });
   }, []);
   

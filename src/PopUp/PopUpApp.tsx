@@ -27,12 +27,22 @@ function PopUpApp() {
       setJSFileCount(result.jsFileCount || 0)
     })
 
-    chrome.storage.local.get("currPage", (data) => {
-      const urls = data.currPage
-      const urlAmt = urls.length
-      setURLCount(urlAmt);
-    });
+   
+      chrome.storage.local.get("URL-PARSER", (data) => {
+        const urlParser = data["URL-PARSER"];
+        const currURL = urlParser["current"];
+        const currURLEndpoints = urlParser[currURL]["currPage"];
+        const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
+        // Calculate the total number of URLs in currPage and externalJSFiles
+        const totalEndpointsInCurrPage = currURLEndpoints.length;
+        const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
+          .flat().length;
+    
+        // Set the total URL count (from currPage and externalJSFiles)
+        setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+      });
 
+    
     
 
     // Listen for updates to the JS file count
