@@ -186,6 +186,9 @@ function parseURLs(){
       chrome.storage.local.set({[currPage] : Array.from(pageURLs)}, () => {
         console.log("saved endpoints from current page")
       })
+      // chrome.storage.local.set({URLParser: {[currPage]: Array.from(pageURLs)}}, () => {
+      //   console.log("saved endpoints from current page")
+      // })
   }
 
   async function fetch_file(file) {
