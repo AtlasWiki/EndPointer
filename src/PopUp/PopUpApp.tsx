@@ -11,18 +11,18 @@ function PopUpApp() {
   const [jsFileCounter, setJSFileCounter] = useState(false)
   
   useEffect(() => {
-    // Retrieve the state from localStorage
-    chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
-      setURLParser(result.urlParser || false)
-      setFileDownloader(result.fileDownloader || false)
-      setJSFileCounter(result.jsFileCounter || false)
-      setJSFileCount(result.jsFileCount || 0)
-    //
+    // let currTab = ""
+    // chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+    //   if (tab && tab.url) {
+    //     currTab = tab.url
+    //   } else {
+    //     console.error("Unable to get current tab URL");
+    //   }
+    // });
     chrome.storage.local.get(null, (data) => {
       const urls = Object.values(data).length - 4
       setURLCount(urls);
     });
-    })
 
     // Listen for updates to the JS file count
     // const listener = (message: { action: string; count: SetStateAction<number> }) => {

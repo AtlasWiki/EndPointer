@@ -181,7 +181,6 @@ function parseURLs(){
       const pageURLs = new Set([...abPageURLs, ...relPageURLs])
       const currPage = encodeURIComponent(document.location.href)
       parse_external_files()
-
       console.log(pageURLs)
       console.log("from current page ^")
       chrome.storage.local.set({[currPage] : Array.from(pageURLs)}, () => {
