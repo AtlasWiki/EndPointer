@@ -115,11 +115,15 @@
 
 
 // parse urls on refresh if parser is enabled
-chrome.storage.local.get("urlParser", (urlParserState) => {
-  if (urlParserState.urlParser){
-    parseURLs()
-  }
-})
+
+window.onload = function(){
+  chrome.storage.local.get("urlParser", (urlParserState) => {
+    if (urlParserState.urlParser){
+      parseURLs()
+    }
+  })
+}
+
 
 // parse urls when receiving message
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -166,7 +170,6 @@ function parseURLs(){
                               urlParser[currentURL] = { currPage: [], externalJSFiles: {} };
                             }
                             // Save the JS file URLs
-                            const encodedURL = encodeURIComponent(js_file);
                             urlParser[currentURL].externalJSFiles[encodedURL] = Array.from(jsFileURLs);
                         
                             chrome.storage.local.set({ "URL-PARSER": urlParser }, () => {
@@ -216,13 +219,11 @@ function parseURLs(){
 
       chrome.storage.local.get('URL-PARSER', (result) => {
         const urlParser = result['URL-PARSER'] || {};
-        const currPage = encodeURIComponent(document.location.href);
-      
         if (!urlParser[currPage]) {
           urlParser[currPage] = { currPage: [], externalJSFiles: {} };
         }
+        urlParser["current"] = currPage;
         urlParser[currPage].currPage = Array.from(pageURLs);
-      
         chrome.storage.local.set({ 'URL-PARSER': urlParser }, () => {
           console.log("Saved endpoints from current page");
         });
