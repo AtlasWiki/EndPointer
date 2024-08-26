@@ -164,19 +164,12 @@ function parseURLs(){
                 // console.log("worked")
                 console.log(currEndpointCount)
 
-                chrome.storage.local.get("current", (result) => {
-                  const currentURL = result.current || '';
-                  chrome.storage.local.get("URL-PARSER", (result) => {
-                    const urlParser = result["URL-PARSER"] || {};
-                    if (!urlParser[currentURL]) {
-                      urlParser[currentURL] = { currPage: [], externalJSFiles: {} };
-                    }
-                    // Save the JS file URLs
-                    urlParser[currentURL].externalJSFiles[encodedURL] = Array.from(jsFileURLs);
-                
-                    chrome.storage.local.set({ "URL-PARSER": urlParser }, () => {
-                      console.log("Saved endpoints from external files");
-                    });
+                chrome.storage.local.get("URL-PARSER", (result) => {
+                  const urlParser = result["URL-PARSER"] || '';
+                  const currentURL = urlParser["current"]
+                  urlParser[currentURL].externalJSFiles[encodedURL] = Array.from(jsFileURLs);
+                  chrome.storage.local.set({ "URL-PARSER": urlParser }, () => {
+                    console.log("Saved endpoints from external files");
                   });
                 });
 
