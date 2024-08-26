@@ -137,17 +137,17 @@ function parse_external_files(){
                     let encodedURL = encodeURIComponent(js_file)
                     document.write(``);
                     
-                    setTimeout( () => {
-                        let dynamicContent = document.documentElement.outerHTML;
-                        let blob = new Blob([dynamicContent], {type: 'text/html'});
-                        document.write(`<a href="${URL.createObjectURL(blob)}" download="${parse_fqdn()}.html">Download</a> <br>`)
-                        let aHidden = document.createElement('a');
-                        dynamicContent = document.documentElement.outerHTML;
-                        blob = new Blob([dynamicContent], {type: 'text/html'});
-                        aHidden.href=URL.createObjectURL(blob);
-                        aHidden.target="_blank";
-                        aHidden.click();
-                    }, 1000)
+                    // setTimeout( () => {
+                    //     let dynamicContent = document.documentElement.outerHTML;
+                    //     let blob = new Blob([dynamicContent], {type: 'text/html'});
+                    //     document.write(`<a href="${URL.createObjectURL(blob)}" download="${parse_fqdn()}.html">Download</a> <br>`)
+                    //     let aHidden = document.createElement('a');
+                    //     dynamicContent = document.documentElement.outerHTML;
+                    //     blob = new Blob([dynamicContent], {type: 'text/html'});
+                    //     aHidden.href=URL.createObjectURL(blob);
+                    //     aHidden.target="_blank";
+                    //     aHidden.click();
+                    // }, 1000)
                     
                     
                     document.write(`<br><h3>${jsFileURLs.size} URLS FOUND IN: <span style="font-weight:100;">[ <a href="${js_file}">${js_file}</a> ]</span></h3>`);
