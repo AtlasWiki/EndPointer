@@ -119,18 +119,6 @@ chrome.storage.local.get("urlParser", (urlParserState) => {
   }
 })
 
-chrome.storage.local.get(null, (data) => {
-  console.log(data);
-  const values = Object.values(data).length - 4;
-  console.log(`url count: ${values}`)
-  // let urlCount = -4
-  // for (let [key, value] of Object.entries(data)){
-  //   urlCount += value.length
-  // }
-  // console.log(urlCount);
-  console.log(JSON.stringify(data, null, 2));
-});
-
 chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
   console.log('Bytes in use:', bytesInUse);
 });
@@ -159,9 +147,18 @@ function parseURLs(){
                         const encodedURL = encodeURIComponent(js_file)
                         // console.log(Array.from(jsFileURLs))
                         // console.log("worked")
-                        chrome.storage.local.set({[encodedURL] : Array.from(jsFileURLs)}, () => {
-                          console.log("saved endpoints from external files")
-                        })
+
+                        chrome.storage.local.get("URLParser", (result) => {
+                          const urlParser = result.URLParser || {};  
+                          urlParser[encodedURL] = Array.from(jsFileURLs);
+                          chrome.storage.local.set({ URLParser: urlParser }, () => {
+                              console.log("Saved endpoints from external files");
+                          });
+                      });
+                      
+                        // chrome.storage.local.set({URLParser: {[encodedURL]: Array.from(jsFileURLs)}}, () => {
+                        //   console.log("saved endpoints from external files")
+                        // })
 
                         
                     })
@@ -183,12 +180,20 @@ function parseURLs(){
       parse_external_files()
       console.log(pageURLs)
       console.log("from current page ^")
-      chrome.storage.local.set({[currPage] : Array.from(pageURLs)}, () => {
+      chrome.storage.local.set({ currPage: Array.from(pageURLs) }, () => {
         console.log("saved endpoints from current page")
       })
       // chrome.storage.local.set({URLParser: {[currPage]: Array.from(pageURLs)}}, () => {
       //   console.log("saved endpoints from current page")
       // })
+
+      chrome.storage.local.get("URLParser", (result) => {
+        const urlParser = result.URLParser || {};  
+        urlParser[currPage] = Array.from(pageURLs);
+        chrome.storage.local.set({ URLParser: urlParser }, () => {
+            console.log("Saved endpoints from external files");
+        });
+    });
   }
 
   async function fetch_file(file) {

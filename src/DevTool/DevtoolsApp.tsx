@@ -13,11 +13,18 @@ function DevToolsApp() {
   const [fileCount, setFileCount] = useState(0)
 
   useEffect(() => {
-    chrome.storage.local.get(null, (data) => {
-      const urls = Object.values(data).length - 4
-      setURLCount(urls);
+    chrome.storage.local.get("URLParser", (data) => {
+      const urlParser = data.URLParser;
+      let totalCount = 0;
+      for (const encodedURL in urlParser) {
+        const endpoints = urlParser[encodedURL];
+        console.log(`Endpoints for ${decodeURIComponent(encodedURL)}:`, endpoints);
+        totalCount += endpoints.length;
+      }
+      setURLCount(totalCount);
     });
-  }, [])
+  }, []);
+  
 
   function clearCache(){
     chrome.storage.local.clear()
