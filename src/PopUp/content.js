@@ -120,7 +120,14 @@ chrome.storage.local.get("urlParser", (urlParserState) => {
 })
 
 chrome.storage.local.get(null, (data) => {
-  console.log(data); 
+  console.log(data);
+  const values = Object.values(data).length - 4;
+  console.log(`url count: ${values}`)
+  // let urlCount = -4
+  // for (let [key, value] of Object.entries(data)){
+  //   urlCount += value.length
+  // }
+  // console.log(urlCount);
   console.log(JSON.stringify(data, null, 2));
 });
 
@@ -132,7 +139,6 @@ function parseURLs(){
   let scope_input = prompt("list scopes in spaces.  Ex: example.com github.com OR use a null/blank value for all domains", parse_fqdn())
   let scopes = scope_input.split(' ')
   let scriptTags = document.getElementsByTagName('script');
-  let urlBuffer = ''; 
   const relRegex = /["'](\/[\w./\-_?=&]*)["']/g;
   const abRegex = /(["'])(https?:\/\/(?:www\.)?[\w.-]+(?::\d+)?(?:\/[\w.\/\-_?=&]*)?)\1/g;
   const fileRegex = /\.(pdf|docx?|xlsx?|pptx?|js|css|jpg|jpeg|png|gif|bmp|svg|mp3|mp4|avi|mov|txt|csv|json|xml|zip|rar|7z|exe|woff2?|otf)$/i;

@@ -17,6 +17,11 @@ function PopUpApp() {
       setFileDownloader(result.fileDownloader || false)
       setJSFileCounter(result.jsFileCounter || false)
       setJSFileCount(result.jsFileCount || 0)
+    //
+    chrome.storage.local.get(null, (data) => {
+      const urls = Object.values(data).length - 4
+      setURLCount(urls);
+    });
     })
 
     // Listen for updates to the JS file count

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './index.css'
 import './App.css'
 
@@ -12,6 +12,12 @@ function DevToolsApp() {
   const [apiKeyCount, setApiKeyCount] = useState(0)
   const [fileCount, setFileCount] = useState(0)
 
+  useEffect(() => {
+    chrome.storage.local.get(null, (data) => {
+      const urls = Object.values(data).length - 4
+      setURLCount(urls);
+    });
+  }, [])
   
   return (
     <div className="w-full md:h-screen m-0 flex flex-col px-5 mt-5">
