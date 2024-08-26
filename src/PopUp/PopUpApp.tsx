@@ -20,15 +20,15 @@ function PopUpApp() {
     })
 
     // Listen for updates to the JS file count
-    const listener = (message: { action: string; count: SetStateAction<number> }) => {
-      if (message.action === 'jsFileCountUpdated') {
-        setJSFileCount(message.count)
-      }
-    }
-    chrome.runtime.onMessage.addListener(listener)
+    // const listener = (message: { action: string; count: SetStateAction<number> }) => {
+    //   if (message.action === 'jsFileCountUpdated') {
+    //     setJSFileCount(message.count)
+    //   }
+    // }
+    // chrome.runtime.onMessage.addListener(listener)
 
-    // Cleanup listener on unmount
-    return () => chrome.runtime.onMessage.removeListener(listener)
+    // // Cleanup listener on unmount
+    // return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
 
   //manage the urlParser button state. 
@@ -40,7 +40,7 @@ function PopUpApp() {
     chrome.storage.local.set({ urlParser: newState }, () => {
       console.log('URL Parser state saved:', newState)
     })
-    chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
+    // chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
   }
 
 //manage the urlParser button state. 
@@ -50,7 +50,7 @@ function PopUpApp() {
     chrome.storage.local.set({ fileDownloader: newState }, () => {
       console.log('File Downloader state saved:', newState)
     })
-    chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
+    // chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
   }
 
   //manage the jsFileCounter button state. 
@@ -60,7 +60,7 @@ function PopUpApp() {
     chrome.storage.local.set({ jsFileCounter: newState }, () => {
       console.log('JS File Counter state saved:', newState)
     })
-    chrome.runtime.sendMessage({ action: 'jsFileCounterChanged', state: newState })
+    // chrome.runtime.sendMessage({ action: 'jsFileCounterChanged', state: newState })
   }
 
   
