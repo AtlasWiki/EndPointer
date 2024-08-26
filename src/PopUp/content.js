@@ -121,7 +121,11 @@ chrome.storage.local.get("urlParser", (urlParserState) => {
 
 chrome.storage.local.get(null, (data) => {
   console.log(data); 
-  console.log(JSON.stringify(data, null, 2)); 
+  console.log(JSON.stringify(data, null, 2));
+});
+
+chrome.storage.local.getBytesInUse(null, function(bytesInUse) {
+  console.log('Bytes in use:', bytesInUse);
 });
 
 function parseURLs(){
@@ -136,80 +140,28 @@ function parseURLs(){
   parse_curr_page()
   function parse_external_files(){
       for (let i = 0; i < scriptTags.length; i++) {
-      const js_file = scriptTags[i].src;
-      for (let scope of scopes){
-          let scope_pattern = `https?://${scope}`
-          if (js_file.search(scope_pattern) != -1){
-              fetch_file(js_file)
-                  .then(code => {
-                      const jsFileRelURLs = Array.from(code.matchAll(relRegex), match => match[1]);
-                      const jsFileAbURLs = Array.from(code.matchAll(abRegex), match => match[1]);
-                      // const urls = new Set([...jsFileRelUrls, ...jsFileAbUrls, ...abPageUrls, ...relPageUrls]);
-                      const jsFileURLs = new Set([...jsFileRelURLs, ...jsFileAbURLs]);
-                      let encodedURL = encodeURIComponent(js_file)
-                      document.write(``);
-                      
-                      // setTimeout( () => {
-                      //     let dynamicContent = document.documentElement.outerHTML;
-                      //     let blob = new Blob([dynamicContent], {type: 'text/html'});
-                      //     document.write(`<a href="${URL.createObjectURL(blob)}" download="${parse_fqdn()}.html">Download</a> <br>`)
-                      //     let aHidden = document.createElement('a');
-                      //     dynamicContent = document.documentElement.outerHTML;
-                      //     blob = new Blob([dynamicContent], {type: 'text/html'});
-                      //     aHidden.href=URL.createObjectURL(blob);
-                      //     aHidden.target="_blank";
-                      //     aHidden.click();
-                      // }, 1000)
-                      
-                      
-                      document.write(`<br><h3>${jsFileURLs.size} URLS FOUND IN: <span style="font-weight:100;">[ <a href="${js_file}">${js_file}</a> ]</span></h3>`);
-                      document.write(`<body><table id=${encodedURL} style="border: 1px solid black;width:70%;"></table></body>`)
-                      let table = document.getElementById(encodedURL)
-                      
-                      let endpointTh = document.createElement('th');
-                      endpointTh.textContent = "Endpoint";
-                      endpointTh.id = encodedURL + '/endpoint-th';
-                      endpointTh.style.border = "1px solid black";
-                      
-                      let mediaTypeTh = document.createElement('th');
-                      mediaTypeTh.textContent = "Extension";
-                      mediaTypeTh.id = encodedURL + '/media-type-th';
-                      mediaTypeTh.style.border = "1px solid black";
-                      
-                      let locationTh =  document.createElement('th');
-                      locationTh.textContent = "Location";
-                      locationTh.id = encodedURL + '/location-th';
-                      
-                      let HeadersRow = document.createElement('tr');
-                      HeadersRow.id = encodedURL + '/row1';
-                      HeadersRow.appendChild(endpointTh);
-                      HeadersRow.appendChild(mediaTypeTh);
+        const js_file = scriptTags[i].src;
+        for (let scope of scopes){
+            let scope_pattern = `https?://${scope}`
+            if (js_file.search(scope_pattern) != -1){
+                fetch_file(js_file)
+                    .then(code => {
+                        const jsFileRelURLs = Array.from(code.matchAll(relRegex), match => match[1]);
+                        const jsFileAbURLs = Array.from(code.matchAll(abRegex), match => match[1]);
+                        // const urls = new Set([...jsFileRelUrls, ...jsFileAbUrls, ...abPageUrls, ...relPageUrls]);
+                        const jsFileURLs = new Set([...jsFileRelURLs, ...jsFileAbURLs]);
+                        const encodedURL = encodeURIComponent(js_file)
+                        // console.log(Array.from(jsFileURLs))
+                        // console.log("worked")
+                        chrome.storage.local.set({[encodedURL] : Array.from(jsFileURLs)}, () => {
+                          console.log("saved endpoints from external files")
+                        })
 
-                      table.appendChild(HeadersRow);
-
-                      jsFileURLs.forEach((url) => {
-                          urlBuffer += url;
-                          let dataRow = document.createElement('tr');
-                          
-                          let urlData = document.createElement('td')
-                          urlData.textContent = url
-                          urlData.style.border = "1px solid black";
-                          
-                          let mediaTypeData = document.createElement('td');
-                          mediaTypeData.textContent = url.match(fileRegex);
-                          mediaTypeData.style.border = "1px solid black";
-                                          
-                          dataRow.appendChild(urlData)
-                          dataRow.appendChild(mediaTypeData)
-                          table.appendChild(dataRow);
                         
-                      });
-                      document.write('<br>')
-                      
-                  })
-                  .catch(error => {
-                      console.error('Error fetching script:', error);
-                  });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching script:', error);
+                    });
           }
       }
     }
@@ -221,50 +173,14 @@ function parseURLs(){
       const abPageURLs = Array.from(pageContent.matchAll(abRegex), match => match[1]);
       const relPageURLs = Array.from(pageContent.matchAll(relRegex), match => match[1]);
       const pageURLs = new Set([...abPageURLs, ...relPageURLs])
+      const currPage = encodeURIComponent(document.location.href)
       parse_external_files()
-      document.write(`<br><h3>${pageURLs.size} URLS FOUND IN: <span style="font-weight:100;">[ <a href="${document.location}">${document.location}</a> ]  [Inline/Main Page]</span></h3>`);
-      document.write(`<table id="mainpage" style="border: 1px solid black;width:70%;"></table>`)
-      
-      let table = document.getElementById("mainpage")
-      let endpointTh = document.createElement('th');
-      endpointTh.textContent = "Endpoint";
-      endpointTh.id = "mainpage" + '/endpoint-th';
-      endpointTh.style.border = "1px solid black";
-      
-      let mediaTypeTh = document.createElement('th');
-      mediaTypeTh.textContent = "Extension";
-      mediaTypeTh.id = "mainpage" + '/media-type-th';
-      mediaTypeTh.style.border = "1px solid black";
-      
-      let locationTh =  document.createElement('th');
-      locationTh.textContent = "Location";
-      locationTh.id = "mainpage" + '/location-th';
-      
-      let HeadersRow = document.createElement('tr');
-      HeadersRow.id = "mainpage" + '/row1';
-      HeadersRow.appendChild(endpointTh);
-      HeadersRow.appendChild(mediaTypeTh);
 
-      table.appendChild(HeadersRow);
-
-      pageURLs.forEach((url) => {
-          console.log(url)
-          urlBuffer += url;
-          let dataRow = document.createElement('tr');
-          
-          let urlData = document.createElement('td')
-          urlData.textContent = url
-          urlData.style.border = "1px solid black";
-          
-          let mediaTypeData = document.createElement('td');
-          mediaTypeData.textContent = url.match(fileRegex);
-          mediaTypeData.style.border = "1px solid black";
-                          
-          dataRow.appendChild(urlData)
-          dataRow.appendChild(mediaTypeData)
-          table.appendChild(dataRow);
-      });
-      document.write('<br>')
+      console.log(pageURLs)
+      console.log("from current page ^")
+      chrome.storage.local.set({[currPage] : Array.from(pageURLs)}, () => {
+        console.log("saved endpoints from current page")
+      })
   }
 
   async function fetch_file(file) {
