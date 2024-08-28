@@ -67,15 +67,16 @@ function PopUpApp() {
       <div className="flex flex-col justify-left gap-10 mx-0">
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">URL Parser</h2>
-          <div className="text-md flex gap-2">
+          {/* <div className="text-md grid grid-cols-3 gap-2"> */}
+          <div className="text-md flex items-center justify-content gap-2">
             <button onClick={toggleParser}>
               {displayState(parserState.enabled)}
             </button>
             <span className="font-semibold text-blue-500">
-              <span className="text-violet-500">URLs</span> ({urlCount})
+              <span className="a-item text-violet-500">URLs <span className="text-blue-500">({urlCount})</span></span> 
             </span>
             <span className="font-semibold text-blue-500">
-              <span className="text-violet-500">JS Files</span> ({jsFileCount})
+              <span className="a-item text-violet-500">JS Files <span className="text-blue-500">({jsFileCount})</span></span> 
             </span>
           </div>
           {parserState.lastParsed && (

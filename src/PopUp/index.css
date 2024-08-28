@@ -45,6 +45,7 @@ button, .a-item {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover, a:hover {
   border-color: #495057;
 }
