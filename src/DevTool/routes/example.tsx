@@ -83,7 +83,7 @@ function URLProps({ endpoint }: { endpoint: Endpoint }) {
   return (
     <tr>
       <td>{endpoint.url}</td>
-      <td>{endpoint.foundAt}</td>
+      <td>{endpoint.webpage}</td>
       <td>test</td>
       <td><a href="#" target="_blank">View here</a></td>
     </tr>
@@ -118,8 +118,8 @@ export function Example() {
           // Map combinedEndpoints to the URLProps component
           allEndpoints = combinedEndpoints.map((endpoint): Endpoint => ({
             url: endpoint,
-            foundAt: decodeURIComponent(key),
-            webpage: JSON.stringify(currURLExtJSFiles),
+            foundAt: JSON.stringify(currURLExtJSFiles),
+            webpage: decodeURIComponent(key),
           }));
         }
       });
