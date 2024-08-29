@@ -1,5 +1,5 @@
 import { REL_REGEX, ABS_REGEX } from '../sharedTypes/regex_constants';
-import { getURLParserState, setURLParserState } from '../sharedTypes/storage';
+import { getURLParserState, setURLParserState } from './storage';
 import { ParsedUrlRecords, ParsedData } from '../sharedTypes/types';
 
 const fetchFile = async (file: string): Promise<string> => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
-import { getURLParserState, clearURLParserData } from '../components/sharedTypes/storage'
+import { getURLParserState, clearURLParserData } from '../components/content/storage'
 import { ParsedUrlRecords } from '../components/sharedTypes/types'
 import { URLList } from '../components/UI/urlList'
 import './index.css'

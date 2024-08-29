@@ -61,7 +61,13 @@ export default defineConfig({
       },
       output: {
         entryFileNames: '[name].js',
+        format: 'es',
         chunkFileNames: 'assets/[name].[hash].js',
+        manualChunks: (id) => {
+          if (id.includes('content-main.ts') || id.includes('/content/')) {
+            return 'content';
+          }
+        },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'background.js' || assetInfo.name === 'content.js') {
             return '[name][extname]';
@@ -75,7 +81,7 @@ export default defineConfig({
         },
       },
     },
-    target: ['chrome89', 'firefox89'],
+    target: ['chrome91', 'firefox91', 'esnext'],
     minify: true,
   },
   resolve: {

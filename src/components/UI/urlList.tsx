@@ -1,6 +1,6 @@
 // src/popup/components/URLList.tsx
 import React, { useEffect, useState } from 'react';
-import { getURLParserState } from '../sharedTypes/storage';
+import { getURLParserState } from '../content/storage';
 import { ParsedUrlRecords } from '../sharedTypes/types';
 
 interface URLListProps {

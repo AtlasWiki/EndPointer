@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getParserEnabledState, setParserEnabledState, getURLParserState } from '../components/sharedTypes/storage'
+import { getParserEnabledState, setParserEnabledState, getURLParserState } from '../components/content/storage'
 import { URLParserState } from '../components/sharedTypes/types'
 import './App.css'
 

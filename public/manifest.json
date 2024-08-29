@@ -19,13 +19,14 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/content.js"]
+      "js": ["content/content.js"],
+      "type": "module"
     }
   ],
   "devtools_page": "DevTool/devtool.html",
   "web_accessible_resources": [
     {
-      "resources": ["background/background.js"],
+      "resources": ["background/background.js", ""],
       "matches": ["<all_urls>"]
     }
   ],

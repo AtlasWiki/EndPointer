@@ -1,4 +1,4 @@
-import { ParsedUrlRecords, URLParserState } from './types';
+import { ParsedUrlRecords, URLParserState } from '../sharedTypes/types';
 
 const URL_PARSER_KEY = 'URL-PARSER';
 const URL_PARSER_STATE_KEY = 'URL-PARSER-STATE';
