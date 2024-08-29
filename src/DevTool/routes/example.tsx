@@ -96,9 +96,10 @@ export function Example() {
   const [jsFile, setJSFile] = useState<string>("");
 
   useEffect(() => {
+    let allEndpoints: Endpoint[] = [];
     chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
       const urlParser = data["URL-PARSER"];
-      let allEndpoints: Endpoint[] = [];
+      
 
       Object.keys(urlParser).forEach((key) => {
         if (key !== "current") {
