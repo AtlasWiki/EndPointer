@@ -1,7 +1,7 @@
 import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import DevToolsApp from './DevtoolsApp'
-import Example from './routes/example'
+import { Example } from './routes/example'
 import {
   HashRouter as Router,
   Route,
