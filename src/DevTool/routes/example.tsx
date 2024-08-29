@@ -85,7 +85,7 @@ function URLProps({ endpoint }: { endpoint: Endpoint }) {
       <td>{endpoint.url}</td>
       <td>{endpoint.webpage}</td>
       <td>test</td>
-      <td><a href="#" target="_blank">View here</a></td>
+      {/* <td><a href="#" target="_blank">View here</a></td> */}
     </tr>
   );
 }
@@ -140,7 +140,7 @@ export function Example() {
                 <th className="border-b-2 pb-10">ENDPOINT</th>
                 <th className="border-b-2 pb-10">LOCATION</th>
                 <th className="border-b-2 pb-10">LINKED</th>
-                <th className="border-b-2 pb-10">CODE</th>
+                {/* <th className="border-b-2 pb-10">CODE</th> */}
               </tr>
             </thead>
             <tbody>
