@@ -16,6 +16,13 @@ interface URLParser {
   [key: string]: URLEntry;
 }
 
+type Location = string;
+
+type LocationPropsType = {
+  url: string;
+  onClick: () => void;
+};
+
 function URLProps({ endpoint }: { endpoint: Endpoint }) {
   return (
     <tr>
@@ -26,11 +33,26 @@ function URLProps({ endpoint }: { endpoint: Endpoint }) {
   );
 }
 
+function LocationItem({ url, onClick }: LocationPropsType) {
+  return (
+    <div
+      onClick={onClick}
+      className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
+    >
+      {url}
+    </div>
+  );
+}
+
 export function Example() {
   const [urls, setURLs] = useState<Endpoint[]>([]);
+  const [jsFiles, setJSFiles] = useState<Location[]>([]);
+  const [selected, setSelected] = useState<string>('Select a location');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     let allEndpoints: Endpoint[] = [];
+    let locations: Location[] = [];
     chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
       const urlParser = data["URL-PARSER"];
 
@@ -48,6 +70,7 @@ export function Example() {
 
           // Add externalJSFiles endpoints, found at the specific JS file
           Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
+            locations.push(decodeURIComponent(jsFile));
             allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
               url: endpoint,
               foundAt: decodeURIComponent(jsFile), // Found at the specific JS file
@@ -56,19 +79,22 @@ export function Example() {
           });
         }
       });
-      console.log(allEndpoints)
       setURLs(allEndpoints);
+      setJSFiles(locations);
     });
   }, []);
+
+  const handleSelect = (url: string) => {
+    setSelected(url);
+    setIsOpen(false);
+  };
 
   return (
     <div className="w-full min-h-screen">
       <NavBar />
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
-           
-          <div className="w-full max-h-[800px] overflow-scroll">
-             {/* ^ max-h-[800px] */}
+          <div className="w-full max-h-[760px] overflow-scroll">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="text-5xl">
@@ -78,28 +104,49 @@ export function Example() {
                 </tr>
               </thead>
               <tbody>
+               
                 <tr>
-                    <td>
-                        <div className="w-full"> 
-                            <input type="text" className="mt-5 px-2 border-2 bg-transparent text-lg w-full pb-3 pt-3 rounded-md" />
+
+                  <td>
+                    <div className="mt-5 w-full">
+                    <input
+                        type="text"
+                        className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
+                                    cursor-pointer hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                        />
+                    </div>
+                  </td>
+
+                  <td className="">
+                    <div className="relative w-full max-w-lg mt-5">
+                      <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                      >
+                        {selected}
+                      </button>
+                      {isOpen && (
+                        <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                          <div
+                            onClick={() => handleSelect('Select a location')}
+                            className="p-2 cursor-pointer bg-gray-700 text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-800"
+                          >
+                            Select a location
+                          </div>
+                          {jsFiles.map((url, index) => (
+                            <LocationItem
+                              key={index}
+                              url={url}
+                              onClick={() => handleSelect(url)}
+                            />
+                          ))}
                         </div>
-                    </td>
-                    <td>
-                        <div className="w-full"> 
-                            <select className="mt-5 px-2 border-2 bg-transparent text-lg w-full pb-3 pt-3 rounded-md">
-                            <option className="bg-gray-500 border-2" value="all">ALL</option>
-                            <option className="bg-gray-500 border-2" value={document.location.href}>{document.location.href}</option>
-                            <option className="bg-gray-500 border-2" value={document.location.href}>{document.location.href}</option>
-                            <option className="bg-gray-500 border-2" value={document.location.pathname}>{document.location.pathname}</option>
-                            </select>
-                        </div>
-                    </td>
+                      )}
+                    </div>
+                  </td>
                 </tr>
                 {urls.map((endpoint, index) => (
-                  <URLProps 
-                    key={index} 
-                    endpoint={endpoint} 
-                  />
+                  <URLProps key={index} endpoint={endpoint} />
                 ))}
               </tbody>
             </table>
