@@ -66,7 +66,7 @@ export function Example() {
       <NavBar />
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
-          <div className="overflow-x-auto">
+          <div className="w-full">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="text-5xl">
