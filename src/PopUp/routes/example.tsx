@@ -108,11 +108,11 @@ export function Example() {
             </table>
           </div>
           <div className="text-lg flex items-center space-x-4 px-5">
-            <a href={document.location.href} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
-            <button className="bg-gray-800 p-3 rounded-md">Download as TXT</button>
-            <button className="bg-gray-800 p-3 rounded-md">Download as JSON</button>
-            <button className="bg-gray-800 p-3 rounded-md">Copy as absolute URLs</button>
-            <button className="bg-gray-800 p-3 rounded-md">Copy All</button>
+            <a href={document.location.origin + "/PopUp/popup.html#example"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
+            <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
+            <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
+            <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
+            <button className="bg-gray-600 p-3 rounded-md">Copy All</button>
           </div>
         </div>
       </div>
