@@ -56,7 +56,7 @@ export function Example() {
           });
         }
       });
-
+      console.log(allEndpoints)
       setURLs(allEndpoints);
     });
   }, []);
@@ -66,7 +66,9 @@ export function Example() {
       <NavBar />
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
-          <div className="w-full">
+           
+          <div className="w-full max-h-[760px] overflow-scroll">
+             {/* ^ max-h-[800px] */}
             <table className="w-full border-collapse">
               <thead>
                 <tr className="text-5xl">
