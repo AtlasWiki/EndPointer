@@ -20,7 +20,7 @@ function URLProps({ endpoint }: { endpoint: Endpoint }) {
   return (
     <tr>
       <td className="break-words max-w-lg">{endpoint.url}</td>
-      <td className="break-words max-w-lg">{endpoint.webpage}</td>
+      <td className="break-words max-w-lg">{endpoint.foundAt}</td>
       <td className="break-words max-w-lg">{endpoint.webpage}</td>
     </tr>
   );
@@ -28,8 +28,6 @@ function URLProps({ endpoint }: { endpoint: Endpoint }) {
 
 export function Example() {
   const [urls, setURLs] = useState<Endpoint[]>([]);
-  const [webpage, setWebpage] = useState<string>("");
-  const [jsFile, setJSFile] = useState<string>("");
 
   useEffect(() => {
     let allEndpoints: Endpoint[] = [];
@@ -38,23 +36,24 @@ export function Example() {
 
       Object.keys(urlParser).forEach((key) => {
         if (key !== "current") {
-          setWebpage(key);
           const currURLEndpoints = urlParser[key].currPage;
           const currURLExtJSFiles = urlParser[key].externalJSFiles;
 
-          setJSFile(JSON.stringify(Object.keys(currURLExtJSFiles)));
-
-          const endpointsInExtJSFiles = Object.values(currURLExtJSFiles).flat();
-          const combinedEndpoints = [
-            ...currURLEndpoints,
-            ...endpointsInExtJSFiles
-          ];
-
-          allEndpoints = combinedEndpoints.map((endpoint): Endpoint => ({
+          // Add currPage endpoints, found at the webpage (key)
+          allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
             url: endpoint,
-            foundAt: JSON.stringify(currURLExtJSFiles),
+            foundAt: decodeURIComponent(key), // Found at the main webpage
             webpage: decodeURIComponent(key),
-          }));
+          })));
+
+          // Add externalJSFiles endpoints, found at the specific JS file
+          Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
+            allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+              url: endpoint,
+              foundAt: decodeURIComponent(jsFile), // Found at the specific JS file
+              webpage: decodeURIComponent(key),
+            })));
+          });
         }
       });
 
@@ -76,14 +75,12 @@ export function Example() {
                   <th className="border-b-2 pb-10">ROOT</th>
                 </tr>
               </thead>
-              <div className="py-2"></div>
               <tbody>
-                <tr className="">
+                <tr>
                     <td>
                         <div className="w-full"> 
                             <input type="text" className="mt-5 px-2 border-2 bg-transparent text-lg w-full pb-3 pt-3 rounded-md" />
                         </div>
-                        
                     </td>
                     <td>
                         <div className="w-full"> 
@@ -95,9 +92,7 @@ export function Example() {
                             </select>
                         </div>
                     </td>
-                    
                 </tr>
-                <div className="py-5"></div>
                 {urls.map((endpoint, index) => (
                   <URLProps 
                     key={index} 
