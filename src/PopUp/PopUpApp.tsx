@@ -106,8 +106,8 @@ function PopUpApp() {
   }
 
   return (
-    <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
-      <div className="mt-5 mb-10">
+    <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center py-5">
+      <div className="mt-5 mb-10 text-center">
         <h1 className="text-3xl md:text-6xl mb-1">JS Toolkit</h1>
         <p className="text-gray-400/60 md:text-lg">A JS Toolkit with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
       </div>
