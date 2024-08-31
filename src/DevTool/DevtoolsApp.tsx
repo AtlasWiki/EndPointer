@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './index.css'
 import './App.css'
 
@@ -12,9 +12,54 @@ function DevToolsApp() {
   const [apiKeyCount, setApiKeyCount] = useState(0)
   const [fileCount, setFileCount] = useState(0)
 
+  useEffect(() => {
+    chrome.storage.local.get("URL-PARSER", (data) => {
+      const urlParser = data["URL-PARSER"];
+      let totalURLCount = 0;
+  
+      // Iterate through each key in URL-PARSER
+      Object.keys(urlParser).forEach((key) => {
+        if (key !== "current") {
+          const currURLEndpoints = urlParser[key]["currPage"];
+          const currURLExtJSFiles = urlParser[key]["externalJSFiles"];
+  
+          // Calculate the number of URLs in currPage and externalJSFiles
+          const totalEndpointsInCurrPage = currURLEndpoints.length;
+          const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
+            .flat().length;
+  
+          // Accumulate the total URL count
+          totalURLCount += totalEndpointsInCurrPage + totalEndpointsInExtJSFiles;
+        }
+      });
+  
+      // Set the total URL count
+      setURLCount(totalURLCount);
+    });
+  }, []);
+
+  // interface URLPropsType {
+  //   url: string;
+  //   foundAt: string;
+  //   webpage: string;
+  // }
+
+ 
+
+  function clearCache(){
+    chrome.storage.local.clear()
+  }
   
   return (
     <div className="w-full md:h-screen m-0 flex flex-col px-5 mt-5">
+      <div className="flex gap-1">
+        <button onClick={() => location.reload()}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
+        </button>
+        <button onClick={() => {clearCache();alert("cache cleared");location.reload()}}>
+          Clear Cache
+        </button>
+      </div>
       <div className="mt-10 mb-10 w-full">
         <h1 className="text-3xl md:text-6xl mb-3">JS-Toolkit Dashboard</h1>
         <p className="text-gray-400/60 md:text-lg mb-3">A JS-Parsing Toolkit with many flexible features by mrunoriginal/AtlasWiki and LordCat</p>

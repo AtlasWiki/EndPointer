@@ -1,7 +1,7 @@
 import { NavBar } from '../../components/navbar';
 import { useEffect, useState } from "react";
 
-export function URLS() {
+export function URLs() {
   interface Endpoint {
     url: string;
     foundAt: string;

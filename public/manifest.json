@@ -14,15 +14,21 @@
     "default_title": "JS Toolkit for Hackers"
   },
   "background": {
-    "service_worker": "PopUp/background.js"
+    "service_worker": ["PopUp/background.js"]
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["PopUp/content.js"]
+      "js": ["Content/content.js"]
     }
   ],
   "devtools_page": "DevTool/DevTool.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["DevTool/background.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }

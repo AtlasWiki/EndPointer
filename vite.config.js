@@ -40,6 +40,7 @@ export default defineConfig({
           if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
             manifest.content_scripts[0].js = ['PopUp/content.js'];
           }
+
           if (manifest.devtools_page) {
             manifest.devtools_page = 'DevTool/DevTool.html';
           }
@@ -64,7 +65,7 @@ export default defineConfig({
           acc[`${feature}/DevtoolRouter`] = resolve(__dirname, `src/${feature}/DevtoolRouter.tsx`);
         }
         acc[`${feature}/background`] = resolve(__dirname, `src/${feature}/background.ts`);
-        acc[`${feature}/content`] = resolve(__dirname, `src/${feature}/content.ts`);
+        acc[`PopUp/content`] = resolve(__dirname, `src/PopUp/content.js`);
         return acc;
       }, {}),
       output: {
@@ -85,7 +86,7 @@ export default defineConfig({
       },
     },
     target: ['chrome89', 'firefox89'],
-    minify: false,
+    minify: true,
   },
   resolve: {
     alias: {

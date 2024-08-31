@@ -11,7 +11,15 @@ function PopUpApp() {
   const [jsFileCounter, setJSFileCounter] = useState(false)
   
   useEffect(() => {
-    // Retrieve the state from localStorage
+    // let currTab = ""
+    // chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+    //   if (tab && tab.url) {
+    //     currTab = tab.url
+    //   } else {
+    //     console.error("Unable to get current tab URL");
+    //   }
+    // });
+
     chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
       setURLParser(result.urlParser || false)
       setFileDownloader(result.fileDownloader || false)
@@ -19,16 +27,34 @@ function PopUpApp() {
       setJSFileCount(result.jsFileCount || 0)
     })
 
-    // Listen for updates to the JS file count
-    const listener = (message: { action: string; count: SetStateAction<number> }) => {
-      if (message.action === 'jsFileCountUpdated') {
-        setJSFileCount(message.count)
-      }
-    }
-    chrome.runtime.onMessage.addListener(listener)
+   
+      chrome.storage.local.get("URL-PARSER", (data) => {
+        const urlParser = data["URL-PARSER"];
+        const currURL = urlParser["current"];
+        const currURLEndpoints = urlParser[currURL]["currPage"];
+        const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
+        // Calculate the total number of URLs in currPage and externalJSFiles
+        const totalEndpointsInCurrPage = currURLEndpoints.length;
+        const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
+          .flat().length;
+    
+        // Set the total URL count (from currPage and externalJSFiles)
+        setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+      });
 
-    // Cleanup listener on unmount
-    return () => chrome.runtime.onMessage.removeListener(listener)
+    
+    
+
+    // Listen for updates to the JS file count
+    // const listener = (message: { action: string; count: SetStateAction<number> }) => {
+    //   if (message.action === 'jsFileCountUpdated') {
+    //     setJSFileCount(message.count)
+    //   }
+    // }
+    // chrome.runtime.onMessage.addListener(listener)
+
+    // // Cleanup listener on unmount
+    // return () => chrome.runtime.onMessage.removeListener(listener)
   }, [])
 
   //manage the urlParser button state. 
@@ -40,7 +66,7 @@ function PopUpApp() {
     chrome.storage.local.set({ urlParser: newState }, () => {
       console.log('URL Parser state saved:', newState)
     })
-    chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
+    // chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
   }
 
 //manage the urlParser button state. 
@@ -50,7 +76,7 @@ function PopUpApp() {
     chrome.storage.local.set({ fileDownloader: newState }, () => {
       console.log('File Downloader state saved:', newState)
     })
-    chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
+    // chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
   }
 
   //manage the jsFileCounter button state. 
@@ -60,7 +86,7 @@ function PopUpApp() {
     chrome.storage.local.set({ jsFileCounter: newState }, () => {
       console.log('JS File Counter state saved:', newState)
     })
-    chrome.runtime.sendMessage({ action: 'jsFileCounterChanged', state: newState })
+    // chrome.runtime.sendMessage({ action: 'jsFileCounterChanged', state: newState })
   }
 
   
@@ -80,8 +106,8 @@ function PopUpApp() {
   }
 
   return (
-    <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center">
-      <div className="mt-5 mb-10">
+    <div className="w-full md:h-screen m-0 flex flex-col items-center md:justify-center py-5">
+      <div className="mt-5 mb-10 text-center">
         <h1 className="text-3xl md:text-6xl mb-1">JS Toolkit</h1>
         <p className="text-gray-400/60 md:text-lg">A JS Toolkit with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
       </div>
