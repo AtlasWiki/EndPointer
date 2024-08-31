@@ -118,6 +118,12 @@ export function URLS() {
       return matchesLocation && matchesQuery;
     });
 
+  function clearURLs(){
+     chrome.storage.local.remove('URL-PARSER', function() {
+         console.log('Key has been removed.');
+     });
+     window.location.reload()
+    }
   return (
     <div className="w-full min-h-screen">
       <NavBar />
@@ -177,7 +183,7 @@ export function URLS() {
           </div>
           <div className="text-lg flex items-center space-x-4 px-5">
             <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
-            <button className="bg-gray-600 p-3 rounded-md">Clear URLs</button>
+            <button className="bg-gray-600 p-3 rounded-md" onClick={clearURLs}>Clear URLs</button>
             <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
             <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
             <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
