@@ -2,8 +2,6 @@ const relRegex = /["'](\/[\w./\-_?=&]*)["']/g;
 const abRegex = /(https?:\/\/[^\s'"){}(]+)/g;
 
 function parseURLs() {
-  alert("Parsing URLs...");
-
   parse_curr_page();
 
   function parse_external_files() {
