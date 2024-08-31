@@ -127,7 +127,7 @@ export function URLs() {
     <div className="w-full min-h-screen">
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
-          <div className="w-full max-h-[760px] overflow-scroll">
+          <div className="w-full max-h-[760px] overflow-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="text-5xl">
