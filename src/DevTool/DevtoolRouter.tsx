@@ -1,7 +1,6 @@
 import React, { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import DevToolsApp from './DevtoolsApp'
-import { Example } from './routes/example'
 import {
   HashRouter as Router,
   Route,
@@ -54,7 +53,6 @@ function renderApp() {
         <Router>
           <Routes>
             <Route path="/" element={<DevToolsApp />} />
-            <Route path="/example" element={<Example />} />
             <Route path="/urls" element={<URLS />} />
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/creds" element={<Creds />} />
