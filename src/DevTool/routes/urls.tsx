@@ -41,6 +41,7 @@ export function URLS() {
         </td>
         <td className="break-words max-w-lg">{endpoint.foundAt}</td>
         <td className="break-words max-w-lg">{endpoint.webpage}</td>
+        <td className="break-words max-w-lg">This here is an endpont that is potentially vulnerable to broken logic. As an unauthenticated user can make a request here</td>
       </tr>
     );
   }
