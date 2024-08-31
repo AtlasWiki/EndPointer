@@ -1,79 +1,168 @@
 import { NavBar } from '../../components/navbar';
-import "../App.css";
-import "../index.css";
+import { useEffect, useState } from "react";
 
 export function URLS() {
+
+    interface Endpoint {
+        url: string;
+        foundAt: string;
+        webpage: string;
+      }
+      
+      interface URLEntry {
+        currPage: string[];
+        externalJSFiles: { [key: string]: string[] };
+      }
+      
+      interface URLParser {
+        [key: string]: URLEntry;
+      }
+      
+      type Location = string;
+      
+      type LocationPropsType = {
+        url: string;
+        onClick: () => void;
+      };
+      
+      function URLProps({ endpoint }: { endpoint: Endpoint }) {
+        return (
+          <tr>
+            <td className="break-words max-w-lg">{endpoint.url}</td>
+            <td className="break-words max-w-lg">{endpoint.foundAt}</td>
+            <td className="break-words max-w-lg">{endpoint.webpage}</td>
+          </tr>
+        );
+      }
+      
+      function LocationItem({ url, onClick }: LocationPropsType) {
+        return (
+          <div
+            onClick={onClick}
+            className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
+          >
+            {url}
+          </div>
+        );
+      }
+
+      const [urls, setURLs] = useState<Endpoint[]>([]);
+      const [jsFiles, setJSFiles] = useState<Location[]>([]);
+      const [selected, setSelected] = useState<string>('All');
+      const [isOpen, setIsOpen] = useState<boolean>(false);
+    
+      useEffect(() => {
+        let allEndpoints: Endpoint[] = [];
+        let locations: Location[] = [];
+        chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
+          const urlParser = data["URL-PARSER"];
+    
+          Object.keys(urlParser).forEach((key) => {
+            if (key !== "current") {
+              const currURLEndpoints = urlParser[key].currPage;
+              const currURLExtJSFiles = urlParser[key].externalJSFiles;
+              locations.push(decodeURIComponent(key))
+              // Add currPage endpoints, found at the webpage (key)
+              allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
+                url: endpoint,
+                foundAt: decodeURIComponent(key), // Found at the main webpage
+                webpage: decodeURIComponent(key),
+              })));
+    
+              // Add externalJSFiles endpoints, found at the specific JS file
+              Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
+                const decodedJsFile = decodeURIComponent(jsFile);
+                if (!locations.includes(decodedJsFile)) {
+                  locations.push(decodedJsFile);
+                }
+                allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+                  url: endpoint,
+                  foundAt: decodedJsFile, // Found at the specific JS file
+                  webpage: decodeURIComponent(key),
+                })));
+              });
+            }
+          });
+    
+          // Ensure "All" is included only once and other locations are unique
+          const uniqueLocations = Array.from(new Set(['All', ...locations]));
+          setURLs(allEndpoints);
+          setJSFiles(uniqueLocations); 
+        });
+      }, []);
+    
+      const handleSelect = (url: string) => {
+        setSelected(url);
+        setIsOpen(false);
+      };
+    
+      const filteredURLs = selected === 'All'
+        ? urls
+        : urls.filter(endpoint => endpoint.foundAt === selected);
+
     return (
-        <div className="w-full min-h-screen">
-            <NavBar />
-            <div className="mt-5 flex flex-col w-full gap-5">
-                <div className="py-1 w-full flex flex-col gap-10">
-                    <table className="w-full mb-5 border-collapse">
-                        <thead>
-                            <tr className="text-3xl">
-                                <th className="border-b-2 pb-10">ENDPOINT</th>
-                                <th className="border-b-2 pb-10">LOCATION</th>
-                                <th className="border-b-2 pb-10">LINKED</th>
-                                <th className="border-b-2 pb-10">CODE</th>
-                            </tr>
-                        </thead>
-                        <div className="mt-20"></div>
-                        <tbody>
-                            <tr>
-                              <td>
-                                   <div className="w-full mb-5 px-5"> 
-                                        {/* <h1 className="text-2xl">Location:</h1> */}
-                                       <input type="text" className="mt-5 p-1 bg-gray-500/80 text-lg w-full" />
-                                   </div>
-                              </td>
-                              <td>
-                                   <div className="w-full mb-5 px-5"> 
-                                        {/* <h1 className="text-2xl">Location:</h1> */}
-                                        <select className="mt-5 p-1 bg-gray-500/80 text-lg w-full">
-                                             <option value="all">ALL</option>
-                                             <option value={document.location.href}>{document.location.href}</option>
-                                             <option value={document.location.href}>{document.location.href}</option>
-                                             <option value={document.location.pathname}>{document.location.pathname}</option>
-                                        </select>
-                                   </div>
-                              </td>
-                            
-                            </tr>
-                            <tr>
-                                <td>/admin</td>
-                                <td>{window.location.href}</td>
-                                <td>{window.location.host + window.location.pathname}</td>
-                                <td><a href="#" target="_blank">View here</a></td>
-                            </tr>
-                            <tr>
-                                <td>/admin</td>
-                                <td>{window.location.href}</td>
-                                <td>{window.location.host + window.location.pathname}</td>
-                                <td><a href="#" target="_blank">View here</a></td>
-                            </tr>
-                            <tr>
-                                <td>/admin</td>
-                                <td>{window.location.href}</td>
-                                <td>{window.location.host + window.location.pathname}</td>
-                                <td><a href="#" target="_blank">View here</a></td>
-                            </tr>
-                            <tr>
-                                <td>/admin</td>
-                                <td>{window.location.href}</td>
-                                <td>{window.location.host + window.location.pathname}</td>
-                                <td><a href="#" target="_blank">View here</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div className="text-lg flex items-center space-x-4 px-5">
-                        <a href={document.location.origin + "/PopUp/popup.html#example"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
-                        <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
-                        <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
-                        <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
-                        <button className="bg-gray-600 p-3 rounded-md">Copy All</button>
+    <div className="w-full min-h-screen">
+      <NavBar />
+      <div className="mt-5 flex">
+        <div className="py-1 w-full flex flex-col gap-10">
+          <div className="w-full max-h-[760px] overflow-scroll">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="text-5xl">
+                  <th className="border-b-2 pb-10">ENDPOINT</th>
+                  <th className="border-b-2 pb-10">LOCATION</th>
+                  <th className="border-b-2 pb-10">ROOT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div className="mt-5 w-full">
+                      <input
+                        type="text"
+                        className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
+                          cursor-pointer hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                      />
                     </div>
-                </div>
-            </div>
+                  </td>
+
+                  <td>
+                    <div className="relative w-full max-w-lg mt-5">
+                      <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                      >
+                        {selected}
+                      </button>
+                      {isOpen && (
+                        <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                          {jsFiles.map((url, index) => (
+                            <LocationItem
+                              key={index}
+                              url={url}
+                              onClick={() => handleSelect(url)}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+                {filteredURLs.map((endpoint, index) => (
+                  <URLProps key={index} endpoint={endpoint} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="text-lg flex items-center space-x-4 px-5">
+            <a href={document.location.origin + "/PopUp/popup.html#example"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
+            <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
+            <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
+            <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
+            <button className="bg-gray-600 p-3 rounded-md">Copy All</button>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

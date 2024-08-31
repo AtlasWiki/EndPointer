@@ -1,50 +1,51 @@
 import { NavBar } from '../../components/navbar';
 import { useEffect, useState } from "react";
 
-interface Endpoint {
-  url: string;
-  foundAt: string;
-  webpage: string;
-}
-
-interface URLEntry {
-  currPage: string[];
-  externalJSFiles: { [key: string]: string[] };
-}
-
-interface URLParser {
-  [key: string]: URLEntry;
-}
-
-type Location = string;
-
-type LocationPropsType = {
-  url: string;
-  onClick: () => void;
-};
-
-function URLProps({ endpoint }: { endpoint: Endpoint }) {
-  return (
-    <tr>
-      <td className="break-words max-w-lg">{endpoint.url}</td>
-      <td className="break-words max-w-lg">{endpoint.foundAt}</td>
-      <td className="break-words max-w-lg">{endpoint.webpage}</td>
-    </tr>
-  );
-}
-
-function LocationItem({ url, onClick }: LocationPropsType) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
-    >
-      {url}
-    </div>
-  );
-}
-
 export function Example() {
+  
+  interface Endpoint {
+    url: string;
+    foundAt: string;
+    webpage: string;
+  }
+  
+  interface URLEntry {
+    currPage: string[];
+    externalJSFiles: { [key: string]: string[] };
+  }
+  
+  interface URLParser {
+    [key: string]: URLEntry;
+  }
+  
+  type Location = string;
+  
+  type LocationPropsType = {
+    url: string;
+    onClick: () => void;
+  };
+  
+  function URLProps({ endpoint }: { endpoint: Endpoint }) {
+    return (
+      <tr>
+        <td className="break-words max-w-lg">{endpoint.url}</td>
+        <td className="break-words max-w-lg">{endpoint.foundAt}</td>
+        <td className="break-words max-w-lg">{endpoint.webpage}</td>
+      </tr>
+    );
+  }
+  
+  function LocationItem({ url, onClick }: LocationPropsType) {
+    return (
+      <div
+        onClick={onClick}
+        className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
+      >
+        {url}
+      </div>
+    );
+  }
+
   const [urls, setURLs] = useState<Endpoint[]>([]);
   const [jsFiles, setJSFiles] = useState<Location[]>([]);
   const [selected, setSelected] = useState<string>('All');
