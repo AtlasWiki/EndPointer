@@ -1,4 +1,3 @@
-import { NavBar } from '../../components/navbar';
 import { useEffect, useState } from "react";
 
 export function URLs() {
@@ -126,7 +125,6 @@ export function URLs() {
     }
   return (
     <div className="w-full min-h-screen">
-      <NavBar />
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
           <div className="w-full max-h-[760px] overflow-scroll">
