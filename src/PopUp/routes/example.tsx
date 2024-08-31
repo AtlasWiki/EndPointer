@@ -47,7 +47,7 @@ function LocationItem({ url, onClick }: LocationPropsType) {
 export function Example() {
   const [urls, setURLs] = useState<Endpoint[]>([]);
   const [jsFiles, setJSFiles] = useState<Location[]>([]);
-  const [selected, setSelected] = useState<string>('Select a location');
+  const [selected, setSelected] = useState<string>('All');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export function Example() {
         if (key !== "current") {
           const currURLEndpoints = urlParser[key].currPage;
           const currURLExtJSFiles = urlParser[key].externalJSFiles;
-
+          locations.push(decodeURIComponent(key))
           // Add currPage endpoints, found at the webpage (key)
           allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
             url: endpoint,
@@ -70,17 +70,23 @@ export function Example() {
 
           // Add externalJSFiles endpoints, found at the specific JS file
           Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
-            locations.push(decodeURIComponent(jsFile));
+            const decodedJsFile = decodeURIComponent(jsFile);
+            if (!locations.includes(decodedJsFile)) {
+              locations.push(decodedJsFile);
+            }
             allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
               url: endpoint,
-              foundAt: decodeURIComponent(jsFile), // Found at the specific JS file
+              foundAt: decodedJsFile, // Found at the specific JS file
               webpage: decodeURIComponent(key),
             })));
           });
         }
       });
+
+      // Ensure "All" is included only once and other locations are unique
+      const uniqueLocations = Array.from(new Set(['All', ...locations]));
       setURLs(allEndpoints);
-      setJSFiles(locations);
+      setJSFiles(uniqueLocations); 
     });
   }, []);
 
@@ -88,6 +94,10 @@ export function Example() {
     setSelected(url);
     setIsOpen(false);
   };
+
+  const filteredURLs = selected === 'All'
+    ? urls
+    : urls.filter(endpoint => endpoint.foundAt === selected);
 
   return (
     <div className="w-full min-h-screen">
@@ -104,20 +114,18 @@ export function Example() {
                 </tr>
               </thead>
               <tbody>
-               
                 <tr>
-
                   <td>
                     <div className="mt-5 w-full">
-                    <input
+                      <input
                         type="text"
                         className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
-                                    cursor-pointer hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
-                        />
+                          cursor-pointer hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                      />
                     </div>
                   </td>
 
-                  <td className="">
+                  <td>
                     <div className="relative w-full max-w-lg mt-5">
                       <button
                         onClick={() => setIsOpen(!isOpen)}
@@ -127,12 +135,6 @@ export function Example() {
                       </button>
                       {isOpen && (
                         <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
-                          <div
-                            onClick={() => handleSelect('Select a location')}
-                            className="p-2 cursor-pointer bg-gray-700 text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-800"
-                          >
-                            Select a location
-                          </div>
                           {jsFiles.map((url, index) => (
                             <LocationItem
                               key={index}
@@ -145,7 +147,7 @@ export function Example() {
                     </div>
                   </td>
                 </tr>
-                {urls.map((endpoint, index) => (
+                {filteredURLs.map((endpoint, index) => (
                   <URLProps key={index} endpoint={endpoint} />
                 ))}
               </tbody>
