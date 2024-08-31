@@ -1,50 +1,50 @@
 import { NavBar } from '../../components/navbar';
 import { useEffect, useState } from "react";
 
-interface Endpoint {
-  url: string;
-  foundAt: string;
-  webpage: string;
-}
+export function URLs() {
+  interface Endpoint {
+    url: string;
+    foundAt: string;
+    webpage: string;
+  }
+  
+  interface URLEntry {
+    currPage: string[];
+    externalJSFiles: { [key: string]: string[] };
+  }
+  
+  interface URLParser {
+    [key: string]: URLEntry;
+  }
+  
+  type Location = string;
+  
+  type LocationPropsType = {
+    url: string;
+    onClick: () => void;
+  };
+  
+  function URLProps({ endpoint }: { endpoint: Endpoint }) {
+    return (
+      <tr>
+        <td className="break-words max-w-lg">{endpoint.url}</td>
+        <td className="break-words max-w-lg">{endpoint.foundAt}</td>
+        <td className="break-words max-w-lg">{endpoint.webpage}</td>
+      </tr>
+    );
+  }
+  
+  function LocationItem({ url, onClick }: LocationPropsType) {
+    return (
+      <div
+        onClick={onClick}
+        className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
+      >
+        {url}
+      </div>
+    );
+  }
 
-interface URLEntry {
-  currPage: string[];
-  externalJSFiles: { [key: string]: string[] };
-}
-
-interface URLParser {
-  [key: string]: URLEntry;
-}
-
-type Location = string;
-
-type LocationPropsType = {
-  url: string;
-  onClick: () => void;
-};
-
-function URLProps({ endpoint }: { endpoint: Endpoint }) {
-  return (
-    <tr>
-      <td className="break-words max-w-lg">{endpoint.url}</td>
-      <td className="break-words max-w-lg">{endpoint.foundAt}</td>
-      <td className="break-words max-w-lg">{endpoint.webpage}</td>
-    </tr>
-  );
-}
-
-function LocationItem({ url, onClick }: LocationPropsType) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
-    >
-      {url}
-    </div>
-  );
-}
-
-export function Example() {
   const [urls, setURLs] = useState<Endpoint[]>([]);
   const [jsFiles, setJSFiles] = useState<Location[]>([]);
   const [selected, setSelected] = useState<string>('All');
@@ -154,7 +154,7 @@ export function Example() {
             </table>
           </div>
           <div className="text-lg flex items-center space-x-4 px-5">
-            <a href={document.location.origin + "/PopUp/popup.html#example"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
             <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
             <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
             <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
