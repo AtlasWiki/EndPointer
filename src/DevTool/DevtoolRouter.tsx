@@ -38,7 +38,7 @@ chrome.devtools.panels.create(
     if (tabId === chrome.devtools.inspectedWindow.tabId && changeInfo.status === 'complete') {
       logCurrentUrl();
     }
-});
+  });
 
   });
 

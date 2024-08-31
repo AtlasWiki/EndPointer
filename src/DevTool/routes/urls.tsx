@@ -141,7 +141,7 @@ export function URLS() {
                         value={searchQuery}
                         onChange={handleSearchChange}
                         className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
-                          cursor-pointer hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                          cursor-pointer text-gray-500 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
                         placeholder="Search endpoints..."
                       />
                     </div>
@@ -177,6 +177,7 @@ export function URLS() {
           </div>
           <div className="text-lg flex items-center space-x-4 px-5">
             <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
+            <button className="bg-gray-600 p-3 rounded-md">Clear URLs</button>
             <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
             <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
             <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
