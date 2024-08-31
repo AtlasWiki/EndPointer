@@ -127,6 +127,9 @@ export function URLS() {
   return (
     <div className="w-full min-h-screen">
       <NavBar />
+      <button onClick={() => location.reload()}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
+      </button>
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
           <div className="w-full max-h-[760px] overflow-scroll">
@@ -147,7 +150,7 @@ export function URLS() {
                         value={searchQuery}
                         onChange={handleSearchChange}
                         className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
-                          cursor-pointer text-gray-500 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                          cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
                         placeholder="Search endpoints..."
                       />
                     </div>

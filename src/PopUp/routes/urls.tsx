@@ -147,7 +147,7 @@ export function URLs() {
                         value={searchQuery}
                         onChange={handleSearchChange}
                         className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
-                          cursor-pointer text-gray-500 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                          cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
                         placeholder="Search endpoints..."
                       />
                     </div>
