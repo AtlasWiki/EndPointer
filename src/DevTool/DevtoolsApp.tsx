@@ -53,10 +53,10 @@ function DevToolsApp() {
   return (
     <div className="w-full md:h-screen m-0 flex flex-col px-5 mt-5">
       <div className="flex gap-1">
-        <button onClick={() => location.reload()}>
+        <button className="a-item a-color" onClick={() => location.reload()}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
         </button>
-        <button onClick={() => {clearCache();alert("cache cleared");location.reload()}}>
+        <button className="a-item a-color" onClick={() => {clearCache();alert("cache cleared");location.reload()}}>
           Clear Cache
         </button>
       </div>
@@ -70,17 +70,17 @@ function DevToolsApp() {
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-               <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
-               <Link className="a-item font-semibold" to="creds"><span className="text-rose-500">Creds</span> ({credCount})</Link>
-               <Link className="a-item font-semibold" to="apikeys"><span className="text-emerald-500">API keys</span> ({apiKeyCount})</Link>
-               <Link className="a-item font-semibold" to="urlsvisited"><span className="text-emerald-500">URLs Visited</span> ({apiKeyCount})</Link>
+               <Link className="a-item a-color font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
+               <Link className="a-item a-color font-semibold" to="creds"><span className="text-rose-500">Creds</span> ({credCount})</Link>
+               <Link className="a-item a-color font-semibold" to="apikeys"><span className="text-emerald-500">API keys</span> ({apiKeyCount})</Link>
+               <Link className="a-item a-color font-semibold" to="urlsvisited"><span className="text-emerald-500">URLs Visited</span> ({apiKeyCount})</Link>
           </div>
         </div>
 
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">JS Downloader</h2>
           <div className="text-md flex gap-2">
-               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
+               <Link className="a-item a-color font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
           </div>
         </div>
       </div>

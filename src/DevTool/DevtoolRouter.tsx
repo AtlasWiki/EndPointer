@@ -6,7 +6,7 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import { URLS } from './routes/urls'
+import { URLs } from './routes/urls'
 import { JSFiles } from './routes/js-files'
 import { Creds } from './routes/creds'
 import { APIKeys } from './routes/apikeys'
@@ -31,14 +31,14 @@ chrome.devtools.panels.create(
   };
 
   // Log URL when panel is shown
-  panel.onShown.addListener(logCurrentUrl);
+  // panel.onShown.addListener(logCurrentUrl);
 
-  // Log URL on page updates for the inspected window
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (tabId === chrome.devtools.inspectedWindow.tabId && changeInfo.status === 'complete') {
-      logCurrentUrl();
-    }
-  });
+  // // Log URL on page updates for the inspected window
+  // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  //   if (tabId === chrome.devtools.inspectedWindow.tabId && changeInfo.status === 'complete') {
+  //     logCurrentUrl();
+  //   }
+  // });
 
   });
 
@@ -53,7 +53,7 @@ function renderApp() {
         <Router>
           <Routes>
             <Route path="/" element={<DevToolsApp />} />
-            <Route path="/urls" element={<URLS />} />
+            <Route path="/urls" element={<URLs />} />
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/creds" element={<Creds />} />
             <Route path="/apikeys" element={<APIKeys />} />
