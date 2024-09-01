@@ -142,7 +142,7 @@ export function URLs() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="text-5xl">
-                  <th className="border-b-2 pb-10">ENDPOINT</th>
+                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
                   <th className="border-b-2 pb-10">LOCATION</th>
                   <th className="border-b-2 pb-10">ROOT</th>
                 </tr>
