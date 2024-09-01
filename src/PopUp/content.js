@@ -1,4 +1,6 @@
-const relRegex = /["'](\/[\w./\-_?=&]*)["']/g;
+// const relRegex = /["'](\/[\w./\-_?=&]*)["']/g; 
+const relRegex = /["']((\/|(\w+\/))[\w./\-_?=&]*)["']/g;
+
 const abRegex = /(https?:\/\/[^\s'"){}(]+)/g;
 
 function parseURLs() {
