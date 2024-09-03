@@ -7,6 +7,12 @@ const root = resolve(__dirname, 'src');
 const outDir = resolve(__dirname, 'dist');
 const publicDir = resolve(__dirname, 'public');
 
+const getFeatureDirectories = () => {
+  return fs.readdirSync(root, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory() && dirent.name !== 'components')
+    .map(dirent => dirent.name);
+};
+
 export default defineConfig({
   root,
   plugins: [
@@ -24,6 +30,7 @@ export default defineConfig({
         if (fs.existsSync(manifestPath)) {
           const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
           
+          // Update paths in manifest
           if (manifest.action && manifest.action.default_popup) {
             manifest.action.default_popup = 'PopUp/popup.html';
           }
@@ -34,7 +41,7 @@ export default defineConfig({
             manifest.content_scripts[0].js = ['content.js'];
           }
           if (manifest.devtools_page) {
-            manifest.devtools_page = 'DevTool/devtool.html';
+            manifest.devtools_page = 'DevTool/DevTool.html';
           }
           
           this.emitFile({
@@ -52,36 +59,34 @@ export default defineConfig({
     sourcemap: 'inline',
     rollupOptions: {
       input: {
-        background: resolve(__dirname, 'src/background-main.ts'),
-        content: resolve(__dirname, 'src/content-main.ts'),
-        'PopUp/index': resolve(__dirname, 'src/PopUp/popup.html'),
-        'PopUp/PopUpRouter': resolve(__dirname, 'src/PopUp/PopUpRouter.tsx'),
-        'DevTool/index': resolve(__dirname, 'src/DevTool/devtool.html'),
-        'DevTool/DevToolRouter': resolve(__dirname, 'src/DevTool/DevToolRouter.tsx'),
+        ...getFeatureDirectories().reduce((acc, feature) => {
+          acc[`${feature}/index`] = resolve(__dirname, `src/${feature}/${feature}.html`);
+          if (feature === 'DevTool') {
+            acc[`${feature}/DevtoolRouter`] = resolve(__dirname, `src/${feature}/DevtoolRouter.tsx`);
+          }
+          return acc;
+        }, {}),
+        'background': resolve(__dirname, 'src/background-main.ts'),
+        'content': resolve(__dirname, 'src/content-main.ts')
       },
       output: {
+        dir: outDir,
         entryFileNames: '[name].js',
-        format: 'es',
         chunkFileNames: 'assets/[name].[hash].js',
-        manualChunks: (id) => {
-          if (id.includes('content-main.ts') || id.includes('/content/')) {
-            return 'content';
-          }
-        },
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'background.js' || assetInfo.name === 'content.js') {
-            return '[name][extname]';
-          }
           const info = assetInfo.name.split('/');
           const feature = info[0];
-          if (['PopUp', 'DevTool'].includes(feature)) {
-            return `${feature}/[name][extname]`;
+          if (getFeatureDirectories().includes(feature)) {
+            if (assetInfo.name.endsWith('.html')) {
+              return `${feature}/[name][extname]`;
+            }
+            return `${feature}/assets/[name][extname]`;
           }
           return 'assets/[name][extname]';
         },
       },
     },
-    target: ['chrome91', 'firefox91', 'esnext'],
+    target: ['chrome89', 'firefox89'],
     minify: true,
   },
   resolve: {

@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom'
 import PopUpApp from './PopUpApp'
 import './index.css'
-
+import { URLs } from './routes/urls'
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -16,6 +16,7 @@ if (rootElement) {
       <Router>
         <Routes>
           <Route path="" element={<PopUpApp />} />
+          <Route path="/urls" element={<URLs />} />
         </Routes>
       </Router>
     </StrictMode>

@@ -1,4 +1,14 @@
-// Import all background scripts here
-// Add more imports as needed
+import { initializeState } from './components/background/stateManager';
+import { setupTabListeners } from './components/background/tabHandler';
+import { setupMessageListeners } from './components/background/messageHandler';
 
-console.log('Background script loaded');
+// Initialize state when extension is installed
+chrome.runtime.onInstalled.addListener(() => {
+  initializeState();
+});
+
+// Set up tab listeners
+setupTabListeners();
+
+// Set up message listeners
+setupMessageListeners();

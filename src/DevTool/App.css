@@ -1,25 +1,12 @@
 td, th {
-  padding: 15px 20px;
-  text-align: center;
+  padding: 20px 40px;
+  /* text-align: center; */
 }
 
 td {
   font-size: 1rem;
 }
 
-/* table {
-  border-collapse: collapse;
-} */
-
-/* tr:nth-child(even) {
-  background-color: #f2f2f2;
-} */
-
-.bg-gray-950 {
-  background-color: #1a1a1a;
+tr:nth-child(even) {
+  background-color: #495057;
 }
-
-.bg-gray-800 {
-  background-color: #333;
-}
-
