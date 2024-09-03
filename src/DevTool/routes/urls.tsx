@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavBar } from '../../components/navbar'
+import { NavBar } from '../../components/navbar';
 
 export function URLs() {
   interface Endpoint {
@@ -25,7 +25,6 @@ export function URLs() {
   };
   
   function URLProps({ endpoint, searchQuery }: { endpoint: Endpoint, searchQuery: string }) {
-    // Split the URL into parts, with the matching part highlighted
     const regexControlChars = ".^$*+?\\|()[]{}";
     let escapedQuery = '';
     for (const char of searchQuery) {
@@ -35,6 +34,16 @@ export function URLs() {
         escapedQuery += char;
     }
     const parts = endpoint.url.split(new RegExp(`(${escapedQuery})`, 'gi'));
+
+    const [isGenerateReportOpen, setIsGenerateReportOpen] = useState(false);
+    const [isViewCodeOpen, setIsViewCodeOpen] = useState(false);
+    const [isSeeResponseOpen, setIsSeeResponseOpen] = useState(false);
+
+    const closeAllModals = () => {
+      setIsGenerateReportOpen(false);
+      setIsViewCodeOpen(false);
+      setIsSeeResponseOpen(false);
+    };
 
     return (
       <tr>
@@ -47,16 +56,71 @@ export function URLs() {
             )
           )}
           <div className="flex mt-2 items-center gap-1">
-            <button className="i-button">
-              <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#3da28f" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5.697M18 12V7a2 2 0 0 0-2-2h-2"/><path d="M8 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2m0 6h4m-4 4h3m3 2.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0m4.5 2L21 22"/></g> <title>Generate Report</title></svg>
+            <button
+              className="i-button"
+              onClick={() => setIsGenerateReportOpen(true)}
+            >
+              <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <g fill="none" stroke="#3da28f" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+                  <path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5.697M18 12V7a2 2 0 0 0-2-2h-2"/>
+                  <path d="M8 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2m0 6h4m-4 4h3m3 2.5a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0m4.5 2L21 22"/>
+                </g>
+                <title>Generate Report</title>
+              </svg>
             </button>
-            <button className="i-button">
-              <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#3da28f" d="m8 18l-6-6l6-6l1.425 1.425l-4.6 4.6L9.4 16.6zm8 0l-1.425-1.425l4.6-4.6L14.6 7.4L16 6l6 6z"/><title>View Code Snippet</title></svg>
+            <button
+              className="i-button"
+              onClick={() => setIsViewCodeOpen(true)}
+            >
+              <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="#3da28f" d="m8 18l-6-6l6-6l1.425 1.425l-4.6 4.6L9.4 16.6zm8 0l-1.425-1.425l4.6-4.6L14.6 7.4L16 6l6 6z"/>
+                <title>View Code Snippet</title>
+              </svg>
             </button>
-            <button className="i-button">
-              <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#3da28f" d="M20 4H6c-1.103 0-2 .897-2 2v5h2V8l6.4 4.8a1 1 0 0 0 1.2 0L20 8v9h-8v2h8c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2m-7 6.75L6.666 6h12.668z"/><path fill="#3da28f" d="M2 12h7v2H2zm2 3h6v2H4zm3 3h4v2H7z"/></svg>
+            <button
+              className="i-button"
+              onClick={() => setIsSeeResponseOpen(true)}
+            >
+              <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="#3da28f" d="M20 4H6c-1.103 0-2 .897-2 2v5h2V8l6.4 4.8a1 1 0 0 0 1.2 0L20 8v9h-8v2h8c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2m-7 6.75L6.666 6h12.668z"/>
+                <path fill="#3da28f" d="M2 12h7v2H2zm2 3h6v2H4zm3 3h4v2H7z"/>
+                <title>See Response</title>
+              </svg>
             </button>
           </div>
+
+          {/* Modal for Generate Report */}
+          {isGenerateReportOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
+              <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
+                <h2 className="text-xl font-semibold text-black">Generate Report for {endpoint.url}</h2>
+                <p className="text-black">Content for Generate Report modal.</p>
+                <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsGenerateReportOpen(false)}>Close</button>
+              </div>
+            </div>
+          )}
+
+          {/* Modal for View Code Snippet */}
+          {isViewCodeOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
+              <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
+                <h2 className="text-xl font-semibold text-black">View Code Snippet for {endpoint.url}</h2>
+                <p className="text-black">Content for View Code Snippet modal.</p>
+                <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsViewCodeOpen(false)}>Close</button>
+              </div>
+            </div>
+          )}
+
+          {/* Modal for See Response */}
+          {isSeeResponseOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
+              <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
+                <h2 className="text-xl font-semibold text-black">See Response for {endpoint.url}</h2>
+                <p className="text-black">Content for See Response modal.</p>
+                <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsSeeResponseOpen(false)}>Close</button>
+              </div>
+            </div>
+          )}
         </td>
         <td className="break-words max-w-lg">{endpoint.foundAt}</td>
         <td className="break-words max-w-lg">{endpoint.webpage}</td>
@@ -141,14 +205,15 @@ export function URLs() {
       chrome.storage.local.remove('URL-PARSER', function() {
           console.log('Key has been removed.');
       });
-      window.location.reload()
+      window.location.reload();
     }
+
   return (
     <div className="w-full min-h-screen">
       <div className="ml-2 mt-2">
         <NavBar />
         <button className="a-item a-color mt-2" onClick={() => location.reload()}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
         </button>
       </div>
       <div className="mt-5 flex">
