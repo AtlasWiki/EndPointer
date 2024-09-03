@@ -3,6 +3,10 @@ td, th {
   /* text-align: center; */
 }
 
+.secrets-td, .secrets-th {
+  text-align: center;
+}
+
 td {
   font-size: 1rem;
 }
