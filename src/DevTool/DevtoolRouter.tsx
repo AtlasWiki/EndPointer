@@ -9,7 +9,6 @@ import {
 import { URLs } from './routes/urls'
 import { JSFiles } from './routes/js-files'
 import { Secrets } from './routes/secrets'
-import { APIKeys } from './routes/apikeys'
 import { URLSVisited } from './routes/urlsvisited';
 
 // Create the DevTools panel
@@ -56,7 +55,6 @@ function renderApp() {
             <Route path="/urls" element={<URLs />} />
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/secrets" element={<Secrets />} />
-            <Route path="/apikeys" element={<APIKeys />} />
             <Route path="/urlsvisited" element={<URLSVisited />} />
           </Routes>
         </Router>
