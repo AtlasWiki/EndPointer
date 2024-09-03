@@ -25,7 +25,15 @@ export function URLs() {
   
   function URLProps({ endpoint, searchQuery }: { endpoint: Endpoint, searchQuery: string }) {
     // Split the URL into parts, with the matching part highlighted
-    const parts = endpoint.url.split(new RegExp(`(${searchQuery})`, 'gi'));
+    const regexControlChars = ".^$*+?\\|()[]{}";
+    let escapedQuery = '';
+    for (const char of searchQuery) {
+        if (regexControlChars.includes(char)) {
+            escapedQuery += '\\';
+        }
+        escapedQuery += char;
+    }
+    const parts = endpoint.url.split(new RegExp(`(${escapedQuery})`, 'gi'));
 
     return (
       <tr>
