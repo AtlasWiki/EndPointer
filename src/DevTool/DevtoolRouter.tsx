@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 import { URLs } from './routes/urls'
 import { JSFiles } from './routes/js-files'
-import { Creds } from './routes/creds'
+import { Secrets } from './routes/secrets'
 import { APIKeys } from './routes/apikeys'
 import { URLSVisited } from './routes/urlsvisited';
 
@@ -55,7 +55,7 @@ function renderApp() {
             <Route path="/" element={<DevToolsApp />} />
             <Route path="/urls" element={<URLs />} />
             <Route path="/js-files" element={<JSFiles />} />
-            <Route path="/creds" element={<Creds />} />
+            <Route path="/secrets" element={<Secrets />} />
             <Route path="/apikeys" element={<APIKeys />} />
             <Route path="/urlsvisited" element={<URLSVisited />} />
           </Routes>

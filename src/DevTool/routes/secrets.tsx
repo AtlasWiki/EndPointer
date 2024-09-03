@@ -2,7 +2,7 @@ import { NavBar } from '../../components/navbar';
 import "../App.css";
 import "../index.css";
 
-export function Creds() {
+export function Secrets() {
     return (
         <div className="w-full min-h-screen">
             <NavBar />
