@@ -46,8 +46,12 @@ function handleCountUpdate(message: Message): void {
   const key = action === 'updateURLCount' ? 'urlCount' : 'fileCount';
   const countValue = count ?? 0;
 
+  chrome.storage.local.get(['URL-PARSER', key], (result) => {
+    const urlParser = result['URL-PARSER'] || {};
+    let totalCount = result[key] || 0;
+
   if (action === 'updateURLCount') {
-    urlCount = countValue;
+    totalCount  += countValue;
   } else {
     jsFileCount = countValue;
   }
@@ -55,4 +59,5 @@ function handleCountUpdate(message: Message): void {
   updateState(key, countValue);
 
   chrome.runtime.sendMessage({ action: `${key}Updated`, count: countValue });
+});
 }
