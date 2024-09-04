@@ -180,7 +180,7 @@ export function URLsTreeView() {
           <div className="relative w-64">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+              className="w-full py-4 px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
             >
               {selected}
             </button>
