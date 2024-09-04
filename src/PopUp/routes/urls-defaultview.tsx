@@ -121,7 +121,7 @@ export function URLsDefaultView() {
           )}
         </td>
         <td className="break-words max-w-lg">{endpoint.foundAt}</td>
-        <td className="break-words max-w-lg">{endpoint.webpage}</td>
+        <td className="break-words max-w-lg text-center">{endpoint.webpage}</td>
       </tr>
     );
   }
@@ -241,6 +241,7 @@ export function URLsDefaultView() {
 
                   <td>
                     <div className="relative w-full max-w-lg mt-5">
+                        {/* closed state, select menu button */}
                       <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
