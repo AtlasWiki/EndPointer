@@ -78,12 +78,12 @@ function DevToolsApp() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-1 md:gap-5">
+        {/* <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">JS Downloader</h2>
           <div className="text-md flex gap-2">
               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <a className="flex justify-center items-center mt-10" href="https://github.com/LordCat/PlaceHolder-Extension" target="_blank" rel="noopener noreferrer">
