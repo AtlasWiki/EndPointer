@@ -71,17 +71,17 @@ function DevToolsApp() {
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">Endpoint parsing</h2>
           <div className="text-md flex gap-2">
-               <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
-               <Link className="a-item font-semibold" to="creds"><span className="text-rose-500">Creds</span> ({credCount})</Link>
-               <Link className="a-item font-semibold" to="apikeys"><span className="text-emerald-500">API keys</span> ({apiKeyCount})</Link>
-               <Link className="a-item font-semibold" to="urlsvisited"><span className="text-emerald-500">URLs Visited</span> ({apiKeyCount})</Link>
+              <Link className="a-item font-semibold" to="urls"><span className="text-violet-500">URLs</span> ({urlCount})</Link>
+              <Link className="a-item font-semibold" to="creds"><span className="text-rose-500">Creds</span> ({credCount})</Link>
+              <Link className="a-item font-semibold" to="apikeys"><span className="text-emerald-500">API keys</span> ({apiKeyCount})</Link>
+              <Link className="a-item font-semibold" to="urlsvisited"><span className="text-emerald-500">URLs Visited</span> ({apiKeyCount})</Link>
           </div>
         </div>
 
         <div className="flex flex-col gap-1 md:gap-5">
           <h2 className="text-xl md:text-4xl">JS Downloader</h2>
           <div className="text-md flex gap-2">
-               <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
+              <Link className="a-item font-semibold" to="js-files"><span className="text-violet-500">JS FILES</span> ({fileCount})</Link>
           </div>
         </div>
       </div>
