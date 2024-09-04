@@ -6,7 +6,8 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import { URLS } from './routes/urls'
+import { URLsDefaultView } from './routes/urls-defaultview'
+import { URLsTreeView } from './routes/urls-treeview'
 import { JSFiles } from './routes/js-files'
 import { Creds } from './routes/creds'
 import { APIKeys } from './routes/apikeys'
@@ -51,7 +52,8 @@ function renderApp() {
         <Router>
           <Routes>
             <Route path="/" element={<DevToolsApp />} />
-            <Route path="/urls" element={<URLS />} />
+            <Route path="/urls/default" element={<URLsDefaultView />} />
+            <Route path="/urls/tree" element={<URLsTreeView />} />
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/creds" element={<Creds />} />
             <Route path="/apikeys" element={<APIKeys />} />
