@@ -208,11 +208,6 @@ export function URLsDefaultView() {
 
   return (
     <div className="w-full min-h-screen">
-      <div className="ml-2 mt-2">
-        <button className="a-item a-color mt-2" onClick={() => location.reload()}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
-        </button>
-      </div>
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
           <div className="w-full max-h-[760px] overflow-auto">

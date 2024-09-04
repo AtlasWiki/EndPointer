@@ -1,4 +1,3 @@
-import { NavBar } from '../../components/navbar';
 import { useEffect, useState } from "react";
 
 export function URLsTreeView() {
@@ -166,7 +165,6 @@ export function URLsTreeView() {
 
   return (
     <div className="w-full min-h-screen">
-      <NavBar />
       <div className="mt-5 p-5">
         <div className="mb-5 flex gap-4">
           <input
