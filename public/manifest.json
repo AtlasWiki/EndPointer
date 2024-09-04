@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "JS-Toolkit",
+  "name": "EndPointer",
   "version": "1.0.0",
-  "description": "A JS-Parsing Toolkit with many flexible features",
+  "description": "An endpoint parser and extractor with many flexible features",
   "permissions": [
     "storage",
     "activeTab",
@@ -12,7 +12,7 @@
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "PopUp/popup.html",
-    "default_title": "JS Toolkit for Hackers"
+    "default_title": "Endpoint Extractor for Hackers"
   },
   "background": {
     "service_worker": "background.js"

@@ -62,8 +62,8 @@ function DevToolsApp() {
         </button>
       </div>
       <div className="mt-10 mb-10 w-full">
-        <h1 className="text-3xl md:text-6xl mb-3">JS-Toolkit Dashboard</h1>
-        <p className="text-gray-400/60 md:text-lg mb-3">A JS-Parsing Toolkit with many flexible features by mrunoriginal/AtlasWiki and LordCat</p>
+        <h1 className="text-3xl md:text-6xl mb-3">EndPointer Dashboard</h1>
+        <p className="text-gray-400/60 md:text-lg">An endpoint parser and extractor with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
         <hr className="w-full mt-5"></hr>
       </div>
 
