@@ -1,21 +1,10 @@
-#root {
-  /* max-width: 1280px; */
-  margin: 0 auto;
-  /* padding: 2rem; */
-  /* text-align: center; */
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
 td, th {
-  padding: 20px 40px;
+  padding: 30px 40px;
   /* text-align: center; */
+}
+
+.secrets-td, .secrets-th {
+  text-align: center;
 }
 
 td {
@@ -25,7 +14,3 @@ td {
 tr:nth-child(even) {
   background-color: #495057;
 }
-
-/* #4a5759 */
-/* #495057 */
-/* #212529 */
