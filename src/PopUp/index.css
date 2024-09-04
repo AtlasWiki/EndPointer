@@ -24,7 +24,7 @@ a {
 
 body {
   margin: 0;
-  display: flex;
+  /* display: flex; */
   min-height: 100vh;
   min-width: 320px;
 }
@@ -34,19 +34,35 @@ h1 {
   line-height: 1.1;
 }
 
-button, .a-item {
+.a-item {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
+  background-color: #64748B;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.a-color{
+  background-color: #1a1a1a;
+}
+
+.i-button{
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 5px 10px;
+  font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover, a:hover {
   border-color: #495057;
+  opacity: 80;
 }
 
 @media (prefers-color-scheme: light) {

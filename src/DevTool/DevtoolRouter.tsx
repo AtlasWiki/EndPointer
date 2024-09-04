@@ -12,6 +12,9 @@ import { JSFiles } from './routes/js-files'
 import { Creds } from './routes/creds'
 import { APIKeys } from './routes/apikeys'
 import { URLSVisited } from './routes/urlsvisited';
+import { URLs } from './routes/urls';
+
+
 
 // Create the DevTools panel
 chrome.devtools.panels.create(
@@ -52,6 +55,7 @@ function renderApp() {
         <Router>
           <Routes>
             <Route path="/" element={<DevToolsApp />} />
+            <Route path="/urls/" element={<URLs />} />
             <Route path="/urls/default" element={<URLsDefaultView />} />
             <Route path="/urls/tree" element={<URLsTreeView />} />
             <Route path="/js-files" element={<JSFiles />} />
