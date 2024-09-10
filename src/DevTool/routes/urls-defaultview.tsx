@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavBar } from '../../components/navbar';
+import { JSFiles } from "./js-files";
 
 export function URLsDefaultView() {
   interface Endpoint {
@@ -223,7 +224,7 @@ export function URLsDefaultView() {
               <thead>
                 <tr className="text-5xl">
                   <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
-                  <th className="border-b-2 pb-10">LOCATION</th>
+                  <th className="border-b-2 pb-10">LOCATION <span className="text-[#3da28f]">({jsFiles.length})</span></th>
                   <th className="border-b-2 pb-10">ROOT</th>
                 </tr>
               </thead>
