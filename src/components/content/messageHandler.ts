@@ -1,4 +1,4 @@
-import { parseURLs, countURLs, countJSFiles } from './urlParser';
+import { urlParserOrchestrator } from './urlParser_Orcastrator';
 import { Message } from '../sharedTypes/message_types';
 
 export function setupMessageListeners() {
@@ -7,14 +7,14 @@ export function setupMessageListeners() {
 
     switch (message.action) {
       case 'getCurrTabData':
-        parseURLs();
+        urlParserOrchestrator.parseURLs();
         sendResponse({ data: 'Parsed URLs' });
         break;
       case 'countURLs':
-        countURLs();
+        urlParserOrchestrator.countURLs();
         break;
       case 'countJSFiles':
-        countJSFiles();
+        urlParserOrchestrator.countJSFiles();
         break;
     }
   });

@@ -1,35 +1,56 @@
+import React, { useEffect, useState } from "react";
 import { NavBar } from '../../components/navbar';
-import { useEffect, useState } from "react";
+
+// Define types for our data structure
+interface ClassifiedURL {
+  url: string;
+  categories: string[];
+  score: number;
+}
+
+interface Endpoint extends ClassifiedURL {
+  foundAt: string;
+  webpage: string;
+}
+
+interface URLHierarchy {
+  [webpage: string]: {
+    mainPage: Endpoint[];
+    jsFiles: {
+      [jsFile: string]: Endpoint[];
+    };
+  };
+}
 
 export function URLsTreeView() {
-  interface Endpoint {
-    url: string;
-    foundAt: string;
-    webpage: string;
-  }
-
-  interface URLHierarchy {
-    [webpage: string]: {
-      mainPage: Endpoint[];
-      jsFiles: {
-        [jsFile: string]: Endpoint[];
-      };
-    };
-  }
-
   const [hierarchy, setHierarchy] = useState<URLHierarchy>({});
   const [jsFiles, setJSFiles] = useState<string[]>([]);
   const [selected, setSelected] = useState<string>('All');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setIsLoading(true);
+    setError(null);
     let newHierarchy: URLHierarchy = {};
     let allJsFiles: string[] = [];
 
-    chrome.storage.local.get("URL-PARSER", (data: { [key: string]: any }) => {
-      const urlParser = data["URL-PARSER"];
+    chrome.storage.local.get("URL-PARSER", (result) => {
+      if (chrome.runtime.lastError) {
+        setError(chrome.runtime.lastError.message as string);
+        setIsLoading(false);
+        return;
+      }
+
+      const urlParser = result["URL-PARSER"];
+      if (!urlParser) {
+        setError("No data found");
+        setIsLoading(false);
+        return;
+      }
 
       Object.keys(urlParser).forEach((key) => {
         if (key !== "current") {
@@ -37,8 +58,8 @@ export function URLsTreeView() {
           newHierarchy[webpage] = { mainPage: [], jsFiles: {} };
 
           // Add currPage endpoints
-          newHierarchy[webpage].mainPage = urlParser[key].currPage.map((url: string): Endpoint => ({
-            url,
+          newHierarchy[webpage].mainPage = urlParser[key].currPage.map((url: ClassifiedURL): Endpoint => ({
+            ...url,
             foundAt: 'Main Page',
             webpage,
           }));
@@ -47,8 +68,8 @@ export function URLsTreeView() {
           Object.entries(urlParser[key].externalJSFiles).forEach(([jsFile, endpoints]) => {
             const decodedJsFile = decodeURIComponent(jsFile);
             allJsFiles.push(decodedJsFile);
-            newHierarchy[webpage].jsFiles[decodedJsFile] = (endpoints as string[]).map((url): Endpoint => ({
-              url,
+            newHierarchy[webpage].jsFiles[decodedJsFile] = (endpoints as ClassifiedURL[]).map((url): Endpoint => ({
+              ...url,
               foundAt: decodedJsFile,
               webpage,
             }));
@@ -58,6 +79,7 @@ export function URLsTreeView() {
 
       setHierarchy(newHierarchy);
       setJSFiles(['All', ...Array.from(new Set(allJsFiles))]);
+      setIsLoading(false);
     });
   }, []);
 
@@ -101,6 +123,9 @@ export function URLsTreeView() {
             <span key={index}>{part}</span>
           )
         )}
+        <span className="ml-2 text-gray-500">
+          (Score: {endpoint.score}, Categories: {endpoint.categories.join(', ')})
+        </span>
       </div>
     );
   };
@@ -164,6 +189,58 @@ export function URLsTreeView() {
     });
   };
 
+  const downloadAsJSON = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(hierarchy, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "url_hierarchy.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
+  const downloadAsTXT = () => {
+    let txt = '';
+    Object.entries(hierarchy).forEach(([webpage, { mainPage, jsFiles }]) => {
+      txt += `${webpage}\n\nMain Page:\n`;
+      mainPage.forEach(endpoint => txt += `${endpoint.url}\n`);
+      txt += '\nJS Files:\n';
+      Object.entries(jsFiles).forEach(([jsFile, endpoints]) => {
+        txt += `${jsFile}:\n`;
+        endpoints.forEach(endpoint => txt += `${endpoint.url}\n`);
+        txt += '\n';
+      });
+      txt += '\n\n';
+    });
+    const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(txt);
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "url_hierarchy.txt");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
+  const copyAllURLs = () => {
+    let urls: string[] = [];
+    Object.values(hierarchy).forEach(({ mainPage, jsFiles }) => {
+      urls = urls.concat(mainPage.map(e => e.url), ...Object.values(jsFiles).map(endpoints => endpoints.map(e => e.url)));
+    });
+    navigator.clipboard.writeText(urls.join('\n')).then(() => {
+      alert('All URLs copied to clipboard!');
+    }, (err) => {
+      console.error('Could not copy text: ', err);
+    });
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="w-full min-h-screen">
       <NavBar />
@@ -204,10 +281,9 @@ export function URLsTreeView() {
         </div>
         <div className="text-lg flex items-center space-x-4 mt-5">
           <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
-          <button className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
-          <button className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
-          <button className="bg-gray-600 p-3 rounded-md">Copy as absolute URLs</button>
-          <button className="bg-gray-600 p-3 rounded-md">Copy All</button>
+          <button onClick={downloadAsTXT} className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
+          <button onClick={downloadAsJSON} className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
+          <button onClick={copyAllURLs} className="bg-gray-600 p-3 rounded-md">Copy All URLs</button>
         </div>
       </div>
     </div>
