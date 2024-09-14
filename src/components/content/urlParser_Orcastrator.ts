@@ -5,6 +5,7 @@ import { URLClassifier } from './urlParser/urlClassification';
 import { RegexManager } from './urlParser/regexManager';
 import { JSFileProcessor } from './urlParser/jsFileProcesser';
 import { StorageManager } from './urlParser/storageManager';
+import { DOMObserver } from './urlParser/DOMobserver';
 
 export class URLParserOrchestrator {
   private urlExtractor: URLExtractor;
@@ -12,6 +13,7 @@ export class URLParserOrchestrator {
   private regexManager: RegexManager;
   private jsFileProcessor: JSFileProcessor;
   private storageManager: StorageManager;
+  private domObserver: DOMObserver;
 
   constructor() {
     this.urlExtractor = new URLExtractor();
@@ -19,6 +21,7 @@ export class URLParserOrchestrator {
     this.storageManager = new StorageManager();
     this.urlClassifier = new URLClassifier(this.regexManager);
     this.jsFileProcessor = new JSFileProcessor(this.urlExtractor, this.urlClassifier, this.storageManager)
+    this.domObserver = new DOMObserver();
   }
 
   async initialize(regexPatternPath: string): Promise<void> {
@@ -31,6 +34,30 @@ export class URLParserOrchestrator {
       console.error("Failed to initialize URL Parser Orchestrator:", error);
       throw error;
     }
+  }
+
+  private startObserving(): void{
+    this.domObserver.startObserving(async (newJsFiles) => {
+      console.log(`Found ${newJsFiles.length} new script(s)`);
+
+      for (const jsFile of newJsFiles) {
+        try {
+          const code = await this.fetchJSFile(jsFile);
+          const newUrls = this.urlExtractor.extractURLsFromJSCode(code);
+          const classifiedNewURLs = this.urlClassifier.classifyMultipleURLs(Array.from(newUrls));
+          await this.storageManager.saveExternalJSURLs(jsFile, classifiedNewURLs);
+        } catch (error) {
+          console.error(`error processing new script ${jsFile}: `, error);
+        }
+      }
+
+      this.countURLs();
+    });
+  }
+
+  private async fetchJSFile(url: string): Promise<string>{
+    const response = await fetch(url);
+    return response.text();
   }
 
   async parseURLs(): Promise<void> {
