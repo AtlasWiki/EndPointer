@@ -50,11 +50,7 @@ function PopUpApp() {
     chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
   }
 
-  function fileDownloaderState() {
-    const newState = !fileDownloader
-    setFileDownloader(newState)
-    chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
-  }
+  
 
   function displayState(state: boolean) {
     return (
