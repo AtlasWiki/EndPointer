@@ -5,7 +5,7 @@ export function initializeState() {
   const initialState: ExtensionState = {
     urlParser: false,
     urlCount: 0,
-    fileDownloader: false
+    jsFileCount: 0
   };
 
   chrome.storage.local.set(initialState, () => {
@@ -14,8 +14,8 @@ export function initializeState() {
 }
 
 // Updates a specific state value
-export function updateState(key: keyof ExtensionState, value: any) {
-  return new Promise<void>((resolve, reject) => {
+export function updateState(key: keyof ExtensionState, value: any): Promise<void> {
+  return new Promise((resolve, reject) => {
     chrome.storage.local.set({ [key]: value }, () => {
       if (chrome.runtime.lastError) {
         console.error(`Error saving ${key} state:`, chrome.runtime.lastError);
@@ -28,16 +28,16 @@ export function updateState(key: keyof ExtensionState, value: any) {
   });
 }
 
-// Retrieves the current state
-export function getState(callback: (state: Partial<ExtensionState>) => void) {
-  chrome.storage.local.get(['urlParser', 'fileDownloader', 'urlCount', 'fileCount'], 
-    (result: Partial<ExtensionState>) => {
+// Retrieves the current state or a specific state value
+export function getState(key?: keyof ExtensionState): Promise<any> {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(key || null, (result: Partial<ExtensionState>) => {
       if (chrome.runtime.lastError) {
         console.error('Error getting state:', chrome.runtime.lastError);
-        callback({});
+        resolve(key ? undefined : {});
       } else {
-        callback(result);
+        resolve(key ? result[key] : result);
       }
-    }
-  );
+    });
+  });
 }
