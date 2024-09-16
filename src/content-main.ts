@@ -8,7 +8,7 @@ import { urlParserOrchestrator } from './components/content/urlParser_Orcastrato
 setupMessageListeners();
 
 // Initialize the URL parser orchestrator with the path to regex patterns
-urlParserOrchestrator.initialize('/assets/regex_patterns.json')
+urlParserOrchestrator.initialize('./components/content/urlParser/urlTypes.json')
   .then(() => {
     console.log('URL Parser Orchestrator initialized successfully');
   })
@@ -31,5 +31,12 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.urlParser.newValue) {
       urlParserOrchestrator.parseURLs();
     }
+  } else {
+    urlParserOrchestrator.stopObserving();
   }
+});
+
+//stop the page observer when the unload signal is sent
+window.addEventListener('unload', () => {
+  urlParserOrchestrator.stopObserving();
 });
