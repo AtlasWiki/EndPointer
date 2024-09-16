@@ -10,6 +10,9 @@ export class RegexManager {
     this.loadPatterns();
   }
 
+  async initialize(regexPatternPath: string): Promise<void>{
+    await this.loadPatterns();
+  }
   // Loads regex patterns from a JSON file and compiles them into RegExp objects.
   // It uses the fetch API to load the file from the correct path in the extension.
   private loadPatterns(): void {

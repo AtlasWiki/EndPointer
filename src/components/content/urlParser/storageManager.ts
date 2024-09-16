@@ -81,21 +81,25 @@ export class StorageManager {
   /**
    * Counts the total number of URLs stored for the current page and its external JS files.
    */
-  countURLs(): void {
-    chrome.storage.local.get(this.STORAGE_KEY, (result) => {
-      const urlParser: URLParserStorage = result[this.STORAGE_KEY] || {};
-      const currentURL = urlParser["current"] as string;
-      if (currentURL && urlParser[currentURL]) {
-        const pageURLs = urlParser[currentURL].currPage.length;
-        const externalURLs = Object.values(urlParser[currentURL].externalJSFiles)
-          .reduce((total, urls) => total + urls.length, 0);
-        const totalURLs = pageURLs + externalURLs;
-        console.log(`Total URLs found: ${totalURLs} (Page: ${pageURLs}, External JS: ${externalURLs})`);
-        chrome.runtime.sendMessage({ action: 'updateURLCount', count: totalURLs });
-      } else {
-        console.log("No URLs stored for the current page.");
-        chrome.runtime.sendMessage({ action: 'updateURLCount', count: 0 });
-      }
+  countURLs(): Promise<number> {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(this.STORAGE_KEY, (result) => {
+        const urlParser = result[this.STORAGE_KEY] || {};
+        let totalCount = 0;
+
+        Object.values(urlParser).forEach((pageData: any) => {
+          if (pageData.currPage) {
+            totalCount += pageData.currPage.length;
+          }
+          if (pageData.externalJSFiles) {
+            Object.values(pageData.externalJSFiles).forEach((jsFileUrls: any) => {
+              totalCount += jsFileUrls.length;
+            });
+          }
+        });
+
+        resolve(totalCount);
+      });
     });
   }
 

@@ -6,6 +6,9 @@ import { RegexManager } from './urlParser/regexManager';
 import { JSFileProcessor } from './urlParser/jsFileProcesser';
 import { StorageManager } from './urlParser/storageManager';
 import { DOMObserver } from './urlParser/DOMobserver';
+import { getState, updateURLCount, updateJSFileCount } from './stateManager';
+import { sendURLCountUpdate, sendJSFileCountUpdate } from './messageHandler';
+
 
 export class URLParserOrchestrator {
   private urlExtractor: URLExtractor;
@@ -14,6 +17,7 @@ export class URLParserOrchestrator {
   private jsFileProcessor: JSFileProcessor;
   private storageManager: StorageManager;
   private domObserver: DOMObserver;
+  private isEnabled: boolean = false;
 
   constructor() {
     this.urlExtractor = new URLExtractor();
@@ -26,8 +30,11 @@ export class URLParserOrchestrator {
 
   async initialize(regexPatternPath: string): Promise<void> {
     try {
+      this.regexManager = new RegexManager();
+      await this.regexManager.initialize('./urlParser/urlTypes.json');
       this.urlClassifier = new URLClassifier(this.regexManager);
       this.jsFileProcessor = new JSFileProcessor(this.urlExtractor, this.urlClassifier, this.storageManager);
+      this.isEnabled = await getState('urlParser') as boolean;
       console.log("URL Parser Orchestrator initialized successfully.");
     } catch (error) {
       console.error("Failed to initialize URL Parser Orchestrator:", error);
@@ -35,47 +42,51 @@ export class URLParserOrchestrator {
     }
   }
 
-  private startObserving(): void{
-    this.domObserver.startObserving(async (newJsFiles) => {
-      console.log(`Found ${newJsFiles.length} new script(s)`);
-
-      for (const jsFile of newJsFiles) {
-        try {
-          const code = await this.fetchJSFile(jsFile);
-          const newUrls = this.urlExtractor.extractURLsFromJSCode(code);
-          const classifiedNewURLs = this.urlClassifier.classifyMultipleURLs(Array.from(newUrls));
-          await this.storageManager.saveExternalJSURLs(jsFile, classifiedNewURLs);
-        } catch (error) {
-          console.error(`error processing new script ${jsFile}: `, error);
-        }
-      }
-
-      this.countURLs();
-    });
+  handleStateChange(newState: boolean): void {
+    this.isEnabled = newState;
+    if (this.isEnabled) {
+      this.startParsing();
+    } else {
+      this.stopParsing()
+    }
   }
 
-  stopObserving(): void {
+  //private function to start observer and the parser
+  private startParsing(): void{
+    this.parseURLs;
+    this.domObserver.startObserving(this.handleNewScripts.bind(this));
+  }
+
+  //private function to turn off observer and parser
+  private stopParsing(): void {
     this.domObserver.stopObserving();
-    console.log('Stopped observing DOM for new script tags')
   }
 
-  private async fetchJSFile(url: string): Promise<string>{
-    const response = await fetch(url);
-    return response.text();
+  private async handleNewScripts(newJsFiles: string[]): Promise<void>{
+    for (const jsFile of newJsFiles){
+      await this.jsFileProcessor.processJSFiles([jsFile]);
+    }
+    this.countURLs();
+    this.countJSFiles();
   }
 
   async parseURLs(): Promise<void> {
-    console.log("Starting URL parsing process...");
-    
+    if (!this.isEnabled) {
+      console.log("URL parsing is disabled");
+      return;
+    }
+
+    console.log("Starting url parsing process...");
     try {
       await this.parseCurrentPage();
       await this.parseExternalFiles();
       this.countURLs();
-      console.log("URL parsing process completed.");
+      console.log("URL parsing process completed");
     } catch (error) {
-      console.error("Error during URL parsing process:", error);
+      console.log("Eorror during the URL parsing process", error);
     }
   }
+
 
   private async parseCurrentPage(): Promise<void> {
     console.log("Parsing URLs from current page...");
@@ -93,11 +104,17 @@ export class URLParserOrchestrator {
   }
 
   countURLs(): void {
-    this.storageManager.countURLs();
+    this.storageManager.countURLs().then(count => {
+      updateURLCount(count);
+      sendURLCountUpdate(count);
+    });
   }
+   
 
   countJSFiles(): void {
-    this.urlExtractor.countJSFiles();
+    const count = this.domObserver.getJSFileCount();
+    updateJSFileCount(count);
+    sendJSFileCountUpdate(count);
   }
 }
 

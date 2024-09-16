@@ -77,8 +77,8 @@ export class JSFileProcessor {
         // Classify the URLs
         const classifiedURLs = this.urlClassifier.classifyMultipleURLs(Array.from(jsFileURLs));
 
-        // TODO: Save classified URLs to storage
-        // This will be handled by the StorageManager in a separate file
+        // Save classified URLs to storage
+        await this.storageManager.saveExternalJSURLs(jsFile, classifiedURLs);
 
         this.parsedJSFiles.add(jsFile);
         console.log(`Successfully processed: ${jsFile}`);
@@ -91,7 +91,7 @@ export class JSFileProcessor {
       console.log(`File already processed: ${jsFile}`);
     }
   }
-
+  
   private async fetchWithTimeout(file: string): Promise<string> {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), this.FETCH_TIMEOUT);

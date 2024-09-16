@@ -30,3 +30,12 @@ export function getState(key?: keyof ExtensionState): Promise<any> {
     });
   });
 }
+
+export function updateURLCount(count: number): void {
+  updateState('urlCount', count);
+}
+
+
+export function updateJSFileCount(count: number): void {
+  updateState('jsFileCount', count);
+}
