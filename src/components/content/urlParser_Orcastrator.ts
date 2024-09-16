@@ -110,7 +110,6 @@ export class URLParserOrchestrator {
     });
   }
    
-
   countJSFiles(): void {
     const count = this.domObserver.getJSFileCount();
     updateJSFileCount(count);
