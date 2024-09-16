@@ -28,7 +28,7 @@ export class URLParserOrchestrator {
     this.domObserver = new DOMObserver();
   }
 
-  async initialize(regexPatternPath: string): Promise<void> {
+  async initialize(): Promise<void> {
     try {
       this.regexManager = new RegexManager();
       await this.regexManager.initialize('./urlParser/urlTypes.json');
@@ -53,7 +53,7 @@ export class URLParserOrchestrator {
 
   //private function to start observer and the parser
   private startParsing(): void{
-    this.parseURLs;
+    this.parseURLs();
     this.domObserver.startObserving(this.handleNewScripts.bind(this));
   }
 

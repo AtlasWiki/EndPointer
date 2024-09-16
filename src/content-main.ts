@@ -10,7 +10,7 @@ initializeState().then(() => {
   setupMessageListeners();
 
   // Initialize the URL parser orchestrator
-  urlParserOrchestrator.initialize('./urlParser/urlTypes.json')
+  urlParserOrchestrator.initialize()
     .then(() => {
       console.log('URL Parser Orchestrator initialized successfully');
       // Notify background script that content script is ready

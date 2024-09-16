@@ -24,9 +24,6 @@ function PopUpApp() {
           case 'urlParser':
             setURLParser(storageChange.newValue)
             break
-          case 'fileDownloader':
-            setFileDownloader(storageChange.newValue)
-            break
           case 'urlCount':
             setURLCount(storageChange.newValue)
             break
@@ -45,9 +42,15 @@ function PopUpApp() {
   }, [])
 
   function urlParserState() {
-    const newState = !urlParser
-    setURLParser(newState)
-    chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
+    const newState = !urlParser;
+    setURLParser(newState);
+    chrome.runtime.sendMessage({ action: 'toggleUrlParser', state: newState }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('Error toggling URL parser:', chrome.runtime.lastError);
+      } else {
+        console.log('URL parser state toggled:', response);
+      }
+    });
   }
 
   

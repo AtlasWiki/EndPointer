@@ -26,7 +26,7 @@
   "devtools_page": "DevTool/DevTool.html",
   "web_accessible_resources": [
     {
-      "resources": ["DevTool/background.js"],
+      "resources": ["background.js"],
       "matches": ["<all_urls>"]
     }
   ],

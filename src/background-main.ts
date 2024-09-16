@@ -5,16 +5,19 @@ import { initializeState } from './components/background/stateManager';
 import { setupTabListeners } from './components/background/tabHandler';
 import { setupMessageListeners } from './components/background/messageHandler';
 
-// Initialize the extension state when installed or updated
-chrome.runtime.onInstalled.addListener(() => {
-  initializeState();
-});
 
 // Set up tab listeners to handle tab updates and URL changes
 setupTabListeners();
 
 // Set up message listeners for communication with content scripts and popup
 setupMessageListeners();
+
+// Initialize the extension state when installed or updated
+chrome.runtime.onInstalled.addListener(() => {
+  initializeState();
+});
+
+
 
 // Listen for changes in the URL parser state
 chrome.storage.onChanged.addListener((changes, namespace) => {

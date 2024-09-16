@@ -5,54 +5,36 @@ export function setupMessageListeners() {
   chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
     console.log('Background script received message:', message);
 
-    switch (message.action) {
-      case 'toggleUrlParser':
-        handleStateChange('urlParser', sendResponse);
-        break;
-      case 'updateURLCount':
-        handleCountUpdate('urlCount', message.count, sendResponse);
-        break;
-      case 'updateJSFileCount':
-        handleCountUpdate('jsFileCount', message.count, sendResponse);
-        break;
-      case 'getState':
-        handleGetState(sendResponse);
-        break;
-      case 'contentScriptReady':
-        handleContentScriptReady(sender.tab?.id);
-        break;
-      default:
-        console.warn('Unknown message action:', message.action);
-        sendResponse({ success: false, error: 'Unknown action' });
+    try {
+      switch (message.action) {
+        case 'toggleUrlParser':
+          handleURLParserStateChange(message.state as boolean);
+          break;
+        case 'getState':
+          handleGetState(sendResponse);
+          break;
+        case 'contentScriptReady':
+          handleContentScriptReady(sender.tab?.id);
+          break;
+        default:
+          console.warn('Unknown message action: ', message.action);
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+      sendResponse({ success: false, error: (error as Error).message });
     }
 
-    return true; // Indicates that the response is sent asynchronously
+    // Return true to indicate that the response will be sent asynchronously
+    return true;
   });
 }
 
-async function handleStateChange(stateKey: keyof ExtensionState, sendResponse: (response: any) => void) {
+async function handleURLParserStateChange(state: boolean): Promise<void> {
   try {
-    const currentState = await getState(stateKey) as boolean;
-    const newState = !currentState;
-    await updateState(stateKey, newState);
-    sendResponse({ success: true, state: newState });
+    await updateState('urlParser', state);
+    console.log('URL Parser state updated:', state);
   } catch (error) {
-    console.error(`Error toggling ${stateKey} state:`, error);
-    sendResponse({ success: false, error: (error as Error).message });
-  }
-}
-
-async function handleCountUpdate(countKey: 'urlCount' | 'jsFileCount', count: number | undefined, sendResponse: (response: any) => void) {
-  if (typeof count === 'number') {
-    try {
-      await updateState(countKey, count);
-      sendResponse({ success: true });
-    } catch (error) {
-      console.error(`Error updating ${countKey}:`, error);
-      sendResponse({ success: false, error: (error as Error).message });
-    }
-  } else {
-    sendResponse({ success: false, error: 'Invalid count value' });
+    console.error('Error updating URL Parser state:', error);
   }
 }
 
