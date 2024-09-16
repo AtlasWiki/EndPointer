@@ -26,7 +26,6 @@ export class URLParserOrchestrator {
 
   async initialize(regexPatternPath: string): Promise<void> {
     try {
-      await this.regexManager.loadPatterns();
       this.urlClassifier = new URLClassifier(this.regexManager);
       this.jsFileProcessor = new JSFileProcessor(this.urlExtractor, this.urlClassifier, this.storageManager);
       console.log("URL Parser Orchestrator initialized successfully.");
@@ -53,6 +52,11 @@ export class URLParserOrchestrator {
 
       this.countURLs();
     });
+  }
+
+  stopObserving(): void {
+    this.domObserver.stopObserving();
+    console.log('Stopped observing DOM for new script tags')
   }
 
   private async fetchJSFile(url: string): Promise<string>{

@@ -1,5 +1,3 @@
-import { REL_REGEX, ABS_REGEX } from "../../sharedTypes/regex_constants";
-
 
 export class DOMObserver {
     private observer: MutationObserver | null = null;

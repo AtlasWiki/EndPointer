@@ -1,5 +1,5 @@
 import { URLCategory } from '../../sharedTypes/urlTypes_enums';
-
+import urlPatterns from './urlTypes.json'
 // RegexManager handles loading and managing regex patterns for URL classification.
 // It provides methods to load patterns from a JSON file and access them for use in URL classification.
 export class RegexManager {
@@ -7,31 +7,21 @@ export class RegexManager {
 
   constructor() {
     this.patterns = new Map();
+    this.loadPatterns();
   }
 
   // Loads regex patterns from a JSON file and compiles them into RegExp objects.
   // It uses the fetch API to load the file from the correct path in the extension.
-  async loadPatterns(): Promise<void> {
-    try {
-      const response = await fetch(chrome.runtime.getURL('assets/regex_patterns.json'));
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  private loadPatterns(): void {
+    for (const [category, pattern] of Object.entries(urlPatterns)) {
+      if (category in URLCategory) {
+        this.patterns.set(
+          URLCategory[category as keyof typeof URLCategory],
+          new RegExp(pattern as string, 'i')
+        );
+      } else {
+        console.warn(`Unknown category in regex file: ${category}`);
       }
-      const jsonPatterns = await response.json();
-      
-      for (const [category, pattern] of Object.entries(jsonPatterns)) {
-        if (category in URLCategory) {
-          this.patterns.set(
-            URLCategory[category as keyof typeof URLCategory],
-            new RegExp(pattern as string, 'i')
-          );
-        } else {
-          console.warn(`Unknown category in regex file: ${category}`);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading regex patterns:', error);
-      throw error;
     }
   }
 

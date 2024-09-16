@@ -15,7 +15,7 @@ interface URLParserStorage {
       [jsFile: string]: ClassifiedURL[];
     };
   };
-  current?: string | any;
+  current?: string | any; //Type declartion for intitlization? 
 }
 
 export class StorageManager {
