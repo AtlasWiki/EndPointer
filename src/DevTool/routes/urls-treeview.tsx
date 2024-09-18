@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavBar } from '../../components/navbar';
+import { URLCategory } from "../../components/sharedTypes/urlTypes_enums";
 
 // Define types for our data structure
 interface ClassifiedURL {
@@ -22,6 +23,38 @@ interface URLHierarchy {
   };
 }
 
+interface URLEntry {
+  currPage: ClassifiedURL[];
+  externalJSFiles: { [key: string]: ClassifiedURL[] };
+}
+
+interface URLParser {
+  [key: string]: URLEntry;
+}
+
+const categorySymbols: { [key in URLCategory]: string } = {
+  [URLCategory.APIEndpoint]: '🔗',
+  [URLCategory.AuthenticationEndpoint]: '🔐',
+  [URLCategory.DataTransfer]: '📤',
+  [URLCategory.DatabaseOperation]: '💾',
+  [URLCategory.AdminPanel]: '👑',
+  [URLCategory.UserDataAccess]: '👤',
+  [URLCategory.PaymentProcessing]: '💳',
+  [URLCategory.FileAccess]: '📁',
+  [URLCategory.LegacyEndpoint]: '👴',
+  [URLCategory.DynamicContent]: '🔄',
+  [URLCategory.WebSocket]: '🔌',
+  [URLCategory.InternalNetwork]: '🏢',
+  [URLCategory.ThirdPartyIntegration]: '🤝',
+  [URLCategory.DebugEndpoint]: '🐛',
+  [URLCategory.PotentiallyVulnerable]: '⚠️',
+  [URLCategory.SensitiveData]: '🔒',
+  [URLCategory.UnsecuredAPI]: '🚨',
+  [URLCategory.ParameterizedEndpoint]: '🔧',
+  [URLCategory.NonStandardPort]: '🚪',
+  [URLCategory.Base64EncodedSegment]: '📟'
+};
+
 export function URLsTreeView() {
   const [hierarchy, setHierarchy] = useState<URLHierarchy>({});
   const [jsFiles, setJSFiles] = useState<string[]>([]);
@@ -29,46 +62,32 @@ export function URLsTreeView() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
-    setError(null);
     let newHierarchy: URLHierarchy = {};
     let allJsFiles: string[] = [];
 
-    chrome.storage.local.get("URL-PARSER", (result) => {
-      if (chrome.runtime.lastError) {
-        setError(chrome.runtime.lastError.message as string);
-        setIsLoading(false);
-        return;
-      }
-
+    chrome.storage.local.get("URL-PARSER", (result: { [key: string]: URLParser }) => {
       const urlParser = result["URL-PARSER"];
-      if (!urlParser) {
-        setError("No data found");
-        setIsLoading(false);
-        return;
-      }
+      if (!urlParser) return;
 
-      Object.keys(urlParser).forEach((key) => {
+      Object.entries(urlParser).forEach(([key, value]) => {
         if (key !== "current") {
           const webpage = decodeURIComponent(key);
           newHierarchy[webpage] = { mainPage: [], jsFiles: {} };
 
           // Add currPage endpoints
-          newHierarchy[webpage].mainPage = urlParser[key].currPage.map((url: ClassifiedURL): Endpoint => ({
+          newHierarchy[webpage].mainPage = value.currPage.map((url: ClassifiedURL): Endpoint => ({
             ...url,
             foundAt: 'Main Page',
             webpage,
           }));
 
           // Add externalJSFiles endpoints
-          Object.entries(urlParser[key].externalJSFiles).forEach(([jsFile, endpoints]) => {
+          Object.entries(value.externalJSFiles).forEach(([jsFile, endpoints]) => {
             const decodedJsFile = decodeURIComponent(jsFile);
             allJsFiles.push(decodedJsFile);
-            newHierarchy[webpage].jsFiles[decodedJsFile] = (endpoints as ClassifiedURL[]).map((url): Endpoint => ({
+            newHierarchy[webpage].jsFiles[decodedJsFile] = endpoints.map((url: ClassifiedURL): Endpoint => ({
               ...url,
               foundAt: decodedJsFile,
               webpage,
@@ -79,7 +98,6 @@ export function URLsTreeView() {
 
       setHierarchy(newHierarchy);
       setJSFiles(['All', ...Array.from(new Set(allJsFiles))]);
-      setIsLoading(false);
     });
   }, []);
 
@@ -111,6 +129,7 @@ export function URLsTreeView() {
     );
   };
 
+  
   const renderEndpoint = (endpoint: Endpoint) => {
     const parts = endpoint.url.split(new RegExp(`(${searchQuery})`, 'gi'));
     return (
@@ -124,11 +143,32 @@ export function URLsTreeView() {
           )
         )}
         <span className="ml-2 text-gray-500">
-          (Score: {endpoint.score}, Categories: {endpoint.categories.join(', ')})
+          (Score: {endpoint.score})
+        </span>
+        <span className="ml-2">
+          {endpoint.categories.map(category => (
+            <span key={category} title={category} className="mr-1">
+              {categorySymbols[category as URLCategory] || '❓'}
+            </span>
+          ))}
         </span>
       </div>
     );
   };
+
+  const renderLegend = () => (
+    <div className="mt-4 p-4 border rounded-lg">
+      <h3 className="text-lg font-semibold mb-2">Classification Legend</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        {Object.entries(categorySymbols).map(([category, symbol]) => (
+          <div key={category} className="flex items-center">
+            <span className="mr-2">{symbol}</span>
+            <span>{category}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   const renderHierarchicalView = () => {
     return Object.entries(hierarchy).map(([webpage, { mainPage, jsFiles }]) => {
@@ -233,13 +273,13 @@ export function URLsTreeView() {
     });
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const clearURLs = () => {
+    chrome.storage.local.remove('URL-PARSER', function() {
+      console.log('URL-PARSER data has been removed.');
+      setHierarchy({});
+      setJSFiles(['All']);
+    });
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -279,8 +319,10 @@ export function URLsTreeView() {
         <div className="border rounded-lg p-4 max-h-[600px] overflow-auto">
           {renderHierarchicalView()}
         </div>
+        {renderLegend()}
         <div className="text-lg flex items-center space-x-4 mt-5">
           <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md">Open in New Tab</a>
+          <button onClick={clearURLs} className="bg-gray-600 p-3 rounded-md">Clear URLs</button>
           <button onClick={downloadAsTXT} className="bg-gray-600 p-3 rounded-md">Download as TXT</button>
           <button onClick={downloadAsJSON} className="bg-gray-600 p-3 rounded-md">Download as JSON</button>
           <button onClick={copyAllURLs} className="bg-gray-600 p-3 rounded-md">Copy All URLs</button>
