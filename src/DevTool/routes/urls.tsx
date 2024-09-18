@@ -12,7 +12,7 @@ export function URLs() {
                 <button className={`px-10 py-2 font-semibold ${selection == "tree" ? "text-purple-500 bg-black": ""}`} onClick={() => setSelection("tree")}>TREE</button>
             </div>
             <div className="py-1"></div>
-            {selection === "default" ? <URLsDefaultView /> : <URLsTreeView />}
+            {selection === "default" ?  <URLsTreeView />: <URLsDefaultView />}
         </div>
     );
 }
