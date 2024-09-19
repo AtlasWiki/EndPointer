@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { js as beautify } from 'js-beautify';
+
 export function URLsDefaultView() {
   interface Endpoint {
     url: string;
@@ -111,7 +113,31 @@ export function URLsDefaultView() {
       }
     }, [isSeeResponseOpen]);
 
+    const [codeSnippet, setCodeSnippet] = useState<string[]>([]);
+
+    useEffect(() => {
+      if (isViewCodeOpen) {
+        fetch(endpoint.foundAt)
+          .then(res => res.text())
+          .then(code => {
+            const beautifiedCode = beautify(code);
+            const regex = new RegExp(`(?:^.*?(?:\\n.*?){0,1}(${endpoint.url}).*?(?:\\n.*?){0,1})`, 'gs');
+            console.log(beautifiedCode)
+            // const regex = new RegExp(`(${endpoint.url})`, 'gs');
+            const matches = beautifiedCode.match(regex); // Use beautifiedCode for matching
   
+            // Handle matches being null
+            setCodeSnippet(matches || []); // Set to an empty array if no matches
+          })
+          .catch(() => {
+            console.error("request failed");
+          });
+      }
+    }, [isViewCodeOpen]);
+
+    const logCodeSnippet = () => {
+      console.log(codeSnippet);
+    };
     return (
       <tr>
         <td className="break-words max-w-lg">
@@ -170,10 +196,18 @@ export function URLsDefaultView() {
           {/* Modal for View Code Snippet */}
           {isViewCodeOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
-              <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
-                <h2 className="text-xl font-semibold text-black">View Code Snippet for {sanitizedURL()}</h2>
-                <p className="text-black">Content for View Code Snippet modal.</p>
-                <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsViewCodeOpen(false)}>Close</button>
+              <div className="bg-[#363333] opacity-85 p-5 rounded-lg shadow-lg max-w-6xl max-h-screen overflow-auto" onClick={e => e.stopPropagation()}>
+                {/* <button onClick={logCodeSnippet}>Log Code Snippet</button> */}
+                <h2 className="text-lg font-semibold text-gray-400 mb-5">View Code Snippet for {sanitizedURL()}</h2>
+                <p className="font-semibold text-gray-400">Content for View Code Snippet modal.</p>
+                <div>
+                  {codeSnippet.map((snippet, index) => (
+                      <pre key={index}>
+                        <code>{snippet}</code>
+                      </pre>
+                    ))}
+                </div>
+                <button className="mt-3 px-4 py-2 bg-black text-white rounded" onClick={() => setIsViewCodeOpen(false)}>Close</button>
               </div>
             </div>
           )}
