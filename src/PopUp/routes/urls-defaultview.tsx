@@ -43,6 +43,44 @@ export function URLsDefaultView() {
       setIsSeeResponseOpen(false);
     };
 
+    const [headers, setHeaders] = useState<string[]>([]);
+  
+    // Sanitze urls
+    const sanitizedURL = () => {
+      let verifiedURL: string;
+      const cleanedWebpage = endpoint.webpage.replace(/\/$/, '').split('#')[0];
+    
+      if (endpoint.url && (endpoint.url.startsWith("http://") || endpoint.url.startsWith("https://"))) {
+        verifiedURL = endpoint.url;
+      } else if (endpoint.url.startsWith('/')) {
+        verifiedURL = cleanedWebpage + endpoint.url;
+      } else {
+        verifiedURL = cleanedWebpage + '/' + endpoint.url; 
+      }
+      verifiedURL = verifiedURL.replace(/([^:]\/)\/+/g, "$1");
+    
+      return verifiedURL;
+    };
+
+    // Logic for capturing response headers
+    useEffect(() => {
+      let verifiedURL: string;
+      if (isSeeResponseOpen) {
+        verifiedURL = sanitizedURL();
+        fetch(verifiedURL)
+          .then(resp => {
+            const fetchedHeaders: string[] = [];
+            resp.headers.forEach((value, header) => {
+              fetchedHeaders.push(`${header}: ${value}`);
+            });
+            setHeaders(fetchedHeaders);
+          })
+          .catch(error => console.error('Error fetching headers:', error));
+      }
+    }, [isSeeResponseOpen]);
+    
+   
+  
     return (
       <tr>
         <td className="break-words max-w-lg">
@@ -91,7 +129,7 @@ export function URLsDefaultView() {
           {isGenerateReportOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
               <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
-                <h2 className="text-xl font-semibold text-black">Generate Report for {endpoint.url}</h2>
+                <h2 className="text-xl font-semibold text-black">Generate Report for {sanitizedURL()}</h2>
                 <p className="text-black">Content for Generate Report modal.</p>
                 <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsGenerateReportOpen(false)}>Close</button>
               </div>
@@ -102,23 +140,55 @@ export function URLsDefaultView() {
           {isViewCodeOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
               <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
-                <h2 className="text-xl font-semibold text-black">View Code Snippet for {endpoint.url}</h2>
+                <h2 className="text-xl font-semibold text-black">View Code Snippet for {sanitizedURL()}</h2>
                 <p className="text-black">Content for View Code Snippet modal.</p>
                 <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsViewCodeOpen(false)}>Close</button>
               </div>
             </div>
           )}
 
-          {/* Modal for See Response */}
-          {isSeeResponseOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
-              <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
-                <h2 className="text-xl font-semibold text-black">See Response for {endpoint.url}</h2>
-                <p className="text-black">Content for See Response modal.</p>
-                <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsSeeResponseOpen(false)}>Close</button>
+         {/* Modal for See Response */}
+         {isSeeResponseOpen && (
+          <div
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+            onClick={closeAllModals}
+          >
+            <div
+              className="bg-[#363333] opacity-85 p-5 rounded-lg shadow-lg max-w-4xl max-h-screen overflow-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-xl font-bold text-gray-400">
+                See Response for {sanitizedURL()}
+              </h2>
+
+              {/* Map and display the fetched headers */}
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold text-gray-400 mb-5">Response Headers:</h3>
+                <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-60">
+                {/* #292727 */}
+                {/* #3D3B3B */}
+                {/* bg-[#4a5759] */}
+                  {headers.map((header, index) => {
+                    const [headerName, ...rest] = header.split(': ');
+                    return (
+                      <li key={index} className="p-1">
+                        <span className="font-bold text-purple-200">{headerName}:</span>
+                        <span className="text-gray-200"> {rest.join(': ')}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
+
+              <button
+                className="mt-3 px-4 py-2 bg-black text-white rounded"
+                onClick={() => setIsSeeResponseOpen(false)}
+              >
+                Close
+              </button>
             </div>
-          )}
+          </div>
+        )}
         </td>
         <td className="break-words max-w-lg">{endpoint.foundAt}</td>
         <td className="break-words max-w-lg text-center">{endpoint.webpage}</td>
