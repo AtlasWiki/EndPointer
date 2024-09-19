@@ -39,6 +39,8 @@ export function URLsDefaultView() {
     const [isGenerateReportOpen, setIsGenerateReportOpen] = useState(false);
     const [isViewCodeOpen, setIsViewCodeOpen] = useState(false);
     const [isSeeResponseOpen, setIsSeeResponseOpen] = useState(false);
+    const [respStatus, setRespStatus] = useState(0);
+    const [respStatusMessage, setRespStatusMessage] = useState("");
 
     const closeAllModals = () => {
       setIsGenerateReportOpen(false);
@@ -77,6 +79,8 @@ export function URLsDefaultView() {
               fetchedHeaders.push(`${header}: ${value}`);
             });
             setHeaders(fetchedHeaders);
+            setRespStatus(resp.status);
+            setRespStatusMessage(resp.statusText);
           })
           .catch(error => console.error('Error fetching headers:', error));
       }
@@ -164,10 +168,12 @@ export function URLsDefaultView() {
                 See Response for {sanitizedURL()}
               </h2>
 
+
               {/* Map and display the fetched headers */}
               <div className="mt-3">
                 <h3 className="text-lg font-semibold text-gray-400 mb-5">Response Headers:</h3>
                 <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-60">
+                  <li className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2">{respStatus + " " + respStatusMessage} GET</li>
                 {/* #292727 */}
                 {/* #3D3B3B */}
                 {/* bg-[#4a5759] */}
