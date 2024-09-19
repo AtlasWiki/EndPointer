@@ -190,7 +190,7 @@ export function URLsDefaultView() {
             onClick={closeAllModals}
           >
             <div
-              className="bg-[#363333] opacity-85 p-5 rounded-lg shadow-lg max-w-4xl max-h-screen overflow-auto"
+              className="bg-[#363333] opacity-85 p-5 rounded-lg shadow-lg max-w-6xl max-h-screen overflow-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <h2 className="text-xl font-bold text-gray-400">
