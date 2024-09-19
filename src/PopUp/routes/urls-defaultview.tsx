@@ -33,11 +33,24 @@ export function URLsDefaultView() {
     }
     const parts = endpoint.url.split(new RegExp(`(${escapedQuery})`, 'gi'));
 
+    type HttpMethod = 'GET' | 'POST' | 'PUT' | 'OPTIONS';
+
     const [isGenerateReportOpen, setIsGenerateReportOpen] = useState(false);
     const [isViewCodeOpen, setIsViewCodeOpen] = useState(false);
     const [isSeeResponseOpen, setIsSeeResponseOpen] = useState(false);
-    const [respStatus, setRespStatus] = useState(0);
-    const [respStatusMessage, setRespStatusMessage] = useState("");
+    const [respStatus, setRespStatus] = useState<Record<HttpMethod, number>>({
+      GET: 0,
+      POST: 0,
+      PUT: 0,
+      OPTIONS: 0
+    });
+    const [respStatusMessage, setRespStatusMessage] = useState<Record<HttpMethod, string>>({
+      GET: "",
+      POST: "",
+      PUT: "",
+      OPTIONS: ""
+    });
+    const [currentMethod, setCurrentMethod] = useState<HttpMethod>("GET");
 
     const closeAllModals = () => {
       setIsGenerateReportOpen(false);
@@ -45,13 +58,18 @@ export function URLsDefaultView() {
       setIsSeeResponseOpen(false);
     };
 
-    const [headers, setHeaders] = useState<string[]>([]);
-  
-    // Sanitze urls
+    const [headers, setHeaders] = useState<Record<HttpMethod, string[]>>({
+      GET: [],
+      POST: [],
+      PUT: [],
+      OPTIONS: []
+    });
+
+    // Sanitize urls
     const sanitizedURL = () => {
       let verifiedURL: string;
       const cleanedWebpage = endpoint.webpage.replace(/\/$/, '').split('#')[0];
-    
+
       if (endpoint.url && (endpoint.url.startsWith("http://") || endpoint.url.startsWith("https://"))) {
         verifiedURL = endpoint.url;
       } else if (endpoint.url.startsWith('/')) {
@@ -60,30 +78,39 @@ export function URLsDefaultView() {
         verifiedURL = cleanedWebpage + '/' + endpoint.url; 
       }
       verifiedURL = verifiedURL.replace(/([^:]\/)\/+/g, "$1");
-    
+
       return verifiedURL;
     };
 
     // Logic for capturing response headers
     useEffect(() => {
-      let verifiedURL: string;
+      const fetchData = async (method: string) => {
+        const verifiedURL = sanitizedURL();
+        try {
+          const response = await fetch(verifiedURL, { method });
+          const fetchedHeaders: string[] = [];
+          response.headers.forEach((value, header) => {
+            fetchedHeaders.push(`${header}: ${value}`);
+          });
+          setHeaders(prev => ({ ...prev, [method]: fetchedHeaders }));
+          setRespStatus(prev => ({ ...prev, [method]: response.status }));
+          setRespStatusMessage(prev => ({ ...prev, [method]: response.statusText }));
+        } catch (error) {
+          const errorMessage = (error as Error).message || 'An unknown error occurred';
+          setHeaders(prev => ({ ...prev, [method]: [`Error: ${errorMessage}`] }));
+          setRespStatus(prev => ({ ...prev, [method]: 0 }));
+          setRespStatusMessage(prev => ({ ...prev, [method]: "Failed to fetch" }));
+        }
+      };
+
       if (isSeeResponseOpen) {
-        verifiedURL = sanitizedURL();
-        fetch(verifiedURL)
-          .then(resp => {
-            const fetchedHeaders: string[] = [];
-            resp.headers.forEach((value, header) => {
-              fetchedHeaders.push(`${header}: ${value}`);
-            });
-            setHeaders(fetchedHeaders);
-            setRespStatus(resp.status)
-            setRespStatusMessage(resp.statusText);
-          })
-          .catch(error => console.error('Error fetching headers:', error));
+        fetchData("GET");
+        fetchData("POST");
+        fetchData("PUT");
+        fetchData("OPTIONS");
       }
     }, [isSeeResponseOpen]);
-    
-   
+
   
     return (
       <tr>
@@ -151,8 +178,8 @@ export function URLsDefaultView() {
             </div>
           )}
 
-         {/* Modal for See Response */}
-         {isSeeResponseOpen && (
+        {/* Modal for See Response */}
+        {isSeeResponseOpen && (
           <div
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
             onClick={closeAllModals}
@@ -169,11 +196,17 @@ export function URLsDefaultView() {
               <div className="mt-3">
                 <h3 className="text-lg font-semibold text-gray-400 mb-5">Response Headers:</h3>
                 <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-60">
-                  <li className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2">{respStatus + " " + respStatusMessage} GET</li>
-                {/* #292727 */}
-                {/* #3D3B3B */}
-                {/* bg-[#4a5759] */}
-                  {headers.map((header, index) => {
+                  <select 
+                    className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
+                    value={currentMethod}
+                    onChange={(e) => setCurrentMethod(e.target.value as HttpMethod)}
+                  >
+                    <option value="GET">[{respStatus.GET}] {respStatusMessage.GET} GET</option>
+                    <option value="POST">[{respStatus.POST}] {respStatusMessage.POST} POST</option>
+                    <option value="PUT">[{respStatus.PUT}] {respStatusMessage.PUT} PUT</option>
+                    <option value="OPTIONS">[{respStatus.OPTIONS}] {respStatusMessage.OPTIONS} OPTIONS</option>
+                  </select>
+                  {headers[currentMethod].map((header, index) => {
                     const [headerName, ...rest] = header.split(': ');
                     return (
                       <li key={index} className="p-1">
