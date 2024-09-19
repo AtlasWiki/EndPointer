@@ -47,23 +47,43 @@ export function URLsDefaultView() {
     };
 
     const [headers, setHeaders] = useState<string[]>([]);
+  
+    // Sanitze urls
+    const sanitizedURL = () => {
+      let verifiedURL: string;
+      const cleanedWebpage = endpoint.webpage.replace(/\/$/, '').split('#')[0];
+    
+      if (endpoint.url && (endpoint.url.startsWith("http://") || endpoint.url.startsWith("https://"))) {
+        verifiedURL = endpoint.url;
+      } else if (endpoint.url.startsWith('/')) {
+        verifiedURL = cleanedWebpage + endpoint.url;
+      } else {
+        verifiedURL = cleanedWebpage + '/' + endpoint.url; 
+      }
+      verifiedURL = verifiedURL.replace(/([^:]\/)\/+/g, "$1");
+    
+      return verifiedURL;
+    };
 
     // Logic for capturing response headers
-      useEffect(() => {
-        if (isSeeResponseOpen) {
-          fetch(endpoint.url)
-            .then(resp => {
-              const fetchedHeaders: string[] = [];
-              resp.headers.forEach((value, header) => {
-                fetchedHeaders.push(`${header}: ${value}`);
-              });
-              setHeaders(fetchedHeaders);
-            })
-            .catch(error => console.error('Error fetching headers:', error));
-        }
-      }, [isSeeResponseOpen]);
+    useEffect(() => {
+      let verifiedURL: string;
+      if (isSeeResponseOpen) {
+        verifiedURL = sanitizedURL();
+        fetch(verifiedURL)
+          .then(resp => {
+            const fetchedHeaders: string[] = [];
+            resp.headers.forEach((value, header) => {
+              fetchedHeaders.push(`${header}: ${value}`);
+            });
+            setHeaders(fetchedHeaders);
+          })
+          .catch(error => console.error('Error fetching headers:', error));
+      }
+    }, [isSeeResponseOpen]);
     
-
+   
+  
     return (
       <tr>
         <td className="break-words max-w-lg">
@@ -112,7 +132,7 @@ export function URLsDefaultView() {
           {isGenerateReportOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
               <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
-                <h2 className="text-xl font-semibold text-black">Generate Report for {endpoint.url}</h2>
+                <h2 className="text-xl font-semibold text-black">Generate Report for {sanitizedURL()}</h2>
                 <p className="text-black">Content for Generate Report modal.</p>
                 <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsGenerateReportOpen(false)}>Close</button>
               </div>
@@ -123,7 +143,7 @@ export function URLsDefaultView() {
           {isViewCodeOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeAllModals}>
               <div className="bg-white p-5 rounded-lg shadow-lg" onClick={e => e.stopPropagation()}>
-                <h2 className="text-xl font-semibold text-black">View Code Snippet for {endpoint.url}</h2>
+                <h2 className="text-xl font-semibold text-black">View Code Snippet for {sanitizedURL()}</h2>
                 <p className="text-black">Content for View Code Snippet modal.</p>
                 <button className="mt-3 px-4 py-2 bg-blue-500 text-white rounded" onClick={() => setIsViewCodeOpen(false)}>Close</button>
               </div>
@@ -141,7 +161,7 @@ export function URLsDefaultView() {
               onClick={(e) => e.stopPropagation()}
             >
               <h2 className="text-xl font-bold text-gray-400">
-                See Response for {endpoint.url}
+                See Response for {sanitizedURL()}
               </h2>
 
               {/* Map and display the fetched headers */}
