@@ -18,10 +18,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+/* a {
   color: #646cff;
   text-decoration: inherit;
-}
+} */
 
 body {
   margin: 0;
