@@ -381,7 +381,7 @@ export function URLsDefaultView() {
     }
 
   return (
-    <div className="w-full min-h-screen flex justify-center item-center">
+    <div className="w-full min-h-screen flex justify-center items-center">
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
           <div className="w-full max-h-[760px] overflow-auto">
