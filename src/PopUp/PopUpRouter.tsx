@@ -8,6 +8,7 @@ import {
 import PopUpApp from './PopUpApp'
 import './index.css'
 import { URLs } from './routes/urls'
+import { URLsPlain } from './routes/urls-plain'
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
@@ -17,6 +18,7 @@ if (rootElement) {
         <Routes>
           <Route path="" element={<PopUpApp />} />
           <Route path="/urls" element={<URLs />} />
+          <Route path="/urls/plain" element={<URLsPlain />} />
         </Routes>
       </Router>
     </StrictMode>
