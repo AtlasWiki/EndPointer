@@ -56,6 +56,13 @@ export function URLsDefaultView() {
       OPTIONS: ""
     });
 
+    const [respBody, setRespBody] = useState<Record<HttpMethod, string>>({
+      GET: "",
+      POST: "",
+      PUT: "",
+      OPTIONS: ""
+    });
+
     const [currentMethod, setCurrentMethod] = useState<HttpMethod>("GET");
 
     const closeAllModals = () => {
@@ -101,6 +108,17 @@ export function URLsDefaultView() {
           setHeaders(prev => ({ ...prev, [method]: fetchedHeaders }));
           setRespStatus(prev => ({ ...prev, [method]: response.status }));
           setRespStatusMessage(prev => ({ ...prev, [method]: response.statusText }));
+
+          const responseBody = await response.text();
+          const beautifiedHTML = beautify(responseBody, {
+            indent_size: 2,
+            indent_char: ' ',
+            preserve_newlines: true,
+            max_preserve_newlines: 2,
+            end_with_newline: true,
+            wrap_line_length: 0,
+          });
+          setRespBody(prev => ({ ...prev, [method]: beautifiedHTML }));
         } catch (error) {
           const errorMessage = (error as Error).message || 'An unknown error occurred';
           setHeaders(prev => ({ ...prev, [method]: [`Error: ${errorMessage}`] }));
@@ -232,8 +250,8 @@ export function URLsDefaultView() {
 
               {/* Map and display the fetched headers */}
               <div className="mt-3">
-                <h3 className="text-lg font-semibold text-gray-400 mb-5">Response Headers:</h3>
-                <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-60">
+                <h3 className="text-lg font-semibold text-gray-400 mb-5">Response</h3>
+                <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-160">
                   <select 
                     className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
                     value={currentMethod}
@@ -253,6 +271,11 @@ export function URLsDefaultView() {
                       </li>
                     );
                   })}
+                  <li>
+                    <pre className="mt-5">
+                      <span className="text-gray-200">{respBody[currentMethod]}</span>
+                    </pre>
+                  </li>
                 </ul>
               </div>
 

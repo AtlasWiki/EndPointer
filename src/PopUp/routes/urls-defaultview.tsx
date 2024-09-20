@@ -46,12 +46,21 @@ export function URLsDefaultView() {
       PUT: 0,
       OPTIONS: 0
     });
+
     const [respStatusMessage, setRespStatusMessage] = useState<Record<HttpMethod, string>>({
       GET: "",
       POST: "",
       PUT: "",
       OPTIONS: ""
     });
+
+    const [respBody, setRespBody] = useState<Record<HttpMethod, string>>({
+      GET: "",
+      POST: "",
+      PUT: "",
+      OPTIONS: ""
+    });
+
     const [currentMethod, setCurrentMethod] = useState<HttpMethod>("GET");
 
     const closeAllModals = () => {
@@ -97,14 +106,26 @@ export function URLsDefaultView() {
           setHeaders(prev => ({ ...prev, [method]: fetchedHeaders }));
           setRespStatus(prev => ({ ...prev, [method]: response.status }));
           setRespStatusMessage(prev => ({ ...prev, [method]: response.statusText }));
+
+          const responseBody = await response.text();
+          const beautifiedHTML = beautify(responseBody, {
+            indent_size: 2,
+            indent_char: ' ',
+            preserve_newlines: true,
+            max_preserve_newlines: 2,
+            end_with_newline: true,
+            wrap_line_length: 0,
+          });
+          setRespBody(prev => ({ ...prev, [method]: beautifiedHTML }));
         } catch (error) {
-          const errorMessage = (error as Error).message || 'An unknown error occurred';
-          setHeaders(prev => ({ ...prev, [method]: [`Error: ${errorMessage}`] }));
-          setRespStatus(prev => ({ ...prev, [method]: 0 }));
-          setRespStatusMessage(prev => ({ ...prev, [method]: "Failed to fetch" }));
+            const errorMessage = (error as Error).message || 'An unknown error occurred';
+            setHeaders(prev => ({ ...prev, [method]: [`Error: ${errorMessage}`] }));
+            setRespStatus(prev => ({ ...prev, [method]: 0 }));
+            setRespStatusMessage(prev => ({ ...prev, [method]: "Failed to fetch" }));
+            setRespBody(prev => ({ ...prev, [method]: "body not found" }));
         }
       };
-
+    
       if (isSeeResponseOpen) {
         fetchData("GET");
         fetchData("POST");
@@ -112,8 +133,10 @@ export function URLsDefaultView() {
         fetchData("OPTIONS");
       }
     }, [isSeeResponseOpen]);
+    
 
     const [codeSnippet, setCodeSnippet] = useState<string[]>([]);
+    const [keywordHits, setKeywordHits] = useState<string[]>([]);
 
     useEffect(() => {
       if (isViewCodeOpen) {
@@ -122,12 +145,15 @@ export function URLsDefaultView() {
           .then(code => {
             const beautifiedCode = beautify(code);
             const regex = new RegExp(`(?:^.*?(?:\\n.*?){0,1}(${endpoint.url}).*?(?:\\n.*?){0,1})`, 'gs');
-            console.log(beautifiedCode)
-            // const regex = new RegExp(`(${endpoint.url})`, 'gs');
-            const matches = beautifiedCode.match(regex); // Use beautifiedCode for matching
+            const keyRegex = new RegExp(`${endpoint.url}`, 'gs');
+            // console.log(beautifiedCode)
+            
+            const matches = beautifiedCode.match(regex);
+            const keywordMatches = beautifiedCode.match(keyRegex); 
   
             // Handle matches being null
-            setCodeSnippet(matches || []); // Set to an empty array if no matches
+            setCodeSnippet(matches || []);
+            setKeywordHits(keywordMatches || []); 
           })
           .catch(() => {
             console.error("request failed");
@@ -200,6 +226,7 @@ export function URLsDefaultView() {
                 {/* <button onClick={logCodeSnippet}>Log Code Snippet</button> */}
                 <h2 className="text-lg font-semibold text-gray-400 mb-5">View Code Snippet for {sanitizedURL()}</h2>
                 <p className="font-semibold text-gray-400">Content for View Code Snippet modal.</p>
+                <p className="mb-5 font-semibold text-purple-200">{keywordHits.length} hits found in {endpoint.foundAt}</p>
                 <div>
                   {codeSnippet.map((snippet, index) => (
                       <pre key={index}>
@@ -228,8 +255,8 @@ export function URLsDefaultView() {
 
               {/* Map and display the fetched headers */}
               <div className="mt-3">
-                <h3 className="text-lg font-semibold text-gray-400 mb-5">Response Headers:</h3>
-                <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-60">
+                <h3 className="text-lg font-semibold text-gray-400 mb-5">Response</h3>
+                <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-160">
                   <select 
                     className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
                     value={currentMethod}
@@ -249,6 +276,11 @@ export function URLsDefaultView() {
                       </li>
                     );
                   })}
+                  <li>
+                    <pre className="mt-5">
+                      <span className="text-gray-200">{respBody[currentMethod]}</span>
+                    </pre>
+                  </li>
                 </ul>
               </div>
 

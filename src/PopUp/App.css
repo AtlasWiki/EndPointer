@@ -26,6 +26,10 @@ tr:nth-child(even) {
   background-color: #495057;
 }
 
+.h-176 {
+  height: 44rem;
+}
+
 /* #4a5759 */
 /* #495057 */
 /* #212529 */
