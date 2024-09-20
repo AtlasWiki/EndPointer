@@ -175,7 +175,7 @@ export function URLsDefaultView() {
             )
           )}
           <div className="flex mt-2 items-center gap-1">
-            <button
+            {/* <button
               className="i-button"
               onClick={() => setIsGenerateReportOpen(true)}
             >
@@ -186,7 +186,7 @@ export function URLsDefaultView() {
                 </g>
                 <title>Generate Report</title>
               </svg>
-            </button>
+            </button> */}
             <button
               className="i-button"
               onClick={() => setIsViewCodeOpen(true)}
