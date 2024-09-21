@@ -5,44 +5,70 @@ import './App.css'
 
 function DevToolsApp() {
   const [urlCount, setURLCount] = useState(0)
-  const [credCount, setCredCount] = useState(0)
-  const [apiKeyCount, setApiKeyCount] = useState(0)
+  // const [credCount, setCredCount] = useState(0)
+  // const [apiKeyCount, setApiKeyCount] = useState(0)
   const [fileCount, setFileCount] = useState(0)
 
+  // useEffect(() => {
+  //   chrome.storage.local.get(['urlCount', 'credCount', 'apiKeyCount', 'jsFileCount'], (result) => {
+  //     setURLCount(result.urlCount || 0)
+  //     setCredCount(result.credCount || 0)
+  //     setApiKeyCount(result.apiKeyCount || 0)
+  //     setFileCount(result.jsFileCount || 0)
+  //   })
+
+  //   const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+  //     for (let key in changes) {
+  //       const storageChange = changes[key]
+  //       switch(key) {
+  //         case 'urlCount':
+  //           setURLCount(storageChange.newValue)
+  //           break
+  //         case 'credCount':
+  //           setCredCount(storageChange.newValue)
+  //           break
+  //         case 'apiKeyCount':
+  //           setApiKeyCount(storageChange.newValue)
+  //           break
+  //         case 'jsFileCount':
+  //           setFileCount(storageChange.newValue)
+  //           break
+  //       }
+  //     }
+  //   }
+
+  //   chrome.storage.onChanged.addListener(handleStorageChange)
+
+  //   return () => {
+  //     chrome.storage.onChanged.removeListener(handleStorageChange)
+  //   }
+  // }, [])
+
   useEffect(() => {
-    chrome.storage.local.get(['urlCount', 'credCount', 'apiKeyCount', 'jsFileCount'], (result) => {
-      setURLCount(result.urlCount || 0)
-      setCredCount(result.credCount || 0)
-      setApiKeyCount(result.apiKeyCount || 0)
-      setFileCount(result.jsFileCount || 0)
-    })
-
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-      for (let key in changes) {
-        const storageChange = changes[key]
-        switch(key) {
-          case 'urlCount':
-            setURLCount(storageChange.newValue)
-            break
-          case 'credCount':
-            setCredCount(storageChange.newValue)
-            break
-          case 'apiKeyCount':
-            setApiKeyCount(storageChange.newValue)
-            break
-          case 'jsFileCount':
-            setFileCount(storageChange.newValue)
-            break
+    chrome.storage.local.get("URL-PARSER", (data) => {
+      const urlParser = data["URL-PARSER"];
+      let totalURLCount = 0;
+  
+      // Iterate through each key in URL-PARSER
+      Object.keys(urlParser).forEach((key) => {
+        if (key !== "current") {
+          const currURLEndpoints = urlParser[key]["currPage"];
+          const currURLExtJSFiles = urlParser[key]["externalJSFiles"];
+  
+          // Calculate the number of URLs in currPage and externalJSFiles
+          const totalEndpointsInCurrPage = currURLEndpoints.length;
+          const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
+            .flat().length;
+  
+          // Accumulate the total URL count
+          totalURLCount += totalEndpointsInCurrPage + totalEndpointsInExtJSFiles;
         }
-      }
-    }
-
-    chrome.storage.onChanged.addListener(handleStorageChange)
-
-    return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange)
-    }
-  }, [])
+      });
+  
+      // Set the total URL count
+      setURLCount(totalURLCount);
+    });
+  }, []);
 
   function clearCache() {
     chrome.storage.local.clear(() => {

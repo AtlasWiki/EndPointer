@@ -9,40 +9,61 @@ function PopUpApp() {
   const [jsFileCount, setJSFileCount] = useState(0)
   const [displayScope, setDisplayScope] = useState(false)
   
-  useEffect(() => {
-    chrome.storage.local.get(['urlParser', 'fileDownloader', 'urlCount', 'jsFileCount'], (result) => {
-      setURLParser(result.urlParser || false)
-      setFileDownloader(result.fileDownloader || false)
-      setURLCount(result.urlCount || 0)
-      setJSFileCount(result.jsFileCount || 0)
-    })
+  // useEffect(() => {
+  //   chrome.storage.local.get(['urlParser', 'fileDownloader', 'urlCount', 'jsFileCount'], (result) => {
+  //     setURLParser(result.urlParser || false)
+  //     setFileDownloader(result.fileDownloader || false)
+  //     setURLCount(result.urlCount || 0)
+  //     setJSFileCount(result.jsFileCount || 0)
+  //   })
 
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-      for (let key in changes) {
-        const storageChange = changes[key]
-        switch(key) {
-          case 'urlParser':
-            setURLParser(storageChange.newValue)
-            break
-          case 'fileDownloader':
-            setFileDownloader(storageChange.newValue)
-            break
-          case 'urlCount':
-            setURLCount(storageChange.newValue)
-            break
-          case 'jsFileCount':
-            setJSFileCount(storageChange.newValue)
-            break
-        }
-      }
-    }
+  //   const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+  //     for (let key in changes) {
+  //       const storageChange = changes[key]
+  //       switch(key) {
+  //         case 'urlParser':
+  //           setURLParser(storageChange.newValue)
+  //           break
+  //         case 'fileDownloader':
+  //           setFileDownloader(storageChange.newValue)
+  //           break
+  //         case 'urlCount':
+  //           setURLCount(storageChange.newValue)
+  //           break
+  //         case 'jsFileCount':
+  //           setJSFileCount(storageChange.newValue)
+  //           break
+  //       }
+  //     }
+  //   }
 
-    chrome.storage.onChanged.addListener(handleStorageChange)
+  //   chrome.storage.onChanged.addListener(handleStorageChange)
 
-    return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange)
-    }
-  }, [])
+  //   return () => {
+  //     chrome.storage.onChanged.removeListener(handleStorageChange)
+  //   }
+  // }, [])
+
+
+  chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
+    setURLParser(result.urlParser || false)
+  })
+
+ 
+    chrome.storage.local.get("URL-PARSER", (data) => {
+      const urlParser = data["URL-PARSER"];
+      const currURL = urlParser["current"];
+      const currURLEndpoints = urlParser[currURL]["currPage"];
+      const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
+      // Calculate the total number of URLs in currPage and externalJSFiles
+      const totalEndpointsInCurrPage = currURLEndpoints.length;
+      const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
+        .flat().length;
+  
+      // Set the total URL count (from currPage and externalJSFiles)
+      setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+    });
+
 
   function urlParserState() {
     const newState = !urlParser
