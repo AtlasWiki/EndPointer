@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function URLsPlain() {
+export function URLsCSV() {
   interface Endpoint {
     url: string;
     foundAt: string;
@@ -37,13 +37,16 @@ export function URLsPlain() {
     return verifiedURL;
   };
 
-  // Function to download URLs as a .txt file
-  const downloadURLsAsTxt = () => {
-    const urlStrings = urls.map(sanitizedURL).join('\n'); // Join URLs as newline-separated strings
-    const blob = new Blob([urlStrings], { type: 'text/plain' });
+  // Function to download URLs as a .csv file
+  const downloadURLsAsCsv = () => {
+    const csvHeader = 'endpoint,parsed from,root webpage\n'; // CSV header
+    const csvContent = urls.map((endpoint) => 
+      `${sanitizedURL(endpoint)},${endpoint.foundAt},${endpoint.webpage}`
+    ).join('\n'); // Join each endpoint row with newline
+    const blob = new Blob([csvHeader + csvContent], { type: 'text/csv' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'urls.txt';
+    link.download = 'urls.csv';
     link.click();
   };
 
@@ -87,12 +90,19 @@ export function URLsPlain() {
 
   return (
     <div className="mt-2 ml-1">
-        <button onClick={downloadURLsAsTxt} className="mt-4 p-2 text-white bg-transparent border border-gray-500 mb-5 rounded">
-            Download URLs as .txt
-        </button>
-        {urls.map((endpoint, index) => (
-            <p className="" key={index}>{sanitizedURL(endpoint)}</p>
-        ))}
+      <button onClick={downloadURLsAsCsv} className="mt-4 p-2 text-white bg-transparent border border-gray-500 mb-5 rounded">
+        Download URLs as .csv
+      </button>
+      {/* CSV Syntax Display */}
+      <pre className="bg-gray-500 p-2 mb-4">
+        endpoint,parsed from,root webpage
+      </pre>
+      {/* Display URLs in CSV format */}
+      <pre className="text-md p-2">
+        {urls.map((endpoint, index) => 
+          `${sanitizedURL(endpoint)},${endpoint.foundAt},${endpoint.webpage}`
+        ).join('\n')}
+      </pre>
     </div>
   );
 }
