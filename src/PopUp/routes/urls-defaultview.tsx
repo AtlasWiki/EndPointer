@@ -376,17 +376,18 @@ export function URLsDefaultView() {
 
    //I think I need to change this a useEffect, so that I can update it with the search bar???
 
+   const filteredURLs = urls
+   .filter(endpoint => {
+     const matchesLocation = selected === 'All' || endpoint.foundAt === selected;
+     const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
+     return matchesLocation && matchesQuery;
+   });
+
   useEffect(() =>{
-  const filteredURLs = urls
-    .filter(endpoint => {
-      const matchesLocation = selected === 'All' || endpoint.foundAt === selected;
-      const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesLocation && matchesQuery;
-    });
      //set the visable urls to match the search critera starting for the 0 value to the 
     // maximum of the startIndex+ the amout of urls we want visable at once
     setVisableUrls(filteredURLs.slice(startIndex, startIndex + VISABLE_URL_SIZE));
-  },[urls, selected, searchQuery, startIndex]); 
+  },[urls, selected, searchQuery, startIndex]);
   //I'm pretty sure these dependecies are all we need, I may need to provide the reference too
 
   //I also need a function to handle the scroll bar   
@@ -421,7 +422,7 @@ export function URLsDefaultView() {
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="text-5xl">
-                    <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({urls.length})</span></th>
+                    <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
                     <th className="border-b-2 pb-10">SOURCE <span className="text-[#3da28f]">({jsFiles.length})</span></th>
                     <th className="border-b-2 pb-10">WEBPAGE</th>
                   </tr>
