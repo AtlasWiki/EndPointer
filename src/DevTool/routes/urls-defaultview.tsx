@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavBar } from '../../components/navbar';
 import { JSFiles } from "./js-files";
 import { js as beautify } from 'js-beautify';
@@ -312,6 +312,14 @@ export function URLsDefaultView() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  //Right, So I'm going to add lazing loading, I gonna require a some states, one that tracks urls that are visable
+  // one that keeps track of the index and one define how many urls we want to see. 
+  const [visableUrls, setVisableUrls] = useState<Endpoint[]>([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const VISABLE_URL_SIZE = 100; // To set how many to display in the sliding window.
+  const table_Ref = useRef<HTMLDivElement>(null); //Reference to the scroll window;
+
+
   useEffect(() => {
     let allEndpoints: Endpoint[] = [];
     let locations: Location[] = [];
@@ -361,12 +369,37 @@ export function URLsDefaultView() {
     setSearchQuery(event.target.value);
   };
 
+   //I think I need to change this a useEffect, so that I can update it with the search bar???
+
+  useEffect(() =>{
   const filteredURLs = urls
     .filter(endpoint => {
       const matchesLocation = selected === 'All' || endpoint.foundAt === selected;
       const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesLocation && matchesQuery;
     });
+     //set the visable urls to match the search critera starting for the 0 value to the 
+    // maximum of the startIndex+ the amout of urls we want visable at once
+    setVisableUrls(filteredURLs.slice(startIndex, startIndex + VISABLE_URL_SIZE));
+  },[urls, selected, searchQuery, startIndex]); 
+  //I'm pretty sure these dependecies are all we need, I may need to provide the reference too
+
+  //I also need a function to handle the scroll bar   
+  const handleScroll = () => {
+    if (table_Ref.current) {
+      const { scrollTop, scrollHeight, clientHeight } = table_Ref.current;
+      const bottomThreshold = 200; // pixels from bottom to trigger load
+      const topThreshold = 200; // pixels from top to trigger load
+
+      if (scrollHeight - scrollTop - clientHeight < bottomThreshold) {
+        // Load more items at the bottom
+        setStartIndex(prev => Math.min(prev + 20, urls.length - VISABLE_URL_SIZE));
+      } else if (scrollTop < topThreshold && startIndex > 0) {
+        // Load more items at the top
+        setStartIndex(prev => Math.max(prev - 20, 0));
+      } 
+    }
+  };
   
   function clearURLs(){
       chrome.storage.local.remove('URL-PARSER', function() {
@@ -382,18 +415,20 @@ export function URLsDefaultView() {
         <button className="a-item a-color mt-2" onClick={() => location.reload()}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#4d4c4c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
         </button>
-      </div>
-      <div className="mt-5 flex">
-        <div className="py-1 w-full flex flex-col gap-10">
-          <div className="w-full max-h-[760px] overflow-auto">
-            <table className="w-full border-collapse">
-              <thead>
+        <thead>
                 <tr className="text-5xl">
-                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
+                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({urls.length})</span></th>
                   <th className="border-b-2 pb-10">SOURCE <span className="text-[#3da28f]">({jsFiles.length})</span></th>
                   <th className="border-b-2 pb-10">WEBPAGE</th>
                 </tr>
-              </thead>
+        </thead>
+      </div>
+      <div className="mt-5 flex">
+        <div className="py-1 w-full flex flex-col gap-10">
+          <div className="w-full max-h-[760px] overflow-auto"
+          ref={table_Ref}
+          onScroll={handleScroll}>  {/* I think this is the correct place to add the scrool handler*/}
+            <table className="w-full border-collapse">
               <tbody>
                 <tr>
                   <td>
@@ -431,8 +466,8 @@ export function URLsDefaultView() {
                     </div>
                   </td>
                 </tr>
-                {filteredURLs.map((endpoint, index) => (
-                  <URLProps key={index} endpoint={endpoint} searchQuery={searchQuery} />
+                {visableUrls.map((endpoint, index) => (
+                  <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
                 ))}
               </tbody>
             </table>
