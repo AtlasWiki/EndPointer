@@ -438,12 +438,11 @@ export function URLsDefaultView() {
             </table>
           </div>
           <div className="text-lg flex items-center space-x-4 px-5">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md font-semibold">WEBPAGE PANEL</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md font-semibold text-[#646cff]">WEBPAGE PANEL</a>
             <button className="a-item bg-gray-600 p-3 rounded-md" onClick={clearURLs}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
             </button>
-            <a href={document.location.origin + "/PopUp/popup.html#urls/plain"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md text-gray-300">TXT</a>
-            <a href={document.location.origin + "/PopUp/popup.html#urls/csv"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md text-gray-300">CSV</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md font-semibold text-gray-300">OUTPUT</a>
           </div>
         </div>
       </div>
