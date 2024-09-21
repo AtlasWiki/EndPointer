@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
-import fs from 'fs'
+import fs from 'fs-extra'
 
 const root = resolve(__dirname, 'src');
 const outDir = resolve(__dirname, 'dist');
@@ -15,6 +15,7 @@ const getFeatureDirectories = () => {
 
 export default defineConfig({
   root,
+  publicDir,  // Ensure publicDir is correctly defined
   plugins: [
     react(),
     {
@@ -50,6 +51,9 @@ export default defineConfig({
             source: JSON.stringify(manifest, null, 2)
           });
         }
+
+        // Copy all files from the public/icons directory to dist/icons
+        fs.copySync(resolve(publicDir, 'icons'), resolve(outDir, 'icons'), { overwrite: true });
       }
     }
   ],

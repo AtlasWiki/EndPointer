@@ -18,7 +18,7 @@ import { URLs } from './routes/urls';
 
 // Create the DevTools panel
 chrome.devtools.panels.create(
-  "JS-Toolkit",
+  "endPointer",
   "",
   "DevTool/DevTool.html",
   (panel) => {

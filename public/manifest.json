@@ -3,6 +3,11 @@
   "name": "EndPointer",
   "version": "1.0.0",
   "description": "An endpoint parser and extractor with many flexible features",
+  "icons": {
+    "16": "icons/endPointer_logo_16x16.png",
+    "48": "icons/endPointer_logo_48x48.png",
+    "128": "icons/endPointer_logo_128x128.png"
+  },
   "permissions": [
     "storage",
     "activeTab",
