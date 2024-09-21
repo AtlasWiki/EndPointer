@@ -10,8 +10,27 @@ const MAX_FILES_TO_PROCESS = 300; // Set a hard limit on the number of files to 
 const MAX_PROCESSING_TIME = 14000; // 12 seconds
 
 export function parseURLs() {
-  console.log("Parsing URLs...");
-  parse_curr_page().then(() => parse_external_files());
+  console.log("Checking Scope...")
+  chrome.storage.local.get("scope", (result) => {
+    const scopes = result.scope || [];
+    const host = document.location.hostname 
+    const baseDomain = host.split('.').slice(-2).join('.');
+    if (scopes.length === 0){
+      console.log("Parsing URLs...");
+      parse_curr_page().then(() => parse_external_files());
+    }
+    else{
+      for (let scope of scopes ){
+        if (baseDomain === scope.toLowerCase()){
+          console.log("Parsing URLs...");
+          parse_curr_page().then(() => parse_external_files());
+        } else if ( host === scope.toLowerCase()){
+          console.log("Parsing URLs...");
+          parse_curr_page().then(() => parse_external_files());
+        }
+      }
+    }
+  })
 }
 
 async function parse_curr_page() {
