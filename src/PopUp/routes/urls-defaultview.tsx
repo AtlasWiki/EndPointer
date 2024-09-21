@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { js as beautify } from 'js-beautify';
+
 
 export function URLsDefaultView() {
   interface Endpoint {
@@ -317,6 +318,13 @@ export function URLsDefaultView() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  //Right, So I'm going to add lazing loading, I gonna require a some states, one that tracks urls that are visable
+  // one that keeps track of the index and one define how many urls we want to see. 
+  const [visableUrls, setVisableUrls] = useState<Endpoint[]>([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const VISABLE_URL_SIZE = 100; // To set how many to display in the sliding window.
+  const table_Ref = useRef<HTMLDivElement>(null); //Reference to the scroll window;
+
   useEffect(() => {
     let allEndpoints: Endpoint[] = [];
     let locations: Location[] = [];
@@ -366,12 +374,37 @@ export function URLsDefaultView() {
     setSearchQuery(event.target.value);
   };
 
+   //I think I need to change this a useEffect, so that I can update it with the search bar???
+
+  useEffect(() =>{
   const filteredURLs = urls
     .filter(endpoint => {
       const matchesLocation = selected === 'All' || endpoint.foundAt === selected;
       const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesLocation && matchesQuery;
     });
+     //set the visable urls to match the search critera starting for the 0 value to the 
+    // maximum of the startIndex+ the amout of urls we want visable at once
+    setVisableUrls(filteredURLs.slice(startIndex, startIndex + VISABLE_URL_SIZE));
+  },[urls, selected, searchQuery, startIndex]); 
+  //I'm pretty sure these dependecies are all we need, I may need to provide the reference too
+
+  //I also need a function to handle the scroll bar   
+  const handleScroll = () => {
+    if (table_Ref.current) {
+      const { scrollTop, scrollHeight, clientHeight } = table_Ref.current;
+      const bottomThreshold = 200; // pixels from bottom to trigger load
+      const topThreshold = 200; // pixels from top to trigger load
+
+      if (scrollHeight - scrollTop - clientHeight < bottomThreshold) {
+        // Load more items at the bottom
+        setStartIndex(prev => Math.min(prev + 20, urls.length - VISABLE_URL_SIZE));
+      } else if (scrollTop < topThreshold && startIndex > 0) {
+        // Load more items at the top
+        setStartIndex(prev => Math.max(prev - 20, 0));
+      } 
+    }
+  };
   
   function clearURLs(){
       chrome.storage.local.remove('URL-PARSER', function() {
@@ -380,72 +413,68 @@ export function URLsDefaultView() {
       window.location.reload();
     }
 
-  return (
-    <div className="w-full min-h-screen flex justify-center">
-      <div className="mt-5 flex">
-        <div className="py-1 w-full flex flex-col gap-10">
-          <div className="w-full max-h-[760px] overflow-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="text-5xl">
-                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
-                  <th className="border-b-2 pb-10">SOURCE <span className="text-[#3da28f]">({jsFiles.length})</span></th>
-                  <th className="border-b-2 pb-10">WEBPAGE</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div className="mt-5 w-full">
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
-                          cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
-                        placeholder="Search endpoints..."
-                      />
-                    </div>
-                  </td>
-
-                  <td>
-                    <div className="relative w-full max-w-lg mt-5">
-                        {/* closed state, select menu button */}
-                      <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
-                      >
-                        {selected}
-                      </button>
-                      {isOpen && (
-                        <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
-                          {jsFiles.map((url, index) => (
-                            <LocationItem
-                              key={index}
-                              url={url}
-                              onClick={() => handleSelect(url)}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                {filteredURLs.map((endpoint, index) => (
-                  <URLProps key={index} endpoint={endpoint} searchQuery={searchQuery} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="text-lg flex items-center space-x-4 px-5">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md font-semibold text-[#646cff]">WEBPAGE PANEL</a>
-            <button className="a-item bg-gray-600 p-3 rounded-md" onClick={clearURLs}>
+    return (
+      <div className="w-full min-h-screen flex justify-center">
+        <div className="mt-5 flex">
+          <div className="py-1 w-full flex flex-col gap-10">
+            <div className="w-full max-h-[760px] overflow-auto" ref={table_Ref} onScroll={handleScroll}>  {/* Correct placement of scroll handler */}
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="text-5xl">
+                    <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({urls.length})</span></th>
+                    <th className="border-b-2 pb-10">SOURCE <span className="text-[#3da28f]">({jsFiles.length})</span></th>
+                    <th className="border-b-2 pb-10">WEBPAGE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div className="mt-5 w-full">
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={handleSearchChange}
+                          className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
+                            cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                          placeholder="Search endpoints..."
+                        />
+                      </div>
+                    </td>
+    
+                    <td>
+                      <div className="relative w-full max-w-lg mt-5">
+                        <button
+                          onClick={() => setIsOpen(!isOpen)}
+                          className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                        >
+                          {selected}
+                        </button>
+                        {isOpen && (
+                          <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                            {jsFiles.map((url, index) => (
+                              <LocationItem key={index} url={url} onClick={() => handleSelect(url)} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                  {visableUrls.map((endpoint, index) => (
+                    <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
+                  ))}
+                </tbody>
+              </table>
+            </div> {/* Closing the div wrapping the table */}
+            <div className="text-lg flex items-center space-x-4 px-5">
+              <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md font-semibold text-[#646cff]">WEBPAGE PANEL</a>
+              <button className="a-item bg-gray-600 p-3 rounded-md" onClick={clearURLs}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
-            </button>
-            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md font-semibold text-gray-300">OUTPUT</a>
+              </button>
+              <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md font-semibold text-gray-300">OUTPUT</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+    
 }
