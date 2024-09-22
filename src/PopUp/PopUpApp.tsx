@@ -225,7 +225,16 @@ function PopUpApp() {
       <div className="w-full text-center flex flex-col justify-center items-center">
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">SCOPE</h1>
-        <p className="text-gray-400/60">Keep scope empty if you want to parse from all scopes</p>
+        <div className="flex gap-0.5">
+          <p className="text-gray-400/60 mb-1">Keep scope empty if you want to parse from all scopes</p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 16 16"><path fill="#615c5c" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412l-1 4.705c-.07.34.029.533.304.533c.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598c-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081l.082-.381l2.29-.287zM8 5.5a1 1 0 1 1 0-2a1 1 0 0 1 0 2"/>
+            <title>
+              You can either specify SLD + TLD (example.com) or subdomains (www.example.com). 
+              For example, example.com would cover all subdomains (all other hosts belonging to example.com like help.example.com)
+              while www.example.com only covers one host/domain. Or scope can be left empty to parse all web apps you go to.
+            </title>
+          </svg>
+        </div>
         <div className="flex items-center justify-center w-full gap-0.5">
             <input type="text" ref={inputRef} className="w-5/6 border-gray-400/60 text-gray-400/60 outline-none border-2 py-1 rounded-sm px-2 bg-transparent" 
             placeholder="example.com or www.example.com" />
