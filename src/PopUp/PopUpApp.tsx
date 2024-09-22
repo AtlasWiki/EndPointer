@@ -225,7 +225,7 @@ function PopUpApp() {
       <div className="w-full text-center flex flex-col justify-center items-center">
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">SCOPE</h1>
-        <p className="text-gray-400/60">Keep scope empty, if you want to parse from all scopes</p>
+        <p className="text-gray-400/60">Keep scope empty if you want to parse from all scopes</p>
         <div className="flex items-center justify-center w-full gap-0.5">
             <input type="text" ref={inputRef} className="w-5/6 border-gray-400/60 text-gray-400/60 outline-none border-2 py-1 rounded-sm px-2 bg-transparent" 
             placeholder="example.com or www.example.com" />
