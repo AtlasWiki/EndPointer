@@ -25,40 +25,59 @@ export function URLsTreeView() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    let newHierarchy: URLHierarchy = {};
-    let allJsFiles: string[] = [];
+    const fetchData = () => {
+      let newHierarchy: URLHierarchy = {};
+      let allJsFiles: string[] = [];
 
-    chrome.storage.local.get("URL-PARSER", (data: { [key: string]: any }) => {
-      const urlParser = data["URL-PARSER"];
+      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: any }) => {
+        const urlParser = data["URL-PARSER"];
 
-      Object.keys(urlParser).forEach((key) => {
-        if (key !== "current") {
-          const webpage = decodeURIComponent(key);
-          newHierarchy[webpage] = { mainPage: [], jsFiles: {} };
+        Object.keys(urlParser).forEach((key) => {
+          if (key !== "current") {
+            const webpage = decodeURIComponent(key);
+            newHierarchy[webpage] = { mainPage: [], jsFiles: {} };
 
-          // Add currPage endpoints
-          newHierarchy[webpage].mainPage = urlParser[key].currPage.map((url: string): Endpoint => ({
-            url,
-            foundAt: 'Main Page',
-            webpage,
-          }));
-
-          // Add externalJSFiles endpoints
-          Object.entries(urlParser[key].externalJSFiles).forEach(([jsFile, endpoints]) => {
-            const decodedJsFile = decodeURIComponent(jsFile);
-            allJsFiles.push(decodedJsFile);
-            newHierarchy[webpage].jsFiles[decodedJsFile] = (endpoints as string[]).map((url): Endpoint => ({
+            // Add currPage endpoints
+            newHierarchy[webpage].mainPage = urlParser[key].currPage.map((url: string): Endpoint => ({
               url,
-              foundAt: decodedJsFile,
+              foundAt: 'Main Page',
               webpage,
             }));
-          });
-        }
-      });
 
-      setHierarchy(newHierarchy);
-      setJSFiles(['All', ...Array.from(new Set(allJsFiles))]);
-    });
+            // Add externalJSFiles endpoints
+            Object.entries(urlParser[key].externalJSFiles).forEach(([jsFile, endpoints]) => {
+              const decodedJsFile = decodeURIComponent(jsFile);
+              allJsFiles.push(decodedJsFile);
+              newHierarchy[webpage].jsFiles[decodedJsFile] = (endpoints as string[]).map((url): Endpoint => ({
+                url,
+                foundAt: decodedJsFile,
+                webpage,
+              }));
+            });
+          }
+        });
+
+        setHierarchy(newHierarchy);
+        setJSFiles(['All', ...Array.from(new Set(allJsFiles))]);
+      });
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Listener for storage changes
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes["URL-PARSER"]) {
+        fetchData(); // Re-fetch data when URL-PARSER changes
+      }
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+
+    // Cleanup listener on component unmount
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
   }, []);
 
   const handleSelect = (url: string) => {

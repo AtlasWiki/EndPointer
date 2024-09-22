@@ -321,44 +321,66 @@ export function URLsDefaultView() {
 
 
   useEffect(() => {
-    let allEndpoints: Endpoint[] = [];
-    let locations: Location[] = [];
-    chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
-      const urlParser = data["URL-PARSER"];
+    const fetchData = () => {
+      let allEndpoints: Endpoint[] = [];
+      let locations: Location[] = [];
 
-      Object.keys(urlParser).forEach((key) => {
-        if (key !== "current") {
-          const currURLEndpoints = urlParser[key].currPage;
-          const currURLExtJSFiles = urlParser[key].externalJSFiles;
-          locations.push(decodeURIComponent(key))
-          // Add currPage endpoints, found at the webpage (key)
-          allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
-            url: endpoint,
-            foundAt: decodeURIComponent(key), // Found at the main webpage
-            webpage: decodeURIComponent(key),
-          })));
+      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
+        const urlParser = data["URL-PARSER"];
 
-          // Add externalJSFiles endpoints, found at the specific JS file
-          Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
-            const decodedJsFile = decodeURIComponent(jsFile);
-            if (!locations.includes(decodedJsFile)) {
-              locations.push(decodedJsFile);
-            }
-            allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+        Object.keys(urlParser).forEach((key) => {
+          if (key !== "current") {
+            const currURLEndpoints = urlParser[key].currPage;
+            const currURLExtJSFiles = urlParser[key].externalJSFiles;
+            locations.push(decodeURIComponent(key));
+
+            // Add currPage endpoints
+            allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
               url: endpoint,
-              foundAt: decodedJsFile, // Found at the specific JS file
+              foundAt: decodeURIComponent(key), // Found at the main webpage
               webpage: decodeURIComponent(key),
             })));
-          });
-        }
-      });
 
-      // Ensure "All" is included only once and other locations are unique
-      const uniqueLocations = Array.from(new Set(['All', ...locations]));
-      setURLs(allEndpoints);
-      setJSFiles(uniqueLocations); 
-    });
+            // Add externalJSFiles endpoints
+            Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
+              const decodedJsFile = decodeURIComponent(jsFile);
+              if (!locations.includes(decodedJsFile)) {
+                locations.push(decodedJsFile);
+              }
+              allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+                url: endpoint,
+                foundAt: decodedJsFile, // Found at the specific JS file
+                webpage: decodeURIComponent(key),
+              })));
+            });
+          }
+        });
+
+        // Ensure "All" is included only once and other locations are unique
+        const uniqueLocations = Array.from(new Set(['All', ...locations]));
+        setURLs(allEndpoints);
+        setJSFiles(uniqueLocations);
+      });
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Listener for storage changes
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes["URL-PARSER"]) {
+        fetchData(); // Re-fetch data when URL-PARSER changes
+      }
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+
+    // Cleanup listener on component unmount
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
   }, []);
+
 
   const handleSelect = (url: string) => {
     setSelected(url);
@@ -376,12 +398,13 @@ export function URLsDefaultView() {
      const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
      return matchesLocation && matchesQuery;
    });
-   
+
   useEffect(() =>{
      //set the visable urls to match the search critera starting for the 0 value to the 
     // maximum of the startIndex+ the amout of urls we want visable at once
     setVisableUrls(filteredURLs.slice(startIndex, startIndex + VISABLE_URL_SIZE));
-  },[urls, selected, searchQuery, startIndex]); 
+  },[urls, selected, searchQuery, startIndex]);
+  
   //I'm pretty sure these dependecies are all we need, I may need to provide the reference too
 
   //I also need a function to handle the scroll bar   

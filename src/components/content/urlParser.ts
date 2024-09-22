@@ -15,28 +15,26 @@ chrome.storage.local.get("requests", (result) => {
   console.log(`Loading setting: ${CONCURRENT_REQUESTS} concurrent requests`)
 });
 
-export function parseURLs() {
-  console.log("Checking Scope...")
+export function parseURLs(): void {
+  console.log("Checking Scope...");
+  updateProgress(0, 'Parsing...');
   chrome.storage.local.get("scope", (result) => {
-    const scopes = result.scope || [];
-    const host = document.location.hostname 
-    const baseDomain = host.split('.').slice(-2).join('.');
-    if (scopes.length === 0){
+    const scopes: string[] = result.scope || [];
+    const host: string = document.location.hostname;
+    const baseDomain: string = host.split('.').slice(-2).join('.');
+    if (scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase())) {
       console.log("Parsing URLs...");
-      parse_curr_page().then(() => parse_external_files());
+      parse_curr_page()
+        .then(() => parse_external_files())
+        .then(() => {
+          updateProgress(100, 'Done');
+          console.log("Parsing completed");
+          setTimeout(removeProgressBar, 2000);
+        });
+    } else {
+      removeProgressBar(); // Remove progress bar if not in scope
     }
-    else{
-      for (let scope of scopes ){
-        if (baseDomain === scope.toLowerCase()){
-          console.log("Parsing URLs...");
-          parse_curr_page().then(() => parse_external_files());
-        } else if ( host === scope.toLowerCase()){
-          console.log("Parsing URLs...");
-          parse_curr_page().then(() => parse_external_files());
-        }
-      }
-    }
-  })
+  });
 }
 
 async function parse_curr_page() {
@@ -114,9 +112,11 @@ async function parse_external_files() {
       const batch = unparsedFiles.slice(i, i + CONCURRENT_REQUESTS);
       await Promise.all(batch.map(js_file => processJSFile(js_file)));
 
-      // Log progress every 5 seconds
-      if (Date.now() - lastLogTime > 5000) {
+      // Log progress every 300 miliseconds
+      if (Date.now() - lastLogTime > 200 || i + CONCURRENT_REQUESTS >= unparsedFiles.length) {
+        const progress = (parsedJSFiles.size / js_files.length) * 100;
         console.log(`Processed ${parsedJSFiles.size} out of ${js_files.length} JS files. ${successfullyFetchedFiles.size} successful, ${failedFetchAttempts.size} failed.`);
+        updateProgress(progress, `Parsing... (${parsedJSFiles.size}/${js_files.length})`);
         lastLogTime = Date.now();
       }
     }
@@ -232,4 +232,80 @@ export function countJSFiles() {
   const scriptTags = document.getElementsByTagName('script');
   const jsFileCount = Array.from(scriptTags).filter(script => script.src).length;
   updateJSFileCount(jsFileCount);
+}
+
+interface ProgressBarElement extends HTMLDivElement {
+  setProgress: (progress: number) => void;
+  setStatus: (status: string) => void;
+}
+
+function createProgressBar(): ProgressBarElement {
+  const container = document.createElement('div') as ProgressBarElement;
+  container.id = 'parsing-progress-container';
+  container.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #353535;
+    padding: 25px;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+  `;
+
+  const statusText = document.createElement('div');
+  statusText.style.cssText = `
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 2em;
+    color: white;
+  `;
+
+  const progressBar = document.createElement('div');
+  progressBar.style.cssText = `
+    height: 10px;
+    background-color: #e5e7eb;
+    border-radius: 5px;
+    overflow: hidden;
+  `;
+
+  const progressFill = document.createElement('div');
+  progressFill.style.cssText = `
+    height: 100%;
+    width: 0%;
+    background-color: #3b82f6;
+    transition: width 0.3s ease-in-out;
+  `;
+
+  progressBar.appendChild(progressFill);
+  container.appendChild(statusText);
+  container.appendChild(progressBar);
+
+  container.setProgress = (progress: number) => {
+    progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+  };
+
+  container.setStatus = (status: string) => {
+    statusText.textContent = status;
+  };
+
+  document.body.insertBefore(container, document.body.firstChild);
+  return container;
+}
+
+function updateProgress(progress: number, status: string): void {
+  let progressBar = document.getElementById('parsing-progress-container') as ProgressBarElement;
+  if (!progressBar) {
+    progressBar = createProgressBar();
+  }
+  progressBar.setProgress(progress);
+  progressBar.setStatus(status);
+}
+
+function removeProgressBar(): void {
+  const progressBar = document.getElementById('parsing-progress-container');
+  if (progressBar) {
+    progressBar.remove();
+  }
 }
