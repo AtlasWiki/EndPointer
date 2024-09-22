@@ -7,7 +7,7 @@ let failedFetchAttempts: Map<string, number> = new Map();
 const MAX_RETRY_ATTEMPTS = 3;
 const FETCH_TIMEOUT = 3000; // 3 seconds
 const MAX_FILES_TO_PROCESS = 300; // Set a hard limit on the number of files to process
-const MAX_PROCESSING_TIME = 14000; // 12 seconds
+const MAX_PROCESSING_TIME = 1000; // 1 second
 
 export function parseURLs() {
   console.log("Checking Scope...")
