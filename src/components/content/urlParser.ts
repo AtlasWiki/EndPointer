@@ -17,12 +17,12 @@ chrome.storage.local.get("requests", (result) => {
 
 export function parseURLs(): void {
   console.log("Checking Scope...");
-  updateProgress(0, 'Parsing...');
   chrome.storage.local.get("scope", (result) => {
     const scopes: string[] = result.scope || [];
     const host: string = document.location.hostname;
     const baseDomain: string = host.split('.').slice(-2).join('.');
     if (scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase())) {
+      updateProgress(0, 'Parsing...');
       console.log("Parsing URLs...");
       parse_curr_page()
         .then(() => parse_external_files())
