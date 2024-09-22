@@ -8,7 +8,12 @@ const MAX_RETRY_ATTEMPTS = 3;
 const FETCH_TIMEOUT = 3000; // 3 seconds
 const MAX_FILES_TO_PROCESS = 300; // Set a hard limit on the number of files to process
 const MAX_PROCESSING_TIME = 1000; // 1 second
-const CONCURRENT_REQUESTS = 1; // Number of concurrent fetch requests
+let CONCURRENT_REQUESTS: number;
+
+chrome.storage.local.get("requests", (result) => {
+  CONCURRENT_REQUESTS = result.requests || 1;
+  console.log(`Loading setting: ${CONCURRENT_REQUESTS} concurrent requests`)
+});
 
 export function parseURLs() {
   console.log("Checking Scope...")

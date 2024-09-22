@@ -64,9 +64,6 @@ function PopUpApp() {
       setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
     });
 
-
-    
-
   function urlParserState() {
     const newState = !urlParser
     setURLParser(newState)
@@ -139,6 +136,30 @@ function PopUpApp() {
     chrome.storage.local.set({ scope: scopes.filter(scope => scope !== scopeToRemove) });
   };
 
+  const [reqAmt, setReqAmt] = useState<number>(1);
+
+  useEffect(() => {
+    chrome.storage.local.get("requests", (result) => {
+      setReqAmt(result.requests || 1)
+    })
+    chrome.storage.local.set({ requests: reqAmt });
+  }, [])
+
+  
+  const handleReqAmt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newReqAmtValue = Number(e.target.value);
+    setReqAmt(newReqAmtValue);
+    chrome.storage.local.set({ requests: newReqAmtValue });
+    console.log(`set requests to ${newReqAmtValue}`)
+  };
+
+  function clearURLs(){
+    chrome.storage.local.remove('URL-PARSER', function() {
+        console.log('Key has been removed.');
+    });
+    window.location.reload();
+  }
+
   return (
     <div className="w-full md:h-screen m-0  md:justify-center py-5"> 
     {/* flex flex-col items-center */}
@@ -152,6 +173,9 @@ function PopUpApp() {
                 {displayState(urlParser)}
               </button>
               <button className="a-item a-color font-semibold text-blue-500"><span className="text-violet-500">URLs</span> ({urlCount})</button>
+              <button className="a-item a-color p-2 rounded-md" onClick={clearURLs}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="#F43F5E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -160,7 +184,29 @@ function PopUpApp() {
       {/* <div className=''>
         <button onClick={() => {setDisplayScope(!displayScope)}} className="text-gray-400/60 font-semibold bg-[#1a1a1a] p-1">SHOW/HIDE</button>
       </div> */}
-    
+      <div className="w-full text-center flex flex-col justify-center items-center">
+          <hr className="w-full border-gray-400/60 mb-5"/>
+          <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
+          <p className="text-gray-400/60">A request of 1 is recommended for higher accuracy when dealing with big web apps with many dynamic js files</p>
+          <div className="mb-1">
+
+            <div className="mt-5 mb-1">
+              <span className="w-full py-1 px-3 bg-slate-600 font-semibold rounded-sm">{reqAmt}</span>
+            </div>
+
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={reqAmt}
+              onChange={handleReqAmt}
+              className="mt-1 w-64 h-2 bg-blue-500 rounded-lg appearance-none cursor-pointer"
+            />
+
+          </div>
+         
+      </div>
+
       <div className="w-full text-center flex flex-col justify-center items-center">
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">SCOPE</h1>
