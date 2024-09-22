@@ -199,26 +199,28 @@ function PopUpApp() {
       {/* <div className=''>
         <button onClick={() => {setDisplayScope(!displayScope)}} className="text-gray-400/60 font-semibold bg-[#1a1a1a] p-1">SHOW/HIDE</button>
       </div> */}
+     
+
       <div className="w-full text-center flex flex-col justify-center items-center">
-          <hr className="w-full border-gray-400/60 mb-5"/>
-          <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
-          <p className="text-gray-400/60">A request of 1 is recommended for higher accuracy when dealing with big web apps with many dynamic js files</p>
-          <div className="mb-1">
-
-            <div className="mt-5 mb-1">
-              <span className="w-full py-1 px-3 bg-slate-600 font-semibold rounded-sm">{reqAmt}</span>
-            </div>
-
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={reqAmt}
-              onChange={handleReqAmt}
-              className="mt-1 w-64 h-2 bg-blue-500 rounded-lg appearance-none cursor-pointer"
-            />
-
+        <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 px-6 rounded-md font-semibold text-[#646cff] mb-5">Panel</a>
+        <hr className="w-full border-gray-400/60 mb-5"/>
+        <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
+        <p className="text-gray-400/60">A request of 1 is recommended for higher accuracy when dealing with big web apps with many dynamic js files</p>
+        <div className="mb-1">
+          <div className="mt-5 mb-1">
+            <span className="w-full py-1 px-3 bg-slate-600 font-semibold rounded-sm">{reqAmt}</span>
           </div>
+
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={reqAmt}
+            onChange={handleReqAmt}
+            className="mt-1 w-64 h-2 bg-blue-500 rounded-lg appearance-none cursor-pointer"
+          />
+
+        </div>
          
       </div>
 
