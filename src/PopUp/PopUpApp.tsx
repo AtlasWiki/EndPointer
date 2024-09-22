@@ -156,8 +156,16 @@ function PopUpApp() {
   function clearURLs(){
     chrome.storage.local.remove('URL-PARSER', function() {
         console.log('Key has been removed.');
+        alert("Deleted urls")
+        window.location.reload();
     });
-    window.location.reload();
+  }
+
+  function clearCache() {
+    chrome.storage.local.clear(() => {
+      alert("Cache cleared")
+      location.reload()
+    })
   }
 
   return (
@@ -174,7 +182,14 @@ function PopUpApp() {
               </button>
               <button className="a-item a-color font-semibold text-blue-500"><span className="text-violet-500">URLs</span> ({urlCount})</button>
               <button className="a-item a-color p-2 rounded-md" onClick={clearURLs}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="#F43F5E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="#F43F5E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>
+                  <title>Delete URLs</title>
+                </svg>
+              </button>
+              <button className="a-item a-color p-2 rounded-md" onClick={clearCache}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#726e6e" d="M5.505 9.117a7.7 7.7 0 0 1-1.497-.852V12c0 .524.473 1.23 1.8 1.883c1.267.625 3.085 1.071 5.18 1.182a.76.76 0 0 1-.08 1.517c-2.242-.118-4.274-.598-5.772-1.336a7.3 7.3 0 0 1-1.128-.68V18.3c0 .282.127.61.476.973c.352.366.899.732 1.633 1.055c1.466.645 3.545 1.063 5.881 1.063q.867 0 1.683-.074a.76.76 0 0 1 .135 1.513a21 21 0 0 1-1.818.08c-2.496 0-4.792-.443-6.493-1.192c-.849-.374-1.584-.838-2.117-1.393c-.536-.558-.9-1.244-.9-2.025V5.7c0-.782.364-1.467.9-2.025c.533-.555 1.268-1.02 2.117-1.393c1.7-.749 3.997-1.193 6.493-1.193s4.793.444 6.493 1.193c.85.373 1.585.838 2.117 1.393c.537.558.9 1.243.9 2.025s-.363 1.467-.9 2.025c-.532.554-1.267 1.02-2.117 1.393c-1.7.748-3.996 1.192-6.493 1.192c-2.496 0-4.792-.444-6.493-1.192Zm-1.021-4.39c-.35.362-.476.69-.476.972s.127.61.476.972c.352.367.899.732 1.633 1.055c1.466.646 3.545 1.064 5.881 1.064s4.415-.418 5.882-1.064c.734-.323 1.28-.688 1.633-1.055c.35-.363.476-.69.476-.972s-.127-.61-.476-.973c-.353-.367-.9-.732-1.633-1.055c-1.467-.645-3.545-1.063-5.882-1.063s-4.415.418-5.88 1.063c-.735.323-1.282.688-1.634 1.055Z"/><path fill="#726e6e" d="M21.425 11.11a.5.5 0 0 0-.881-.418l-5.438 6.937a.5.5 0 0 0 .394.808h3.268l-.945 4.46a.5.5 0 0 0 .888.405l4.688-6.188a.5.5 0 0 0-.399-.802h-2.745z"/>
+                    <title>Delete Cache</title>
+                  </svg>
               </button>
             </div>
           </div>
