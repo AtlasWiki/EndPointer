@@ -8,6 +8,7 @@ const MAX_RETRY_ATTEMPTS = 3;
 const FETCH_TIMEOUT = 3000; // 3 seconds
 const MAX_FILES_TO_PROCESS = 300; // Set a hard limit on the number of files to process
 const MAX_PROCESSING_TIME = 1000; // 1 second
+const CONCURRENT_REQUESTS = 1; // Number of concurrent fetch requests
 
 export function parseURLs() {
   console.log("Checking Scope...")
@@ -103,22 +104,16 @@ async function parse_external_files() {
       .filter(file => !parsedJSFiles.has(file) && (!failedFetchAttempts.has(file) || failedFetchAttempts.get(file)! < MAX_RETRY_ATTEMPTS))
       .slice(0, MAX_FILES_TO_PROCESS - parsedJSFiles.size);
     
-    for (const js_file of unparsedFiles) {
-      try {
-        console.log(`Processing file: ${js_file}`);
-        await processJSFile(js_file);
-      } catch (error) {
-        console.error(`Error processing file ${js_file}:`, error);
-      }
+    // Process files concurrently in batches
+    for (let i = 0; i < unparsedFiles.length; i += CONCURRENT_REQUESTS) {
+      const batch = unparsedFiles.slice(i, i + CONCURRENT_REQUESTS);
+      await Promise.all(batch.map(js_file => processJSFile(js_file)));
 
       // Log progress every 5 seconds
       if (Date.now() - lastLogTime > 5000) {
         console.log(`Processed ${parsedJSFiles.size} out of ${js_files.length} JS files. ${successfullyFetchedFiles.size} successful, ${failedFetchAttempts.size} failed.`);
         lastLogTime = Date.now();
       }
-
-      // Add a small delay between files to avoid overwhelming the browser
-      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 
