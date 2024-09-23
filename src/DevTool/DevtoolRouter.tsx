@@ -6,42 +6,44 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import { URLs } from './routes/urls'
+import { URLsDefaultView } from './routes/urls-defaultview'
+import { URLsTreeView } from './routes/urls-treeview'
 import { JSFiles } from './routes/js-files'
 import { Secrets } from './routes/secrets'
 import { URLSVisited } from './routes/urlsvisited';
+import { URLs } from './routes/urls';
+
+
 
 // Create the DevTools panel
 chrome.devtools.panels.create(
-  "JS-Toolkit",
+  "endPointer",
   "",
   "DevTool/DevTool.html",
   (panel) => {
     console.log("DevTools panel created");
 
-    const  logCurrentUrl = () => {
-    chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
-      if (tab && tab.url) {
-        console.log("Current URL:", tab.url);
-      } else {
-        console.error("Unable to get current tab URL");
+    const logCurrentUrl = () => {
+      chrome.tabs.get(chrome.devtools.inspectedWindow.tabId, (tab) => {
+        if (tab && tab.url) {
+          console.log("Current URL:", tab.url);
+        } else {
+          console.error("Unable to get current tab URL");
+        }
+      });
+    };
+
+    // Log URL when panel is shown
+    panel.onShown.addListener(logCurrentUrl);
+
+    // Log URL on page updates for the inspected window
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (tabId === chrome.devtools.inspectedWindow.tabId && changeInfo.status === 'complete') {
+        logCurrentUrl();
       }
     });
-  };
-
-  // Log URL when panel is shown
-  // panel.onShown.addListener(logCurrentUrl);
-
-  // // Log URL on page updates for the inspected window
-  // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //   if (tabId === chrome.devtools.inspectedWindow.tabId && changeInfo.status === 'complete') {
-  //     logCurrentUrl();
-  //   }
-  // });
-
-  });
-
-
+  }
+);
 
 // Render the React app
 function renderApp() {
@@ -52,7 +54,9 @@ function renderApp() {
         <Router>
           <Routes>
             <Route path="/" element={<DevToolsApp />} />
-            <Route path="/urls" element={<URLs />} />
+            <Route path="/urls/" element={<URLs />} />
+            <Route path="/urls/default" element={<URLsDefaultView />} />
+            <Route path="/urls/tree" element={<URLsTreeView />} />
             <Route path="/js-files" element={<JSFiles />} />
             <Route path="/secrets" element={<Secrets />} />
             <Route path="/urlsvisited" element={<URLSVisited />} />
@@ -64,11 +68,10 @@ function renderApp() {
     console.log("Root element not found");
   }
 }
-  
+
 // Wait for the DOM to be fully loaded before rendering
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', renderApp);
 } else {
   renderApp();
 }
-  

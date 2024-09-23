@@ -123,3 +123,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ data: 'Parsed URLs' });
     }
 });
+

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
-import fs from 'fs'
+import fs from 'fs-extra'
 
 const root = resolve(__dirname, 'src');
 const outDir = resolve(__dirname, 'dist');
@@ -15,6 +15,7 @@ const getFeatureDirectories = () => {
 
 export default defineConfig({
   root,
+  publicDir,  // Ensure publicDir is correctly defined
   plugins: [
     react(),
     {
@@ -35,12 +36,11 @@ export default defineConfig({
             manifest.action.default_popup = 'PopUp/popup.html';
           }
           if (manifest.background && manifest.background.service_worker) {
-            manifest.background.service_worker = 'PopUp/background.js';
+            manifest.background.service_worker = 'background.js';
           }
           if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
-            manifest.content_scripts[0].js = ['PopUp/content.js'];
+            manifest.content_scripts[0].js = ['content.js'];
           }
-
           if (manifest.devtools_page) {
             manifest.devtools_page = 'DevTool/DevTool.html';
           }
@@ -51,6 +51,9 @@ export default defineConfig({
             source: JSON.stringify(manifest, null, 2)
           });
         }
+
+        // Copy all files from the public/icons directory to dist/icons
+        fs.copySync(resolve(publicDir, 'icons'), resolve(outDir, 'icons'), { overwrite: true });
       }
     }
   ],
@@ -59,15 +62,17 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: 'inline',
     rollupOptions: {
-      input: getFeatureDirectories().reduce((acc, feature) => {
-        acc[`${feature}/index`] = resolve(__dirname, `src/${feature}/${feature}.html`);
-        if (feature === 'DevTool') {
-          acc[`${feature}/DevtoolRouter`] = resolve(__dirname, `src/${feature}/DevtoolRouter.tsx`);
-        }
-        acc[`${feature}/background`] = resolve(__dirname, `src/${feature}/background.ts`);
-        acc[`PopUp/content`] = resolve(__dirname, `src/PopUp/content.js`);
-        return acc;
-      }, {}),
+      input: {
+        ...getFeatureDirectories().reduce((acc, feature) => {
+          acc[`${feature}/index`] = resolve(__dirname, `src/${feature}/${feature}.html`);
+          if (feature === 'DevTool') {
+            acc[`${feature}/DevtoolRouter`] = resolve(__dirname, `src/${feature}/DevtoolRouter.tsx`);
+          }
+          return acc;
+        }, {}),
+        'background': resolve(__dirname, 'src/background-main.ts'),
+        'content': resolve(__dirname, 'src/content-main.ts')
+      },
       output: {
         dir: outDir,
         entryFileNames: '[name].js',

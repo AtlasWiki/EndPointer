@@ -1,25 +1,31 @@
 {
   "manifest_version": 3,
-  "name": "JS-Toolkit",
+  "name": "EndPointer",
   "version": "1.0.0",
-  "description": "A JS-Parsing Toolkit with many flexible features",
+  "description": "An endpoint parser and extractor with many flexible features",
+  "icons": {
+    "16": "icons/endPointer_logo_16x16.png",
+    "48": "icons/endPointer_logo_48x48.png",
+    "128": "icons/endPointer_logo_128x128.png"
+  },
   "permissions": [
     "storage",
     "activeTab",
-    "tabs"
+    "tabs",
+    "webNavigation"
   ],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "PopUp/popup.html",
-    "default_title": "JS Toolkit for Hackers"
+    "default_title": "Endpoint Extractor for Hackers"
   },
   "background": {
-    "service_worker": ["PopUp/background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["Content/content.js"]
+      "js": ["content.js"]
     }
   ],
   "devtools_page": "DevTool/DevTool.html",
