@@ -111,6 +111,13 @@ export function URLsPlain() {
         <button onClick={downloadURLsAsTxt} className="mt-4 p-2 text-white bg-transparent border border-gray-500 mb-5 rounded">
             Download URLs as .txt
         </button>
+        <pre className="bg-gray-500 p-2 mb-4">
+                  {`
+          Showing modified relative paths (format: root webpage + relative paths)
+          Example: https://www.example.com + /help: https://www.example.com/help
+          and absolute urls
+          `}
+        </pre>
         {urls.map((endpoint, index) => (
             <p className="" key={index}>{sanitizedURL(endpoint)}</p>
         ))}
