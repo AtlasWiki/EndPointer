@@ -51,41 +51,62 @@ export function URLsCSV() {
   };
 
   useEffect(() => {
-    let allEndpoints: Endpoint[] = [];
-    let locations: Location[] = [];
-    chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
-      const urlParser = data["URL-PARSER"];
+    const fetchData = () => {
+      let allEndpoints: Endpoint[] = [];
+      let locations: Location[] = [];
 
-      Object.keys(urlParser).forEach((key) => {
-        if (key !== "current") {
-          const currURLEndpoints = urlParser[key].currPage;
-          const currURLExtJSFiles = urlParser[key].externalJSFiles;
-          locations.push(decodeURIComponent(key));
+      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
+        const urlParser = data["URL-PARSER"];
 
-          // Add currPage endpoints, found at the webpage (key)
-          allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
-            url: endpoint,
-            foundAt: decodeURIComponent(key),
-            webpage: decodeURIComponent(key),
-          })));
+        Object.keys(urlParser).forEach((key) => {
+          if (key !== "current") {
+            const currURLEndpoints = urlParser[key].currPage;
+            const currURLExtJSFiles = urlParser[key].externalJSFiles;
+            locations.push(decodeURIComponent(key));
 
-          // Add externalJSFiles endpoints, found at the specific JS file
-          Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
-            const decodedJsFile = decodeURIComponent(jsFile);
-            if (!locations.includes(decodedJsFile)) {
-              locations.push(decodedJsFile);
-            }
-            allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+            // Add currPage endpoints
+            allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
               url: endpoint,
-              foundAt: decodedJsFile,
+              foundAt: decodeURIComponent(key), // Found at the main webpage
               webpage: decodeURIComponent(key),
             })));
-          });
-        }
-      });
 
-      setURLs(allEndpoints);
-    });
+            // Add externalJSFiles endpoints
+            Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
+              const decodedJsFile = decodeURIComponent(jsFile);
+              if (!locations.includes(decodedJsFile)) {
+                locations.push(decodedJsFile);
+              }
+              allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+                url: endpoint,
+                foundAt: decodedJsFile, // Found at the specific JS file
+                webpage: decodeURIComponent(key),
+              })));
+            });
+          }
+        });
+
+        // Ensure "All" is included only once and other locations are unique
+        setURLs(allEndpoints);
+      });
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Listener for storage changes
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes["URL-PARSER"]) {
+        fetchData(); // Re-fetch data when URL-PARSER changes
+      }
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+
+    // Cleanup listener on component unmount
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
   }, []);
 
   return (
