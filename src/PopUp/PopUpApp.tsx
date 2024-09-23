@@ -140,9 +140,8 @@ function PopUpApp() {
 
   useEffect(() => {
     chrome.storage.local.get("requests", (result) => {
-      setReqAmt(result.requests || 1)
+      setReqAmt(result.requests)
     })
-    chrome.storage.local.set({ requests: reqAmt });
   }, [])
 
   
