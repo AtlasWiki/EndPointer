@@ -9,8 +9,7 @@ import {
 import { URLsDefaultView } from './routes/urls-defaultview'
 import { URLsTreeView } from './routes/urls-treeview'
 import { JSFiles } from './routes/js-files'
-import { Creds } from './routes/creds'
-import { APIKeys } from './routes/apikeys'
+import { Secrets } from './routes/secrets'
 import { URLSVisited } from './routes/urlsvisited';
 import { URLs } from './routes/urls';
 
@@ -59,8 +58,7 @@ function renderApp() {
             <Route path="/urls/default" element={<URLsDefaultView />} />
             <Route path="/urls/tree" element={<URLsTreeView />} />
             <Route path="/js-files" element={<JSFiles />} />
-            <Route path="/creds" element={<Creds />} />
-            <Route path="/apikeys" element={<APIKeys />} />
+            <Route path="/secrets" element={<Secrets />} />
             <Route path="/urlsvisited" element={<URLSVisited />} />
           </Routes>
         </Router>
