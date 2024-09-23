@@ -425,11 +425,10 @@ export function URLsDefaultView() {
   };
   
   function clearURLs(){
-      chrome.storage.local.remove('URL-PARSER', function() {
-          console.log('Key has been removed.');
-      });
-      window.location.reload();
-    }
+    chrome.storage.local.set({ 'URL-PARSER': {}}, () => {
+      console.log("Clear endpoints");
+    });
+  }
 
   return (
     <div className="w-full min-h-screen">

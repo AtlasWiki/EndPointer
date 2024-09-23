@@ -184,10 +184,9 @@ export function URLsTreeView() {
   };
 
   function clearURLs(){
-    chrome.storage.local.remove('URL-PARSER', function() {
-        console.log('Key has been removed.');
+    chrome.storage.local.set({ 'URL-PARSER': {}}, () => {
+      console.log("Clear endpoints");
     });
-    window.location.reload();
   }
   
   return (
