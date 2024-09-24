@@ -37,6 +37,12 @@ export function parseURLs(): void {
   });
 }
 
+export function parseURLsManually(): void {
+  parsedJSFiles = new Set();
+  parseURLs()
+}
+
+
 async function parse_curr_page() {
   const pageContent = document.documentElement.outerHTML;
   const abPageURLs = Array.from(pageContent.matchAll(ABS_REGEX), match => match[1]);
