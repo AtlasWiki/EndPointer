@@ -20,35 +20,46 @@ function PopUpApp() {
     });
   }
 
-
   chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
     setURLParser(result.urlParser || false)
   })
  
+  function updateURLCount() {
     chrome.storage.local.get("URL-PARSER", (data) => {
-      const urlParser = data["URL-PARSER"];
-      const currURL = urlParser["current"];
-      const currURLEndpoints = urlParser[currURL]["currPage"];
-      const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
-      // Calculate the total number of URLs in currPage and externalJSFiles
-      const totalEndpointsInCurrPage = currURLEndpoints.length;
-      const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
-        .flat().length;
-  
-      // Set the total URL count (from currPage and externalJSFiles)
-      setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+        const urlParser = data["URL-PARSER"];
+        
+        if (urlParser) {
+            const currURL = urlParser["current"];
+            const currURLEndpoints = urlParser[currURL]["currPage"];
+            const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
+            
+            // Calculate the total number of URLs in currPage and externalJSFiles
+            const totalEndpointsInCurrPage = currURLEndpoints ? currURLEndpoints.length : 0;
+            const totalEndpointsInExtJSFiles = currURLExtJSFiles ? Object.values(currURLExtJSFiles).flat().length : 0;
+
+            // Set the total URL count (from currPage and externalJSFiles)
+            setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+        } else {
+            // If URL-PARSER doesn't exist or is undefined, set count to 0
+            setURLCount(0);
+        }
     });
+}
+
+  // Initial call to set the URL count when the extension loads
+  updateURLCount();
+
+  // Add a listener to monitor changes in chrome.storage
+  chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes['URL-PARSER']) {
+          updateURLCount();
+      }
+  });
 
   function urlParserState() {
     const newState = !urlParser
     setURLParser(newState)
     chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
-  }
-
-  function fileDownloaderState() {
-    const newState = !fileDownloader
-    setFileDownloader(newState)
-    chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
   }
 
   function displayState(state: boolean) {
@@ -115,7 +126,7 @@ function PopUpApp() {
 
   useEffect(() => {
     chrome.storage.local.get("requests", (result) => {
-      setReqAmt(result.requests)
+      setReqAmt(result.requests || 1)
     })
   }, [])
 
@@ -128,9 +139,7 @@ function PopUpApp() {
   };
 
   function clearURLs(){
-    chrome.storage.local.set({ 'URL-PARSER': {}}, () => {
-      alert("Cleared endpoints");
-    });
+    chrome.storage.local.set({ 'URL-PARSER': {}})
     location.reload();
   }
 
