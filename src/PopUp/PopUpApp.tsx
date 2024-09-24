@@ -10,40 +10,15 @@ function PopUpApp() {
   // const [displayScope, setDisplayScope] = useState(false)
   const [scopes, setScopes] = React.useState<string[]>([]);
   
-  // useEffect(() => {
-  //   chrome.storage.local.get(['urlParser', 'fileDownloader', 'urlCount', 'jsFileCount'], (result) => {
-  //     setURLParser(result.urlParser || false)
-  //     setFileDownloader(result.fileDownloader || false)
-  //     setURLCount(result.urlCount || 0)
-  //     setJSFileCount(result.jsFileCount || 0)
-  //   })
-
-  //   const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-  //     for (let key in changes) {
-  //       const storageChange = changes[key]
-  //       switch(key) {
-  //         case 'urlParser':
-  //           setURLParser(storageChange.newValue)
-  //           break
-  //         case 'fileDownloader':
-  //           setFileDownloader(storageChange.newValue)
-  //           break
-  //         case 'urlCount':
-  //           setURLCount(storageChange.newValue)
-  //           break
-  //         case 'jsFileCount':
-  //           setJSFileCount(storageChange.newValue)
-  //           break
-  //       }
-  //     }
-  //   }
-
-  //   chrome.storage.onChanged.addListener(handleStorageChange)
-
-  //   return () => {
-  //     chrome.storage.onChanged.removeListener(handleStorageChange)
-  //   }
-  // }, [])
+  function parseURLs(){
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'parseURLs' }, (response) => {
+          console.log('Popup received response:', response);
+        });
+      }
+    });
+  }
 
 
   chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
@@ -200,7 +175,10 @@ function PopUpApp() {
      
 
       <div className="w-full text-center flex flex-col justify-center items-center">
-        <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 px-6 rounded-md font-semibold text-[#646cff] mb-5">Panel</a>
+        <div className="flex mb-5 gap-2 justify-content items-center">
+          <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 px-2 py-2 px-6 rounded-md font-semibold text-[#646cff]">Panel</a>
+          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>MANUAL PARSE</button>
+        </div>
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
         <p className="text-gray-400/60">A request of 1 is recommended for higher accuracy when dealing with big web apps with many dynamic js files</p>

@@ -1,4 +1,4 @@
-import { parseURLs, countURLs, countJSFiles } from './urlParser';
+import { parseURLs, countURLs, countJSFiles, parseURLsManually } from './urlParser';
 import { Message } from '../sharedTypes/message_types';
 
 export function setupMessageListeners() {
@@ -15,6 +15,11 @@ export function setupMessageListeners() {
         break;
       case 'countJSFiles':
         countJSFiles();
+        break;
+      case 'parseURLs':
+        // parseURLs();
+        parseURLsManually()
+        sendResponse({ data: 'Parsed URLs' });
         break;
     }
   });
