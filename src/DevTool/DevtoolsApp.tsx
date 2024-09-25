@@ -128,7 +128,6 @@ function DevToolsApp() {
   function clearURLs(){
     chrome.storage.local.remove('URL-PARSER', function() {
         console.log('Key has been removed.');
-        alert("Deleted urls")
         window.location.reload();
     });
   }

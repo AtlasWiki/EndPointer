@@ -4,76 +4,63 @@ import './App.css'
 
 function PopUpApp() {
   const [urlParser, setURLParser] = useState(false)
+  const [domObserver, setDOMObserver] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
   const [urlCount, setURLCount] = useState(0)
   const [jsFileCount, setJSFileCount] = useState(0)
   // const [displayScope, setDisplayScope] = useState(false)
   const [scopes, setScopes] = React.useState<string[]>([]);
   
-  // useEffect(() => {
-  //   chrome.storage.local.get(['urlParser', 'fileDownloader', 'urlCount', 'jsFileCount'], (result) => {
-  //     setURLParser(result.urlParser || false)
-  //     setFileDownloader(result.fileDownloader || false)
-  //     setURLCount(result.urlCount || 0)
-  //     setJSFileCount(result.jsFileCount || 0)
-  //   })
-
-  //   const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-  //     for (let key in changes) {
-  //       const storageChange = changes[key]
-  //       switch(key) {
-  //         case 'urlParser':
-  //           setURLParser(storageChange.newValue)
-  //           break
-  //         case 'fileDownloader':
-  //           setFileDownloader(storageChange.newValue)
-  //           break
-  //         case 'urlCount':
-  //           setURLCount(storageChange.newValue)
-  //           break
-  //         case 'jsFileCount':
-  //           setJSFileCount(storageChange.newValue)
-  //           break
-  //       }
-  //     }
-  //   }
-
-  //   chrome.storage.onChanged.addListener(handleStorageChange)
-
-  //   return () => {
-  //     chrome.storage.onChanged.removeListener(handleStorageChange)
-  //   }
-  // }, [])
-
+  function parseURLs(){
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'parseURLs' }, (response) => {
+          console.log('Popup received response:', response);
+        });
+      }
+    });
+  }
 
   chrome.storage.local.get(['urlParser', 'fileDownloader', 'jsFileCounter', 'jsFileCount'], (result) => {
     setURLParser(result.urlParser || false)
   })
  
+  function updateURLCount() {
     chrome.storage.local.get("URL-PARSER", (data) => {
-      const urlParser = data["URL-PARSER"];
-      const currURL = urlParser["current"];
-      const currURLEndpoints = urlParser[currURL]["currPage"];
-      const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
-      // Calculate the total number of URLs in currPage and externalJSFiles
-      const totalEndpointsInCurrPage = currURLEndpoints.length;
-      const totalEndpointsInExtJSFiles = Object.values(currURLExtJSFiles)
-        .flat().length;
-  
-      // Set the total URL count (from currPage and externalJSFiles)
-      setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+        const urlParser = data["URL-PARSER"];
+        
+        if (urlParser) {
+            const currURL = urlParser["current"];
+            const currURLEndpoints = urlParser[currURL]["currPage"];
+            const currURLExtJSFiles = urlParser[currURL]["externalJSFiles"];
+            
+            // Calculate the total number of URLs in currPage and externalJSFiles
+            const totalEndpointsInCurrPage = currURLEndpoints ? currURLEndpoints.length : 0;
+            const totalEndpointsInExtJSFiles = currURLExtJSFiles ? Object.values(currURLExtJSFiles).flat().length : 0;
+
+            // Set the total URL count (from currPage and externalJSFiles)
+            setURLCount(totalEndpointsInCurrPage + totalEndpointsInExtJSFiles);
+        } else {
+            // If URL-PARSER doesn't exist or is undefined, set count to 0
+            setURLCount(0);
+        }
     });
+}
+
+  // Initial call to set the URL count when the extension loads
+  updateURLCount();
+
+  // Add a listener to monitor changes in chrome.storage
+  chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes['URL-PARSER']) {
+          updateURLCount();
+      }
+  });
 
   function urlParserState() {
     const newState = !urlParser
     setURLParser(newState)
     chrome.runtime.sendMessage({ action: 'urlParserChanged', state: newState })
-  }
-
-  function fileDownloaderState() {
-    const newState = !fileDownloader
-    setFileDownloader(newState)
-    chrome.runtime.sendMessage({ action: 'fileDownloaderChanged', state: newState })
   }
 
   function displayState(state: boolean) {
@@ -90,6 +77,22 @@ function PopUpApp() {
       </div>
     )
   }
+
+
+  // function displayDOMObserverState(state: boolean) {
+  //   return (
+  //     <div className="flex">
+  //       <div className="flex items-center">
+  //         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  //           <path fill={state ? "#82e467" : "#e63946"} d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/>
+  //         </svg>
+  //         <span className={state ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>
+  //           {state ? "ON" : "OFF"}
+  //         </span>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   useEffect(() => {
     chrome.storage.local.get("scope", (result) => {
@@ -140,7 +143,7 @@ function PopUpApp() {
 
   useEffect(() => {
     chrome.storage.local.get("requests", (result) => {
-      setReqAmt(result.requests)
+      setReqAmt(result.requests || 1)
     })
   }, [])
 
@@ -153,9 +156,7 @@ function PopUpApp() {
   };
 
   function clearURLs(){
-    chrome.storage.local.set({ 'URL-PARSER': {}}, () => {
-      alert("Cleared endpoints");
-    });
+    chrome.storage.local.set({ 'URL-PARSER': {}})
     location.reload();
   }
 
@@ -200,7 +201,10 @@ function PopUpApp() {
      
 
       <div className="w-full text-center flex flex-col justify-center items-center">
-        <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 px-6 rounded-md font-semibold text-[#646cff] mb-5">Panel</a>
+        <div className="flex mb-5 gap-2 justify-content items-center">
+          <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 px-2 py-2 px-6 rounded-md font-semibold text-[#646cff]">Panel</a>
+          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
+        </div>
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
         <p className="text-gray-400/60">A request of 1 is recommended for higher accuracy when dealing with big web apps with many dynamic js files</p>
@@ -221,6 +225,29 @@ function PopUpApp() {
         </div>
          
       </div>
+
+      {/* <div className="w-full text-center flex flex-col justify-center items-center">
+        <hr className="w-full border-gray-400/60 mb-5"/>
+        <h1 className="text-2xl font-bold mb-2">DOM Observer</h1>
+        <p className="text-gray-400/60">Enable DOM observer to parse for URLs when new elements gets added</p>
+        <div className="mb-1">
+          <div className="mt-5 mb-1">
+            <span className="w-full py-1 px-3 bg-slate-600 font-semibold rounded-sm">{reqAmt}</span>
+          </div>
+
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={reqAmt}
+            onChange={handleReqAmt}
+            className="mt-1 w-64 h-2 bg-blue-500 rounded-lg appearance-none cursor-pointer"
+          />
+
+        </div>
+         
+      </div> */}
+
 
       <div className="w-full text-center flex flex-col justify-center items-center">
         <hr className="w-full border-gray-400/60 mb-5"/>
