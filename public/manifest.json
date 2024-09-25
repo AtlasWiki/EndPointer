@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "EndPointer",
   "version": "0.1.0",
   "description": "An endpoint parser and extractor with many flexible features",
@@ -15,13 +15,14 @@
     "webNavigation"
   ],
   "host_permissions": ["<all_urls>"],
-  "browser_action": {
+  "action": {
     "default_popup": "PopUp/popup.html",
     "default_title": "Endpoint Extractor for Hackers"
   },
   "background": {
     "scripts": ["background.js"],
-    "persistent": false
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {

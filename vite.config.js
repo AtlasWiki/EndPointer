@@ -36,7 +36,7 @@ export default defineConfig({
             manifest.action.default_popup = 'PopUp/popup.html';
           }
           if (manifest.background && manifest.background.service_worker) {
-            manifest.background.service_worker = 'background.js';
+            manifest.background.service_worker = [ 'background.js'];
           }
           if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
             manifest.content_scripts[0].js = ['content.js'];
@@ -77,6 +77,7 @@ export default defineConfig({
         dir: outDir,
         entryFileNames: '[name].js',
         chunkFileNames: 'assets/[name].[hash].js',
+        format: 'cjs',
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('/');
           const feature = info[0];
@@ -90,18 +91,16 @@ export default defineConfig({
         },
       },
     },
-    target: ['chrome89', 'firefox89'],
+    target: ['es2020', 'chrome89', 'firefox88'],
     minify: true,
   },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      'webextension-polyfill': 'webextension-polyfill',
     },
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     __DEV__: process.env.NODE_ENV !== 'production',
-    global: 'globeThis',
   },
 })
