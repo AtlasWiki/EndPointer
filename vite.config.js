@@ -96,10 +96,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
+      'webextension-polyfill': 'webextension-polyfill',
     },
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     __DEV__: process.env.NODE_ENV !== 'production',
+    globae: 'globeThis',
   },
 })
