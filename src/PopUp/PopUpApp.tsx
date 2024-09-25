@@ -186,7 +186,7 @@ function PopUpApp() {
       <div className="w-full text-center flex flex-col justify-center items-center">
         <div className="flex mb-5 gap-2 justify-content items-center">
           <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 px-2 py-2 px-6 rounded-md font-semibold text-[#646cff]">Panel</a>
-          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>MANUAL PARSE</button>
+          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
         </div>
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
