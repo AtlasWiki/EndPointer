@@ -4,6 +4,7 @@ import './App.css'
 
 function PopUpApp() {
   const [urlParser, setURLParser] = useState(false)
+  const [domObserver, setDOMObserver] = useState(false)
   const [fileDownloader, setFileDownloader] = useState(false)
   const [urlCount, setURLCount] = useState(0)
   const [jsFileCount, setJSFileCount] = useState(0)
@@ -63,6 +64,21 @@ function PopUpApp() {
   }
 
   function displayState(state: boolean) {
+    return (
+      <div className="flex">
+        <div className="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill={state ? "#82e467" : "#e63946"} d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/>
+          </svg>
+          <span className={state ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>
+            {state ? "ON" : "OFF"}
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  function displayDOMObserverState(state: boolean) {
     return (
       <div className="flex">
         <div className="flex items-center">
@@ -186,7 +202,7 @@ function PopUpApp() {
       <div className="w-full text-center flex flex-col justify-center items-center">
         <div className="flex mb-5 gap-2 justify-content items-center">
           <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 px-2 py-2 px-6 rounded-md font-semibold text-[#646cff]">Panel</a>
-          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>MANUAL PARSE</button>
+          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
         </div>
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
@@ -208,6 +224,29 @@ function PopUpApp() {
         </div>
          
       </div>
+
+      <div className="w-full text-center flex flex-col justify-center items-center">
+        <hr className="w-full border-gray-400/60 mb-5"/>
+        <h1 className="text-2xl font-bold mb-2">DOM Observer</h1>
+        <p className="text-gray-400/60">Enable DOM observer to parse for URLs when new elements gets added</p>
+        <div className="mb-1">
+          <div className="mt-5 mb-1">
+            <span className="w-full py-1 px-3 bg-slate-600 font-semibold rounded-sm">{reqAmt}</span>
+          </div>
+
+          <input
+            type="range"
+            min="1"
+            max="10"
+            value={reqAmt}
+            onChange={handleReqAmt}
+            className="mt-1 w-64 h-2 bg-blue-500 rounded-lg appearance-none cursor-pointer"
+          />
+
+        </div>
+         
+      </div>
+
 
       <div className="w-full text-center flex flex-col justify-center items-center">
         <hr className="w-full border-gray-400/60 mb-5"/>
