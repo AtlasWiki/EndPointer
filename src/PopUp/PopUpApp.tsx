@@ -170,15 +170,15 @@ function PopUpApp() {
   return (
     <div className="w-full md:h-screen m-0  md:justify-center py-5"> 
     {/* flex flex-col items-center */}
-      <div className="mt-5 mb-5 text-center">
+      <div className="mt-5 mb-1 text-center">
         <h1 className="text-4xl font-bold md:text-6xl mb-1">EndPointer</h1>
         <p className="text-gray-400/60 md:text-lg">An endpoint parser and extractor with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
-        <div className="mt-3 flex flex-col justify-center items-center gap-10 mx-0">
+        <div className="mt-3 flex flex-col justify-center gap-2 items-center mx-0">
           <div className="flex flex-col gap-1 md:gap-5">
             <div className="text-md flex gap-2">
-              <button className="a-color a-item" onClick={urlParserState}>
+              {/* <button className="a-color a-item" onClick={urlParserState}>
                 {displayState(urlParser)}
-              </button>
+              </button> */}
               <button className="a-item a-color font-semibold text-blue-500"><span className="text-violet-500">URLs</span> ({urlCount})</button>
               <button className="a-item a-color p-2 rounded-md" onClick={clearURLs}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="none" stroke="#F43F5E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>
@@ -192,19 +192,30 @@ function PopUpApp() {
               </button>
             </div>
           </div>
+          <div className="flex mb-3 gap-2 justify-content items-center">
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 px-2 py-2 px-6 rounded-md font-semibold text-[#646cff]">Panel</a>
+            <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
+          </div>
         </div>
       </div>
-
+      
+      
+      <div className="w-full text-center flex flex-col justify-center items-center">
+        <hr className="w-full border-gray-400/60 mb-5"/>
+        <h1 className="text-2xl font-bold mb-2">Auto Parser</h1>
+        <p className="text-gray-400/60 mb-2">Auto parses after page load</p>
+        <div className="mb-2">
+          <button className="a-color a-item" onClick={urlParserState}>
+              {displayState(urlParser)}
+          </button>
+        </div>
+      </div>
       {/* <div className=''>
         <button onClick={() => {setDisplayScope(!displayScope)}} className="text-gray-400/60 font-semibold bg-[#1a1a1a] p-1">SHOW/HIDE</button>
       </div> */}
      
 
       <div className="w-full text-center flex flex-col justify-center items-center">
-        <div className="flex mb-5 gap-2 justify-content items-center">
-          <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 px-2 py-2 px-6 rounded-md font-semibold text-[#646cff]">Panel</a>
-          <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
-        </div>
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">Concurrent Requests</h1>
         <p className="text-gray-400/60">A request of 1 is recommended for higher accuracy when dealing with big web apps with many dynamic js files</p>
