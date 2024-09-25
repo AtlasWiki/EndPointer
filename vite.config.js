@@ -35,11 +35,12 @@ export default defineConfig({
           if (manifest.action && manifest.action.default_popup) {
             manifest.action.default_popup = 'PopUp/popup.html';
           }
-          if (manifest.background && manifest.background.service_worker) {
-            manifest.background.service_worker = [ 'background.js'];
+          if (manifest.background && manifest.background.service_worker && manifest.background.scripts) {
+            manifest.background.service_worker = 'background.js';
+            manifest.background.scripts = ["background.js"]
           }
           if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
-            manifest.content_scripts[0].js = ['content.js'];
+            manifest.content_scripts[0].js = ['browser-polyfill.js', 'content.js'];
           }
           if (manifest.devtools_page) {
             manifest.devtools_page = 'DevTool/DevTool.html';
@@ -71,13 +72,15 @@ export default defineConfig({
           return acc;
         }, {}),
         'background': resolve(__dirname, 'src/background-main.ts'),
-        'content': resolve(__dirname, 'src/content-main.ts')
+        'content': resolve(__dirname, 'src/content-main.ts'),
+        'browser-polyfill': resolve(__dirname, 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js')
       },
       output: {
         dir: outDir,
-        entryFileNames: '[name].js',
+        entryFileNames: (chunkInfo) => {
+          return chunkInfo.name === 'browser-polyfill' ? '[name].js' : '[name].js';
+        },
         chunkFileNames: 'assets/[name].[hash].js',
-        format: 'cjs',
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('/');
           const feature = info[0];
@@ -102,5 +105,6 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     __DEV__: process.env.NODE_ENV !== 'production',
+    'process.env.BROWSER_POLYFILL': JSON.stringify(true),
   },
 })

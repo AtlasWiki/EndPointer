@@ -20,7 +20,7 @@
     "default_title": "Endpoint Extractor for Hackers"
   },
   "background": {
-    "scripts": ["background.js"],
+    "scripts": "background.js",
     "service_worker": "background.js",
     "type": "module"
   },
