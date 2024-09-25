@@ -78,20 +78,21 @@ function PopUpApp() {
     )
   }
 
-  function displayDOMObserverState(state: boolean) {
-    return (
-      <div className="flex">
-        <div className="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path fill={state ? "#82e467" : "#e63946"} d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/>
-          </svg>
-          <span className={state ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>
-            {state ? "ON" : "OFF"}
-          </span>
-        </div>
-      </div>
-    )
-  }
+
+  // function displayDOMObserverState(state: boolean) {
+  //   return (
+  //     <div className="flex">
+  //       <div className="flex items-center">
+  //         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  //           <path fill={state ? "#82e467" : "#e63946"} d="M12 18a6 6 0 1 0 0-12a6 6 0 0 0 0 12"/>
+  //         </svg>
+  //         <span className={state ? "text-green-400 font-semibold" : "text-red-400 font-semibold"}>
+  //           {state ? "ON" : "OFF"}
+  //         </span>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   useEffect(() => {
     chrome.storage.local.get("scope", (result) => {
@@ -225,7 +226,7 @@ function PopUpApp() {
          
       </div>
 
-      <div className="w-full text-center flex flex-col justify-center items-center">
+      {/* <div className="w-full text-center flex flex-col justify-center items-center">
         <hr className="w-full border-gray-400/60 mb-5"/>
         <h1 className="text-2xl font-bold mb-2">DOM Observer</h1>
         <p className="text-gray-400/60">Enable DOM observer to parse for URLs when new elements gets added</p>
@@ -245,7 +246,7 @@ function PopUpApp() {
 
         </div>
          
-      </div>
+      </div> */}
 
 
       <div className="w-full text-center flex flex-col justify-center items-center">
