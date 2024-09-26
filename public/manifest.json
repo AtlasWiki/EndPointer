@@ -20,20 +20,21 @@
     "default_title": "Endpoint Extractor for Hackers"
   },
   "background": {
-    "scripts": "background.js",
-    "service_worker": "background.js",
-    "type": "module"
+    "scripts": ["background.js"],
+    "service_worker": "background.js"
+    
   },
   "content_scripts": [
-    {
+    { 
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "type": "module"
     }
   ],
   "devtools_page": "DevTool/DevTool.html",
   "web_accessible_resources": [
     {
-      "resources": ["DevTool/background.js"],
+      "resources": [ "DevTool/background.js"],
       "matches": ["<all_urls>"]
     }
   ],

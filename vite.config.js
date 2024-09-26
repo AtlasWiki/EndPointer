@@ -2,6 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import fs from 'fs-extra'
+import { rollup } from 'rollup'
+import commonjs from '@rollup/plugin-commonjs'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import typescript from '@rollup/plugin-typescript'
+import replace from '@rollup/plugin-replace'
 
 const root = resolve(__dirname, 'src');
 const outDir = resolve(__dirname, 'dist');
@@ -15,45 +20,48 @@ const getFeatureDirectories = () => {
 
 export default defineConfig({
   root,
-  publicDir,  // Ensure publicDir is correctly defined
+  publicDir,
   plugins: [
     react(),
     {
-      name: 'html-transform',
-      transformIndexHtml(html) {
-        return html.replace(/(['"])(.+)\.tsx(['"])/g, '$1$2.js$3');
+      name: 'build-content-script',
+      async writeBundle() {
+        const contentScriptInput = resolve(__dirname, 'src/content-main.ts');
+        const bundle = await rollup({
+          input: contentScriptInput,
+          plugins: [
+            nodeResolve(),
+            commonjs(),
+            typescript({
+              tsconfig: './tsconfig.json',
+              module: 'esnext',
+            }),
+            replace({
+              'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+              preventAssignment: true
+            })
+          ]
+        });
+        await bundle.write({
+          file: resolve(outDir, 'content.js'),
+          format: 'iife',
+          name: 'content'
+        });
+        await bundle.close();
       }
     },
     {
-      name: 'manifest-copier',
-      generateBundle() {
+      name: 'copy-manifest',
+      buildEnd() {
         const manifestPath = resolve(publicDir, 'manifest.json');
         if (fs.existsSync(manifestPath)) {
-          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-          
-          // Update paths in manifest
-          if (manifest.action && manifest.action.default_popup) {
-            manifest.action.default_popup = 'PopUp/popup.html';
-          }
-          if (manifest.background && manifest.background.service_worker && manifest.background.scripts) {
-            manifest.background.service_worker = 'background.js';
-            manifest.background.scripts = ["background.js"]
-          }
-          if (manifest.content_scripts && manifest.content_scripts[0] && manifest.content_scripts[0].js) {
-            manifest.content_scripts[0].js = ['browser-polyfill.js', 'content.js'];
-          }
-          if (manifest.devtools_page) {
-            manifest.devtools_page = 'DevTool/DevTool.html';
-          }
-          
-          this.emitFile({
-            type: 'asset',
-            fileName: 'manifest.json',
-            source: JSON.stringify(manifest, null, 2)
-          });
+          fs.copySync(manifestPath, resolve(outDir, 'manifest.json'));
         }
-
-        // Copy all files from the public/icons directory to dist/icons
+      }
+    },
+    {
+      name: 'copy-icons',
+      buildEnd() {
         fs.copySync(resolve(publicDir, 'icons'), resolve(outDir, 'icons'), { overwrite: true });
       }
     }
@@ -72,14 +80,9 @@ export default defineConfig({
           return acc;
         }, {}),
         'background': resolve(__dirname, 'src/background-main.ts'),
-        'content': resolve(__dirname, 'src/content-main.ts'),
-        'browser-polyfill': resolve(__dirname, 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js')
       },
       output: {
-        dir: outDir,
-        entryFileNames: (chunkInfo) => {
-          return chunkInfo.name === 'browser-polyfill' ? '[name].js' : '[name].js';
-        },
+        entryFileNames: '[name].js',
         chunkFileNames: 'assets/[name].[hash].js',
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('/');
@@ -94,7 +97,7 @@ export default defineConfig({
         },
       },
     },
-    target: ['es2020', 'chrome89', 'firefox88'],
+    target: ['chrome116', 'firefox115'],
     minify: true,
   },
   resolve: {
@@ -105,6 +108,8 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     __DEV__: process.env.NODE_ENV !== 'production',
-    'process.env.BROWSER_POLYFILL': JSON.stringify(true),
   },
+  optimizeDeps: {
+    include: ['webextension-polyfill'],
+  }
 })

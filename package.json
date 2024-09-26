@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-typescript": "^12.1.0",
     "@types/firefox-webext-browser": "^120.0.4",
+    "@types/node": "^22.7.1",
     "@types/webextension-polyfill": "^0.12.1",
     "fs-extra": "^11.2.0",
     "install": "^0.13.0",
@@ -18,10 +21,13 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
+    "tslib": "^2.7.0",
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
     "@types/chrome": "^0.0.270",
     "@types/js-beautify": "^1.14.3",
     "@types/react": "^18.3.3",
@@ -35,6 +41,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.10",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "vite-plugin-node-polyfills": "^0.22.0"
   }
 }
