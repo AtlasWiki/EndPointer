@@ -13,12 +13,18 @@ import { URLs } from './routes/urls';
 
 
 
+// Function to determine the correct path based on the browser
+function getDevToolPath() {
+  const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+  return isFirefox ? "./DevTool.html" : "./DevTool/DevTool.html";
+}
+
 
 // Create the DevTools panel
 browser.devtools.panels.create(
   "endPointer",
   "",
-  "DevTool/DevTool.html",
+  getDevToolPath(),
 ).then((panel: any) => {
   console.log("DevTools panel created");
 })
