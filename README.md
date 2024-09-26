@@ -1,3 +1,19 @@
+# Endpointer: URL Finder for JavaScript Files
+
+![test](https://github.com/user-attachments/assets/5c6fd54f-59d5-4bf0-bf4f-f4c9fe6ab977)
+
+
+
+
+
+
+
+
+
+
+
+Old  Information
+
 # Chrome/FireFox Vite-React w/ tailwindcss Extension Template
 
 A basic extension template to fork and build from, using Vite, React, and Tailwind CSS, created by LordCat and AtlasWiki/mrunoriginal. Comes with three UI templates - developer tools tab/panel, extension popup, and accessible webpage through `chrome-extension` url.
