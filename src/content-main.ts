@@ -37,7 +37,7 @@ browser.runtime.onMessage.addListener((message: unknown, sender: any, sendRespon
 
   response.then(sendResponse).catch(error => {
     console.error('Error in message handler:', error);
-    sendResponse({ success: false, error: error.message });
+    sendResponse({ success: false, error: error.message, stack: error.stack });
   });
 
   return true; // Keeps the message channel open for asynchronous responses
@@ -49,7 +49,7 @@ async function handleParseURLs(): Promise<MessageResponse> {
     return { success: true };
   } catch (error) {
     console.error('Failed to parse URLs:', error);
-    return { success: false, error: 'Failed to parse URLs' };
+    return { success: false, error: 'Failed to parse URLs', details: (error as Error).message };
   }
 }
 
@@ -59,7 +59,7 @@ async function handleCountURLs(): Promise<MessageResponse> {
     return { success: true, count };
   } catch (error) {
     console.error('Failed to count URLs:', error);
-    return { success: false, error: 'Failed to count URLs' };
+    return { success: false, error: 'Failed to count URLs', details: (error as Error).message };
   }
 }
 
@@ -69,29 +69,34 @@ async function handleCountJSFiles(): Promise<MessageResponse> {
     return { success: true, count };
   } catch (error) {
     console.error('Failed to count JS files:', error);
-    return { success: false, error: 'Failed to count JS files' };
+    return { success: false, error: 'Failed to count JS files', details: (error as Error).message };
   }
 }
 
 async function handleSetAutoParserState(state: boolean): Promise<MessageResponse> {
-  isAutoParserEnabled = state;
-  await browser.storage.local.set({ autoParserEnabled: state });
-  return { success: true };
+  try {
+    isAutoParserEnabled = state;
+    await browser.storage.local.set({ autoParserEnabled: state });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to set auto parser state:', error);
+    return { success: false, error: 'Failed to set auto parser state', details: (error as Error).message };
+  }
 }
 
 async function handleClearURLs(): Promise<MessageResponse> {
   try {
-    await browser.storage.local.set({ 'URL-PARSER': {} });
+    await browser.storage.local.remove('URL-PARSER');
     return { success: true };
   } catch (error) {
     console.error('Failed to clear URLs:', error);
-    return { success: false, error: 'Failed to clear URLs' };
+    return { success: false, error: 'Failed to clear URLs', details: (error as Error).message };
   }
 }
 
 // Initialize content script
 browser.storage.local.get('autoParserEnabled').then((result) => {
-  (isAutoParserEnabled as any) = result.autoParserEnabled || false;
+  (isAutoParserEnabled as {}) = result.autoParserEnabled || false;
   if (isAutoParserEnabled) {
     parseURLs();
   }

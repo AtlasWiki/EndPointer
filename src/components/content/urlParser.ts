@@ -37,14 +37,18 @@ async function getConcurrencySetting() {
   console.log(`Loading setting: ${CONCURRENT_REQUESTS} concurrent requests`);
 }
 
+async function isInScope(host: string): Promise<boolean> {
+  const result = await browser.storage.local.get('scope');
+  const scopes: string[] = result.scope as string[] || [];
+  const baseDomain: string = host.split('.').slice(-2).join('.');
+  return scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase());
+}
+
 export async function parseURLs(): Promise<void> {
   await getConcurrencySetting();
   console.log("Checking Scope...");
-  const result = await browser.storage.local.get('scope');
-  const scopes: string[] = result.scope as string[] || [];
   const host: string = document.location.hostname;
-  const baseDomain: string = host.split('.').slice(-2).join('.');
-  if (scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase())) {
+  if (await isInScope(host)) {
     updateProgress(0, 'Parsing...');
     console.log("Parsing URLs...");
     await parse_curr_page();
@@ -54,6 +58,7 @@ export async function parseURLs(): Promise<void> {
     setTimeout(removeProgressBar, 2000);
   } else {
     removeProgressBar(); // Remove progress bar if not in scope
+    console.log("URL not in scope, skipping parsing");
   }
 }
 

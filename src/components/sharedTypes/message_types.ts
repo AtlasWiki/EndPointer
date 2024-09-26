@@ -16,6 +16,7 @@ export interface Message {
 export interface MessageResponse {
   success: boolean;
   error?: string;
+  details?: string;
   count?: number;
   state?: boolean;
 }
