@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import browser from 'webextension-polyfill';
 
 export function URLsUnmodified() {
   // Simplified Endpoint interface to only include 'url'
@@ -31,7 +32,7 @@ export function URLsUnmodified() {
     const fetchData = () => {
       let allEndpoints: Endpoint[] = [];
 
-      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
+      browser.storage.local.get("URL-PARSER"), (data: { [key: string]: URLParser }) => {
         const urlParser = data["URL-PARSER"];
 
         Object.keys(urlParser).forEach((key) => {
@@ -58,24 +59,24 @@ export function URLsUnmodified() {
         });
 
         setURLs(allEndpoints); // Update state with URLs only
-      });
+      };
     };
 
     // Initial fetch
     fetchData();
 
     // Listener for storage changes
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+    const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
         fetchData(); // Re-fetch data when URL-PARSER changes
       }
     };
 
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    browser.storage.onChanged.addListener(handleStorageChange);
 
     // Cleanup listener on component unmount
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      browser.storage.onChanged.removeListener(handleStorageChange);
     };
   }, []);
 

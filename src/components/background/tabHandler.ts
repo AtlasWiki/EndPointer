@@ -1,13 +1,14 @@
-// Sets up tab update listeners
+import browser from 'webextension-polyfill'
+
 export function setupTabListeners() {
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
-      chrome.storage.local.get(['urlParser', 'fileDownloader'], (result) => {
+      browser.storage.local.get(['urlParser']).then((result) => {
         if (result.urlParser) {
-          chrome.tabs.sendMessage(tabId, {action: "countURLs"});
+          browser.tabs.sendMessage(tabId, {action: "countURLs"});
         }
         if (result.fileDownloader) {
-          chrome.tabs.sendMessage(tabId, {action: "countJSFiles"});
+          browser.tabs.sendMessage(tabId, {action: "countJSFiles"});
         }
       });
     }

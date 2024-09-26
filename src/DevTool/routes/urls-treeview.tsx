@@ -1,5 +1,6 @@
 import { NavBar } from '../../components/navbar';
 import { useEffect, useState } from "react";
+import browser from 'webextension-polyfill';
 
 export function URLsTreeView() {
   interface Endpoint {
@@ -29,7 +30,7 @@ export function URLsTreeView() {
       let newHierarchy: URLHierarchy = {};
       let allJsFiles: string[] = [];
 
-      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: any }) => {
+      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
         const urlParser = data["URL-PARSER"];
 
         Object.keys(urlParser).forEach((key) => {
@@ -66,17 +67,17 @@ export function URLsTreeView() {
     fetchData();
 
     // Listener for storage changes
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+    const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
         fetchData(); // Re-fetch data when URL-PARSER changes
       }
     };
 
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    browser.storage.onChanged.addListener(handleStorageChange);
 
     // Cleanup listener on component unmount
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      browser.storage.onChanged.removeListener(handleStorageChange);
     };
   }, []);
 
@@ -184,7 +185,7 @@ export function URLsTreeView() {
   };
 
   function clearURLs(){
-    chrome.storage.local.set({ 'URL-PARSER': {}}, () => {
+    browser.storage.local.set({ 'URL-PARSER': {}}).then(() => {
       console.log("Clear endpoints");
     });
   }

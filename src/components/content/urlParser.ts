@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill'
 import { ExtensionState } from '../sharedTypes/message_types';
 import { REL_REGEX, ABS_REGEX } from '../sharedTypes/regex_constants';
 
@@ -8,44 +9,58 @@ const MAX_RETRY_ATTEMPTS = 3;
 const FETCH_TIMEOUT = 3000; // 3 seconds
 const MAX_FILES_TO_PROCESS = 300; // Set a hard limit on the number of files to process
 const MAX_PROCESSING_TIME = 1000; // 1 second
-let CONCURRENT_REQUESTS: number;
+let CONCURRENT_REQUESTS = 1; // Default to 1, will be updated from storage
 
-function grabConcurrencySetting(){
-  chrome.storage.local.get("requests", (result) => {
-    CONCURRENT_REQUESTS = result.requests || 1;
-    console.log(`Loading setting: ${CONCURRENT_REQUESTS} concurrent requests`)
-  });
-  
+interface URLParserStorageItem {
+  currPage: string[];
+  externalJSFiles: {
+    [key: string]: string[];
+  };
 }
 
-export function parseURLs(): void {
-  grabConcurrencySetting()
+interface URLParserStorage {
+  [key: string]: URLParserStorageItem;
+}
+
+interface URLParserStorageWithCurrent {
+  current: string;
+  storage: URLParserStorage;
+}
+
+function isURLParserStorageItem(item: any): item is URLParserStorageItem {
+  return item && typeof item === 'object' && Array.isArray(item.currPage) && typeof item.externalJSFiles === 'object';
+}
+
+async function getConcurrencySetting() {
+  const result = await browser.storage.local.get('requests');
+  CONCURRENT_REQUESTS = (result.requests as number) || 1;
+  console.log(`Loading setting: ${CONCURRENT_REQUESTS} concurrent requests`);
+}
+
+export async function parseURLs(): Promise<void> {
+  await getConcurrencySetting();
   console.log("Checking Scope...");
-  chrome.storage.local.get("scope", (result) => {
-    const scopes: string[] = result.scope || [];
-    const host: string = document.location.hostname;
-    const baseDomain: string = host.split('.').slice(-2).join('.');
-    if (scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase())) {
-      updateProgress(0, 'Parsing...');
-      console.log("Parsing URLs...");
-      parse_curr_page()
-        .then(() => parse_external_files())
-        .then(() => {
-          updateProgress(100, 'Done');
-          console.log("Parsing completed");
-          setTimeout(removeProgressBar, 2000);
-        });
-    } else {
-      removeProgressBar(); // Remove progress bar if not in scope
-    }
-  });
+  const result = await browser.storage.local.get('scope');
+  const scopes: string[] = result.scope as string[] || [];
+  const host: string = document.location.hostname;
+  const baseDomain: string = host.split('.').slice(-2).join('.');
+  if (scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase())) {
+    updateProgress(0, 'Parsing...');
+    console.log("Parsing URLs...");
+    await parse_curr_page();
+    await parse_external_files();
+    updateProgress(100, 'Done');
+    console.log("Parsing completed");
+    setTimeout(removeProgressBar, 2000);
+  } else {
+    removeProgressBar(); // Remove progress bar if not in scope
+  }
 }
 
 export function parseURLsManually(): void {
   parsedJSFiles = new Set();
-  parseURLs()
+  parseURLs();
 }
-
 
 async function parse_curr_page() {
   const pageContent = document.documentElement.outerHTML;
@@ -56,23 +71,18 @@ async function parse_curr_page() {
   const currPage = encodeURIComponent(document.location.href);
   console.log("URLs from current page: ", pageURLs);
 
-  return new Promise<void>((resolve) => {
-    chrome.storage.local.get('URL-PARSER', (result) => {
-      const urlParser = result['URL-PARSER'] || {};
-      if (!urlParser[currPage]) {
-        urlParser[currPage] = { currPage: [], externalJSFiles: {} };
-      }
+  const result = await browser.storage.local.get('URL-PARSER');
+  const urlParser: URLParserStorageWithCurrent = (result['URL-PARSER'] as URLParserStorageWithCurrent) || { current: currPage, storage: {} };
+  if (!urlParser.storage[currPage] || !isURLParserStorageItem(urlParser.storage[currPage])) {
+    urlParser.storage[currPage] = { currPage: [], externalJSFiles: {} };
+  }
 
-      urlParser["current"] = currPage;
-      urlParser[currPage].currPage = Array.from(pageURLs);
+  urlParser.current = currPage;
+  urlParser.storage[currPage].currPage = Array.from(pageURLs);
 
-      chrome.storage.local.set({ 'URL-PARSER': urlParser }, () => {
-        console.log("Saved endpoints from the current page.");
-        updateURLCount(pageURLs.size);
-        resolve();
-      });
-    });
-  });
+  await browser.storage.local.set({ 'URL-PARSER': urlParser });
+  console.log("Saved endpoints from the current page.");
+  await updateURLCount(pageURLs.size);
 }
 
 async function parse_external_files() {
@@ -122,7 +132,7 @@ async function parse_external_files() {
       const batch = unparsedFiles.slice(i, i + CONCURRENT_REQUESTS);
       await Promise.all(batch.map(js_file => processJSFile(js_file)));
 
-      // Log progress every 300 miliseconds
+      // Log progress every 300 milliseconds
       if (Date.now() - lastLogTime > 200 || i + CONCURRENT_REQUESTS >= unparsedFiles.length) {
         const progress = (parsedJSFiles.size / js_files.length) * 100;
         console.log(`Processed ${parsedJSFiles.size} out of ${js_files.length} JS files. ${successfullyFetchedFiles.size} successful, ${failedFetchAttempts.size} failed.`);
@@ -141,7 +151,7 @@ async function parse_external_files() {
   console.log(`Failed to fetch: ${failedFetchAttempts.size}`);
   console.log(`Processing time: ${(Date.now() - processingStart) / 1000} seconds`);
   
-  updateJSFileCount(successfullyFetchedFiles.size);
+  await updateJSFileCount(successfullyFetchedFiles.size);
 }
 
 async function processJSFile(js_file: string) {
@@ -189,59 +199,44 @@ async function fetchWithTimeout(file: string): Promise<string> {
 }
 
 async function saveToStorage(encodedURL: string, urls: string[]): Promise<void> {
-  return new Promise((resolve, reject) => {
-    chrome.storage.local.get("URL-PARSER", (result) => {
-      const urlParser = result["URL-PARSER"] || {};
-      const currentURL = urlParser["current"];
-      
-      if (!urlParser[currentURL]) {
-        urlParser[currentURL] = { currPage: [], externalJSFiles: {} };
-      }
-      
-      if (!urlParser[currentURL].externalJSFiles) {
-        urlParser[currentURL].externalJSFiles = {};
-      }
+  const result = await browser.storage.local.get("URL-PARSER");
+  const urlParser: URLParserStorageWithCurrent = (result["URL-PARSER"] as URLParserStorageWithCurrent) || { current: encodedURL, storage: {} };
+  const currentURL = urlParser.current;
+  
+  if (!urlParser.storage[currentURL] || !isURLParserStorageItem(urlParser.storage[currentURL])) {
+    urlParser.storage[currentURL] = { currPage: [], externalJSFiles: {} };
+  }
+  
+  urlParser.storage[currentURL].externalJSFiles[encodedURL] = urls;
 
-      urlParser[currentURL].externalJSFiles[encodedURL] = urls;
-
-      chrome.storage.local.set({ "URL-PARSER": urlParser }, () => {
-        if (chrome.runtime.lastError) {
-          console.error("Error saving to storage:", chrome.runtime.lastError);
-          reject(chrome.runtime.lastError);
-        } else {
-          console.log(`Saved ${urls.length} endpoints from external JS file: ${encodedURL}`);
-          resolve();
-        }
-      });
-    });
-  });
+  await browser.storage.local.set({ "URL-PARSER": urlParser });
+  console.log(`Saved ${urls.length} endpoints from external JS file: ${encodedURL}`);
 }
 
-function updateURLCount(count: number) {
-  chrome.runtime.sendMessage({ action: 'updateURLCount', count });
+async function updateURLCount(count: number) {
+  await browser.runtime.sendMessage({ action: 'updateURLCount', count });
 }
 
-function updateJSFileCount(count: number) {
-  chrome.runtime.sendMessage({ action: 'updateJSFileCount', count });
+async function updateJSFileCount(count: number) {
+  await browser.runtime.sendMessage({ action: 'updateJSFileCount', count });
 }
 
-export function countURLs() {
-  chrome.storage.local.get('URL-PARSER', (result) => {
-    const urlParser = result['URL-PARSER'] || {};
-    const currentURL = urlParser["current"];
-    if (currentURL && urlParser[currentURL]) {
-      const pageURLs = urlParser[currentURL].currPage.length;
-      const externalURLs = Object.values(urlParser[currentURL].externalJSFiles)
-        .reduce((total, urls) => (total as number) + (urls as string[]).length, 0);
-      updateURLCount(pageURLs + externalURLs);
-    }
-  });
+export async function countURLs() {
+  const result = await browser.storage.local.get('URL-PARSER');
+  const urlParser: URLParserStorageWithCurrent = (result['URL-PARSER'] as URLParserStorageWithCurrent) || { current: '', storage: {} };
+  const currentURL = urlParser.current;
+  if (currentURL && urlParser.storage[currentURL] && isURLParserStorageItem(urlParser.storage[currentURL])) {
+    const pageURLs = urlParser.storage[currentURL].currPage.length;
+    const externalURLs = Object.values(urlParser.storage[currentURL].externalJSFiles)
+      .reduce((total, urls) => total + urls.length, 0);
+    await updateURLCount(pageURLs + externalURLs);
+  }
 }
 
-export function countJSFiles() {
+export async function countJSFiles() {
   const scriptTags = document.getElementsByTagName('script');
   const jsFileCount = Array.from(scriptTags).filter(script => script.src).length;
-  updateJSFileCount(jsFileCount);
+  await updateJSFileCount(jsFileCount);
 }
 
 interface ProgressBarElement extends HTMLDivElement {

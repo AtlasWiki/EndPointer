@@ -1,60 +1,23 @@
 import React, { useState, useEffect } from 'react'
+import browser from 'webextension-polyfill'
 import { Link } from 'react-router-dom'
 import './index.css'
 import './App.css'
 
 function DevToolsApp() {
   const [urlCount, setURLCount] = useState(0)
-  // const [credCount, setCredCount] = useState(0)
-  // const [apiKeyCount, setApiKeyCount] = useState(0)
-  // const [fileCount, setFileCount] = useState(0)
-
-  // useEffect(() => {
-  //   chrome.storage.local.get(['urlCount', 'credCount', 'apiKeyCount', 'jsFileCount'], (result) => {
-  //     setURLCount(result.urlCount || 0)
-  //     setCredCount(result.credCount || 0)
-  //     setApiKeyCount(result.apiKeyCount || 0)
-  //     setFileCount(result.jsFileCount || 0)
-  //   })
-
-  //   const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-  //     for (let key in changes) {
-  //       const storageChange = changes[key]
-  //       switch(key) {
-  //         case 'urlCount':
-  //           setURLCount(storageChange.newValue)
-  //           break
-  //         case 'credCount':
-  //           setCredCount(storageChange.newValue)
-  //           break
-  //         case 'apiKeyCount':
-  //           setApiKeyCount(storageChange.newValue)
-  //           break
-  //         case 'jsFileCount':
-  //           setFileCount(storageChange.newValue)
-  //           break
-  //       }
-  //     }
-  //   }
-
-  //   chrome.storage.onChanged.addListener(handleStorageChange)
-
-  //   return () => {
-  //     chrome.storage.onChanged.removeListener(handleStorageChange)
-  //   }
-  // }, [])
 
   useEffect(() => {
     // Fetch the initial data
-    chrome.storage.local.get("URL-PARSER", (data) => {
-      const urlParser = data["URL-PARSER"];
+    browser.storage.local.get("URL-PARSER").then((data) => {
+      const urlParser = data["URL-PARSER"] as Record<string, any>;
       let totalURLCount = 0;
   
       // Iterate through each key in URL-PARSER
       Object.keys(urlParser).forEach((key) => {
         if (key !== "current") {
-          const currURLEndpoints = urlParser[key]["currPage"];
-          const currURLExtJSFiles = urlParser[key]["externalJSFiles"];
+          const currURLEndpoints = urlParser[key]["currPage"] as string[];
+          const currURLExtJSFiles = urlParser[key]["externalJSFiles"] as Record<string, string[]>;
   
           // Calculate the number of URLs in currPage and externalJSFiles
           const totalEndpointsInCurrPage = currURLEndpoints.length;
@@ -69,24 +32,24 @@ function DevToolsApp() {
       setURLCount(totalURLCount);
     });
   
-    // Listener for live updates from chrome.storage
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-      console.log("Storage changes detected:", changes); // Logs the entire changes object
+    // Listener for live updates from browser.storage
+    const handleStorageChange = (changes: Record<string, browser.Storage.StorageChange>) => {
+      console.log("Storage changes detected:", changes);
     
       if (changes["URL-PARSER"]) {
-        const newUrlParser = changes["URL-PARSER"].newValue;
-        console.log("'URL-PARSER' key changed. New value is:", newUrlParser); // Logs new value of 'URL-PARSER'
+        const newUrlParser = changes["URL-PARSER"].newValue as Record<string, any>;
+        console.log("'URL-PARSER' key changed. New value is:", newUrlParser);
     
         let updatedTotalURLCount = 0;
     
         // Iterate through each key in the updated 'URL-PARSER'
         Object.keys(newUrlParser).forEach((key) => {
-          console.log("Processing key:", key); // Logs the key we are currently processing
+          console.log("Processing key:", key);
     
           // Skip the "current" key
           if (key !== "current") {
-            const currURLEndpoints = newUrlParser[key]["currPage"];
-            const currURLExtJSFiles = newUrlParser[key]["externalJSFiles"];
+            const currURLEndpoints = newUrlParser[key]["currPage"] as string[];
+            const currURLExtJSFiles = newUrlParser[key]["externalJSFiles"] as Record<string, string[]>;
     
             console.log(`For key ${key}: currPage URLs:`, currURLEndpoints);
             console.log(`For key ${key}: externalJSFiles URLs:`, currURLExtJSFiles);
@@ -103,32 +66,32 @@ function DevToolsApp() {
           }
         });
     
-        console.log("Total URL count after processing:", updatedTotalURLCount); // Logs the total count of URLs
-        setURLCount(updatedTotalURLCount); // Update the state with the new URL count
+        console.log("Total URL count after processing:", updatedTotalURLCount);
+        setURLCount(updatedTotalURLCount);
       } else {
-        console.log("'URL-PARSER' key did not change."); // Logs if 'URL-PARSER' wasn't part of the changes
+        console.log("'URL-PARSER' key did not change.");
       }
     };
     
   
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    browser.storage.onChanged.addListener(handleStorageChange);
   
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      browser.storage.onChanged.removeListener(handleStorageChange);
     };
   }, []);
 
   function clearCache() {
-    chrome.storage.local.clear(() => {
+    browser.storage.local.clear().then(() => {
       alert("Cache cleared")
       location.reload()
     })
   }
 
   function clearURLs(){
-    chrome.storage.local.remove('URL-PARSER', function() {
-        console.log('Key has been removed.');
-        window.location.reload();
+    browser.storage.local.remove('URL-PARSER').then(() => {
+      console.log('Key has been removed.');
+      window.location.reload();
     });
   }
   

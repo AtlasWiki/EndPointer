@@ -1,9 +1,11 @@
+import browser from 'webextension-polyfill';
 import { initializeState } from './components/background/stateManager';
 import { setupTabListeners } from './components/background/tabHandler';
 import { setupMessageListeners } from './components/background/messageHandler';
 
+
 // Initialize state when extension is installed
-chrome.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(() => {
   initializeState();
 });
 

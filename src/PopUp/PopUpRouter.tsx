@@ -8,8 +8,7 @@ import {
 import PopUpApp from './PopUpApp'
 import './index.css'
 import { URLs } from './routes/urls'
-import { URLsPlain } from './routes/urls-plain'
-import { URLsCSV } from './routes/urls-csv'
+
 import { URLsOutput } from './routes/urls-output'
 
 const rootElement = document.getElementById('root');

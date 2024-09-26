@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import browser from 'webextension-polyfill';
 
 export function URLsCSV() {
   interface Endpoint {
@@ -55,7 +56,7 @@ export function URLsCSV() {
       let allEndpoints: Endpoint[] = [];
       let locations: Location[] = [];
 
-      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
+      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
         const urlParser = data["URL-PARSER"];
 
         Object.keys(urlParser).forEach((key) => {
@@ -65,7 +66,7 @@ export function URLsCSV() {
             locations.push(decodeURIComponent(key));
 
             // Add currPage endpoints
-            allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
+            allEndpoints.push(...currURLEndpoints.map((endpoint: any): Endpoint => ({
               url: endpoint,
               foundAt: decodeURIComponent(key), // Found at the main webpage
               webpage: decodeURIComponent(key),
@@ -77,7 +78,7 @@ export function URLsCSV() {
               if (!locations.includes(decodedJsFile)) {
                 locations.push(decodedJsFile);
               }
-              allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+              allEndpoints.push(...(endpoints as any).map((endpoint: any): Endpoint => ({
                 url: endpoint,
                 foundAt: decodedJsFile, // Found at the specific JS file
                 webpage: decodeURIComponent(key),
@@ -95,17 +96,17 @@ export function URLsCSV() {
     fetchData();
 
     // Listener for storage changes
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+    const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
         fetchData(); // Re-fetch data when URL-PARSER changes
       }
     };
 
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    browser.storage.onChanged.addListener(handleStorageChange);
 
     // Cleanup listener on component unmount
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      browser.storage.onChanged.removeListener(handleStorageChange);
     };
   }, []);
 
