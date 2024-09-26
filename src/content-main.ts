@@ -1,8 +1,8 @@
-
 import browser from 'webextension-polyfill';
-import { parseURLs, countURLs, countJSFiles, parseURLsManually } from './components/content/urlParser';
-import { ExtensionState, Message, MessageResponse } from './components/sharedTypes/message_types';
+import { parseURLs, parseURLsManually, countURLs, countJSFiles } from './components/content/urlParser';
+import { Message, MessageResponse } from './components/sharedTypes/message_types';
 
+let isAutoParserEnabled = false;
 
 // Set up message listener for content script
 browser.runtime.onMessage.addListener((message: unknown, sender: any, sendResponse: any) => {
@@ -16,17 +16,20 @@ browser.runtime.onMessage.addListener((message: unknown, sender: any, sendRespon
     case 'parseURLs':
       response = handleParseURLs();
       break;
-    case 'parseURLsManually':
-      response = handleParseURLsManually();
-      break;
     case 'countURLs':
       response = handleCountURLs();
       break;
     case 'countJSFiles':
       response = handleCountJSFiles();
       break;
-    case 'urlParserStateChanged':
-      response = handleUrlParserStateChanged(typedMessage.state);
+    case 'getAutoParserState':
+      response = Promise.resolve({ success: true, state: isAutoParserEnabled });
+      break;
+    case 'setAutoParserState':
+      response = handleSetAutoParserState(typedMessage.state as boolean);
+      break;
+    case 'clearURLs':
+      response = handleClearURLs();
       break;
     default:
       response = Promise.resolve({ success: false, error: 'Unknown action' });
@@ -40,8 +43,6 @@ browser.runtime.onMessage.addListener((message: unknown, sender: any, sendRespon
   return true; // Keeps the message channel open for asynchronous responses
 });
 
-
-
 async function handleParseURLs(): Promise<MessageResponse> {
   try {
     await parseURLs();
@@ -52,20 +53,10 @@ async function handleParseURLs(): Promise<MessageResponse> {
   }
 }
 
-async function handleParseURLsManually(): Promise<MessageResponse> {
-  try {
-    await parseURLsManually();
-    return { success: true };
-  } catch (error) {
-    console.error('Failed to parse URLs manually:', error);
-    return { success: false, error: 'Failed to parse URLs manually' };
-  }
-}
-
 async function handleCountURLs(): Promise<MessageResponse> {
   try {
-    await countURLs();
-    return { success: true };
+    const count = await countURLs();
+    return { success: true, count };
   } catch (error) {
     console.error('Failed to count URLs:', error);
     return { success: false, error: 'Failed to count URLs' };
@@ -74,65 +65,43 @@ async function handleCountURLs(): Promise<MessageResponse> {
 
 async function handleCountJSFiles(): Promise<MessageResponse> {
   try {
-    await countJSFiles();
-    return { success: true };
+    const count = await countJSFiles();
+    return { success: true, count };
   } catch (error) {
     console.error('Failed to count JS files:', error);
     return { success: false, error: 'Failed to count JS files' };
   }
 }
 
-async function handleUrlParserStateChanged(state?: boolean): Promise<MessageResponse> {
-  if (state === true) {
-    try {
-      await parseURLs();
-      return { success: true };
-    } catch (error) {
-      console.error('Failed to parse URLs after state change:', error);
-      return { success: false, error: 'Failed to parse URLs after state change' };
-    }
-  }
+async function handleSetAutoParserState(state: boolean): Promise<MessageResponse> {
+  isAutoParserEnabled = state;
+  await browser.storage.local.set({ autoParserEnabled: state });
   return { success: true };
 }
 
-
-// Initialize content script
-// Type guard function
-function isExtensionState(obj: unknown): obj is Partial<ExtensionState> {
-  return typeof obj === 'object' && obj !== null && 'urlParser' in obj;
+async function handleClearURLs(): Promise<MessageResponse> {
+  try {
+    await browser.storage.local.set({ 'URL-PARSER': {} });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to clear URLs:', error);
+    return { success: false, error: 'Failed to clear URLs' };
+  }
 }
 
 // Initialize content script
-browser.runtime.sendMessage({ action: 'getInitialState' }).then((response: unknown) => {
-  if (isExtensionState(response) && response.urlParser) {
+browser.storage.local.get('autoParserEnabled').then((result) => {
+  (isAutoParserEnabled as any) = result.autoParserEnabled || false;
+  if (isAutoParserEnabled) {
     parseURLs();
-  } else {
-    console.error('Received invalid state:', response);
   }
-  // Add any other initialization based on state if needed
-}).catch((error:any) => {
+}).catch((error) => {
   console.error('Failed to get initial state:', error);
 });
 
-// Parse URLs on page load if urlParser is enabled
+// Parse URLs on page load if autoParser is enabled
 window.addEventListener('load', function () {
-  browser.runtime.sendMessage({ action: 'getUrlParserState' }).then(enabled => {
-    if (enabled) {
-      parseURLs();
-    }
-  }).catch((error: any) => {
-    console.error('Failed to get URL parser state:', error);
-  });
-});
-
-browser.runtime.onMessage.addListener((message: unknown, sender: any, sendResponse: any) => {
-  if (typeof message === 'object' && message !== null && 'action' in message && message.action === 'parseURLs') {
-    parseURLs().then(() => {
-      sendResponse({ success: true });
-    }).catch((error) => {
-      console.error('Error parsing URLs:', error);
-      sendResponse({ success: false, error: error.message });
-    });
-    return true;
+  if (isAutoParserEnabled) {
+    parseURLs();
   }
 });

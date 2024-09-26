@@ -221,7 +221,7 @@ async function updateJSFileCount(count: number) {
   await browser.runtime.sendMessage({ action: 'updateJSFileCount', count });
 }
 
-export async function countURLs() {
+export async function countURLs(): Promise<number> {
   const result = await browser.storage.local.get('URL-PARSER');
   const urlParser: URLParserStorageWithCurrent = (result['URL-PARSER'] as URLParserStorageWithCurrent) || { current: '', storage: {} };
   const currentURL = urlParser.current;
@@ -229,14 +229,14 @@ export async function countURLs() {
     const pageURLs = urlParser.storage[currentURL].currPage.length;
     const externalURLs = Object.values(urlParser.storage[currentURL].externalJSFiles)
       .reduce((total, urls) => total + urls.length, 0);
-    await updateURLCount(pageURLs + externalURLs);
+    return pageURLs + externalURLs;
   }
+  return 0;
 }
 
-export async function countJSFiles() {
+export async function countJSFiles(): Promise<number> {
   const scriptTags = document.getElementsByTagName('script');
-  const jsFileCount = Array.from(scriptTags).filter(script => script.src).length;
-  await updateJSFileCount(jsFileCount);
+  return Array.from(scriptTags).filter(script => script.src).length;
 }
 
 interface ProgressBarElement extends HTMLDivElement {
@@ -248,7 +248,7 @@ function createProgressBar(): ProgressBarElement {
   const container = document.createElement('div') as ProgressBarElement;
   container.id = 'parsing-progress-container';
   container.style.cssText = `
-    position: fixed;
+    position: fixe  d;
     top: 0;
     left: 0;
     right: 0;
