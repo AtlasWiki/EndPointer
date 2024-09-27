@@ -33,7 +33,7 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
       typedSendResponse({ success: true });
       break;
     case 'clearURLs':
-      browser.storage.local.remove('URL-PARSER').then(() => typedSendResponse({ success: true }));
+      browser.storage.local.set({ "URL-PARSER": {} }).then(() => typedSendResponse({ success: true }));
       break;
     default:
       typedSendResponse({ success: false, error: 'Unknown action' });
