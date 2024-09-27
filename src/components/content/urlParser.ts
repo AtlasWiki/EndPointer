@@ -100,7 +100,6 @@ async function parse_external_files() {
 
   let js_files = Array.from(scriptTags).filter(script => script.src).map(script => script.src);
   console.log("Initial JS files: " + js_files.length);
-  console.log("JS files:", js_files); // Log the actual JS files
 
   const observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
@@ -246,11 +245,11 @@ async function saveToStorage(encodedURL: string, urls: string[]): Promise<void> 
 }
 
 async function updateURLCount(count: number) {
-  await browser.runtime.sendMessage({ action: 'updateURLCount', count });
+  await browser.storage.local.set({ urlCount: count });
 }
 
 async function updateJSFileCount(count: number) {
-  await browser.runtime.sendMessage({ action: 'updateJSFileCount', count });
+  await browser.storage.local.set({ jsFileCount: count });
 }
 
 export async function countURLs(): Promise<number> {
@@ -286,7 +285,7 @@ function createProgressBar(): ProgressBarElement {
     left: 0;
     right: 0;
     background-color: #353535;
-    padding: 25px;
+    padding: 10px;
     z-index: 9999;
     font-family: Arial, sans-serif;
   `;
@@ -295,16 +294,14 @@ function createProgressBar(): ProgressBarElement {
   statusText.style.cssText = `
     text-align: center;
     margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 2em;
     color: white;
   `;
 
   const progressBar = document.createElement('div');
   progressBar.style.cssText = `
-    height: 10px;
-    background-color: #e5e7eb;
-    border-radius: 5px;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
     overflow: hidden;
   `;
 
@@ -312,7 +309,7 @@ function createProgressBar(): ProgressBarElement {
   progressFill.style.cssText = `
     height: 100%;
     width: 0%;
-    background-color: #3b82f6;
+    background-color: #4CAF50;
     transition: width 0.3s ease-in-out;
   `;
 
