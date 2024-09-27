@@ -65,7 +65,7 @@ function PopUpApp() {
     }
   };
 
-  const parseURLs = () => handleAction('reparse');
+  const parseURLs = () => handleAction('reparse');handleAction('countURLs');
   const clearURLs = () => handleAction('clearURLs');
 
   const toggleUrlParserState = async () => {
