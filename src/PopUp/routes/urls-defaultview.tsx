@@ -391,7 +391,13 @@ export function URLsDefaultView() {
   const handleSelect = (url: string) => {
     setSelected(url);
     setIsOpen(false);
+    setStartIndex(0);
   };
+
+  useEffect(() => {
+    setStartIndex(0);
+  }, [searchQuery])
+
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -409,7 +415,8 @@ export function URLsDefaultView() {
   useEffect(() =>{
      //set the visable urls to match the search critera starting for the 0 value to the 
     // maximum of the startIndex+ the amout of urls we want visable at once
-    setVisableUrls(filteredURLs.slice(startIndex, startIndex + VISABLE_URL_SIZE));
+    const endIndex = Math.min(startIndex + VISABLE_URL_SIZE, filteredURLs.length);
+    setVisableUrls(filteredURLs.slice(startIndex, endIndex));
   },[urls, selected, searchQuery, startIndex]);
   //I'm pretty sure these dependecies are all we need, I may need to provide the reference too
 
@@ -422,7 +429,14 @@ export function URLsDefaultView() {
 
       if (scrollHeight - scrollTop - clientHeight < bottomThreshold) {
         // Load more items at the bottom
-        setStartIndex(prev => Math.min(prev + 20, urls.length - VISABLE_URL_SIZE));
+        setStartIndex(prev => {
+          const filteredURLs = urls.filter(endpoint => {
+            const matchesLocation = selected === 'All' || endpoint.foundAt === selected;
+            const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesLocation && matchesQuery;
+          });
+          return Math.min(prev + 20, Math.max(0, filteredURLs.length - VISABLE_URL_SIZE));
+        });
       } else if (scrollTop < topThreshold && startIndex > 0) {
         // Load more items at the top
         setStartIndex(prev => Math.max(prev - 20, 0));
