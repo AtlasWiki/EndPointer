@@ -65,8 +65,19 @@ function PopUpApp() {
     }
   };
 
-  const parseURLs = () => handleAction('reparse');handleAction('countURLs');
+  const parseURLs = () => handleAction('reparse');
   const clearURLs = () => handleAction('clearURLs');
+  const countURLs = () => handleAction('countURLs');
+
+  useEffect(() => {
+    const handleChange = () => {
+      countURLs();
+    };
+    browser.storage.onChanged.addListener(handleChange);
+    return () => {
+      browser.storage.onChanged.removeListener(handleChange);
+    };
+  }, []);
 
   const toggleUrlParserState = async () => {
     const newState = !state.urlParser;
