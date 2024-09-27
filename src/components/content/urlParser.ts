@@ -39,6 +39,7 @@ async function isInScope(host: string): Promise<boolean> {
   return scopes.length === 0 || scopes.some(scope => baseDomain === scope.toLowerCase() || host === scope.toLowerCase());
 }
 
+
 export async function parseURLs(): Promise<void> {
   await getConcurrencySetting();
   console.log("Checking Scope...");
@@ -46,16 +47,22 @@ export async function parseURLs(): Promise<void> {
   if (await isInScope(host)) {
     updateProgress(0, 'Parsing...');
     console.log("Parsing URLs...");
-    await parse_curr_page();
-    await parse_external_files();
-    updateProgress(100, 'Done');
-    console.log("Parsing completed");
-    setTimeout(removeProgressBar, 2000);
+    try {
+      await parse_curr_page();
+      await parse_external_files();
+      updateProgress(100, 'Done');
+      console.log("Parsing completed");
+    } catch (error) {
+      console.error("Error during parsing:", error);
+      updateProgress(100, 'Error occurred');
+    } finally {
+      setTimeout(removeProgressBar, 2000);
+    }
   } else {
-    removeProgressBar(); // Remove progress bar if not in scope
-    console.log("URL not in scope, skipping parsing");
+    console.log("URL not in scope, skipping parsing");  
   }
 }
+
 
 export function parseURLsManually(): void {
   parsedJSFiles = new Set();
@@ -248,12 +255,13 @@ async function updateJSFileCount(count: number) {
 
 export async function countURLs(): Promise<number> {
   const result = await browser.storage.local.get('URL-PARSER');
-  const urlParser = (result['URL-PARSER'] as URLParserStorageWithOptionalCurrent) || {};
-  const currentURL = urlParser.current || '';
+  const urlParser = result['URL-PARSER'] as URLParserStorage || {};
+  const currentURL = urlParser.current;
   if (currentURL && urlParser[currentURL]) {
-    const pageURLs = urlParser[currentURL].currPage.length;
-    const externalURLs = Object.values(urlParser[currentURL].externalJSFiles)
-      .reduce((total, urls) => total + urls.length, 0);
+    const currentPageData = urlParser[currentURL] as URLParserStorageItem;
+    const pageURLs = currentPageData.currPage.length;
+    const externalURLs = Object.values(currentPageData.externalJSFiles)
+      .reduce((total, urls) => total + (urls as string[]).length, 0);
     return pageURLs + externalURLs;
   }
   return 0;

@@ -46,10 +46,8 @@ export interface URLParserStorageItem {
 }
 
 export interface URLParserStorage {
-  [key: string]: URLParserStorageItem;
+  current?: string;
+  [key: string]: URLParserStorageItem | string | undefined;
 }
 
-export interface URLParserStorageWithCurrent {
-  current: string;
-  storage: URLParserStorage;
-}
+
