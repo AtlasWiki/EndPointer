@@ -27,10 +27,6 @@ function PopUpApp() {
 
   const updateAllState = async () => {
     try {
-      if (!document.body) {
-        console.log("Popup is closed, skipping update");
-        return;
-      }
       const tabs = await browser.tabs.query({active: true, currentWindow: true});
       if (tabs[0]?.id) {
         const [autoParserState, urlCount, jsFileCount] = await Promise.all([
