@@ -64,9 +64,10 @@ export async function parseURLs(): Promise<void> {
 }
 
 
-export function parseURLsManually(): void {
+export function reparse(): Promise<void> {
   parsedJSFiles = new Set();
   parseURLs();
+  return Promise.resolve();
 }
 
 

@@ -8,7 +8,8 @@ export type MessageAction =
   | 'setAutoParserState'
   | 'clearURLs'
   | 'updateURLCount'
-  | 'updateJSFileCount';
+  | 'updateJSFileCount'
+  | 'reparse';
 
 export interface Message {
   action: MessageAction;

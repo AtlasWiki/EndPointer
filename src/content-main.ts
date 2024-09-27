@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { parseURLs, parseURLsManually, countURLs, countJSFiles } from './components/content/urlParser';
+import { parseURLs, reparse, countURLs, countJSFiles } from './components/content/urlParser';
 import { Message, MessageResponse } from './components/sharedTypes/message_types';
 
 let isAutoParserEnabled = false;
@@ -14,6 +14,9 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
   switch (typedMessage.action) {
     case 'parseURLs':
       parseURLs().then(() => typedSendResponse({ success: true }));
+      break;
+    case 'reparse':
+      reparse().then(() => typedSendResponse({ success: true }));
       break;
     case 'countURLs':
       countURLs().then(count => typedSendResponse({ success: true, count }));

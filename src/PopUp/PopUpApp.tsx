@@ -65,7 +65,7 @@ function PopUpApp() {
     }
   };
 
-  const parseURLs = () => handleAction('parseURLs');
+  const parseURLs = () => handleAction('reparse');
   const clearURLs = () => handleAction('clearURLs');
 
   const toggleUrlParserState = async () => {
@@ -164,7 +164,7 @@ function PopUpApp() {
           </div>
           <div className="flex mb-3 gap-2 justify-content items-center">
             <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 py-2 px-2 rounded-md font-semibold text-[#646cff]">Panel</a>
-            <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
+            <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>REPARSE</button>
           </div>
         </div>
       </div>
