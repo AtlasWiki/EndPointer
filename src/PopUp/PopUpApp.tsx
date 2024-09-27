@@ -47,7 +47,6 @@ function PopUpApp() {
       }
     } catch (error) {
       console.error('Failed to update state:', error);
-      
     }
   };
   
@@ -63,7 +62,6 @@ function PopUpApp() {
       }
     } catch (error) {
       console.error(`Error in ${action}:`, error);
-      
     }
   };
 
@@ -114,6 +112,7 @@ function PopUpApp() {
     browser.storage.local.set({scope: []});
     setState(prevState => ({ ...prevState, scopes: [] }));
   };
+
 
   // UI Components
   const DisplayState: React.FC<{ state: boolean }> = ({ state }) => (

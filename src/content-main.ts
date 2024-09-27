@@ -31,6 +31,11 @@ browser.runtime.onMessage.addListener((message: unknown, sender: any, sendRespon
     case 'clearURLs':
       response = handleClearURLs();
       break;
+    case 'updateURLCount':
+    case 'updateJSFileCount':
+      // These messages are handled by the background script, so we just acknowledge receipt
+      response = Promise.resolve({ success: true });
+      break;
     default:
       response = Promise.resolve({ success: false, error: 'Unknown action' });
   }
@@ -45,7 +50,7 @@ browser.runtime.onMessage.addListener((message: unknown, sender: any, sendRespon
 
 async function handleParseURLs(): Promise<MessageResponse> {
   try {
-    await parseURLs();
+    await parseURLsManually();
     return { success: true };
   } catch (error) {
     console.error('Failed to parse URLs:', error);
@@ -96,7 +101,7 @@ async function handleClearURLs(): Promise<MessageResponse> {
 
 // Initialize content script
 browser.storage.local.get('autoParserEnabled').then((result) => {
-  (isAutoParserEnabled as {}) = result.autoParserEnabled || false;
+  (isAutoParserEnabled as any) = result.autoParserEnabled || false;
   if (isAutoParserEnabled) {
     parseURLs();
   }

@@ -6,11 +6,14 @@ export type MessageAction =
   | 'countJSFiles'
   | 'getAutoParserState'
   | 'setAutoParserState'
-  | 'clearURLs';
+  | 'clearURLs'
+  | 'updateURLCount'
+  | 'updateJSFileCount';
 
 export interface Message {
   action: MessageAction;
   state?: boolean;
+  count?: number;
 }
 
 export interface MessageResponse {
@@ -33,4 +36,20 @@ export interface ExtensionState {
   urlParser: boolean;
   urlCount: number;
   fileCount: number;
+}
+
+export interface URLParserStorageItem {
+  currPage: string[];
+  externalJSFiles: {
+    [key: string]: string[];
+  };
+}
+
+export interface URLParserStorage {
+  [key: string]: URLParserStorageItem;
+}
+
+export interface URLParserStorageWithCurrent {
+  current: string;
+  storage: URLParserStorage;
 }
