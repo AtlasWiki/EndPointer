@@ -1,4 +1,4 @@
-# Endpointer: URL Finder for JavaScript Files
+# EndPointer: URL Finder for JavaScript Files
 
 ![Endpointer(B) (1)](https://github.com/user-attachments/assets/5a8002f8-3f2b-4981-84a0-a34228077dfe)
 
