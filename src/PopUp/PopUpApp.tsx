@@ -163,7 +163,7 @@ function PopUpApp() {
             </div>
           </div>
           <div className="flex mb-3 gap-2 justify-content items-center">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 py-2 rounded-md font-semibold text-[#646cff]">Panel</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 py-2 px-2 rounded-md font-semibold text-[#646cff]">Panel</a>
             <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>PARSE NOW</button>
           </div>
         </div>
