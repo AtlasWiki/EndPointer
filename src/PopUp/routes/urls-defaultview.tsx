@@ -322,7 +322,7 @@ export function URLsDefaultView() {
   // one that keeps track of the index and one define how many urls we want to see. 
   const [visableUrls, setVisableUrls] = useState<Endpoint[]>([]);
   const [startIndex, setStartIndex] = useState(0);
-  const VISABLE_URL_SIZE = 100; // To set how many to display in the sliding window.
+  let VISABLE_URL_SIZE = 100; // To set how many to display in the sliding window.
   const table_Ref = useRef<HTMLDivElement>(null); //Reference to the scroll window;
 
   useEffect(() => {
@@ -447,6 +447,13 @@ export function URLsDefaultView() {
     });
   }
 
+  const [loadAmtSelected, setLoadAmtSelected] = useState(VISABLE_URL_SIZE)
+  function selectRenderItems(amt: number){
+    VISABLE_URL_SIZE = amt
+    setLoadAmtSelected(VISABLE_URL_SIZE)
+    console.log(VISABLE_URL_SIZE)
+  }
+
     return (
       <div className="w-full min-h-screen flex justify-center">
         <div className="mt-5 flex">
@@ -462,40 +469,59 @@ export function URLsDefaultView() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>
-                      <div className="mt-5 w-full">
-                        <input
-                          type="text"
-                          value={searchQuery}
-                          onChange={handleSearchChange}
-                          className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
-                            cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
-                          placeholder="Search endpoints..."
-                        />
-                      </div>
-                    </td>
-    
-                    <td>
-                      <div className="relative w-full max-w-lg mt-5">
-                        <button
-                          onClick={() => setIsOpen(!isOpen)}
-                          className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
-                        >
-                          {selected}
-                        </button>
-                        {isOpen && (
-                          <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
-                            {jsFiles.map((url, index) => (
-                              <LocationItem key={index} url={url} onClick={() => handleSelect(url)} />
-                            ))}
+                      <td>
+                          <p className="text-gray-600">Render</p>
+                          <div className="flex gap-1">
+                            <button className={`bg-black py-2 px-3 rounded-md ${loadAmtSelected === 25 ? "text-purple-500 opacity-100" : "opacity-60"}`} onClick={() => selectRenderItems(25)}>25</button>
+                            <button className={`bg-black py-2 px-3 rounded-md ${loadAmtSelected === 50 ? "text-purple-500 opacity-100" : "opacity-60"}`} onClick={() => selectRenderItems(50)}>50</button>
+                            <button className={`bg-black py-2 px-3 rounded-md ${loadAmtSelected === 75 ? "text-purple-500 opacity-100" : "opacity-60"}`} onClick={() => selectRenderItems(75)}>75</button>
+                            <button className={`bg-black py-2 px-3 rounded-md ${loadAmtSelected === 100 ? "text-purple-500 opacity-100" : "opacity-60"}`} onClick={() => selectRenderItems(100)}>100</button>
                           </div>
-                        )}
-                      </div>
-                    </td>
+                      </td>
+                      <td>
+                        <button className="bg-black py-2 px-3 opacity-80 rounded-md shadow-sm shadow-purple-500/80">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="#615c5c" d="M10 14L4 5V3h16v2l-6 9v6l-4 2z"/>
+                            <title>Filter URLs</title>
+                          </svg>
+                        </button>
+                      </td>
                   </tr>
-                  {visableUrls.map((endpoint, index) => (
-                    <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
-                  ))}
+                  <tr className="p-0"><td className="p-0"></td></tr>
+                    <tr>
+                      <td>
+                        <div className="mt-5 w-full">
+                          <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
+                              cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
+                            placeholder="Search endpoints..."
+                          />
+                        </div>
+                      </td>
+    
+                      <td>
+                        <div className="relative w-full max-w-lg mt-5">
+                          <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                          >
+                            {selected}
+                          </button>
+                          {isOpen && (
+                            <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                              {jsFiles.map((url, index) => (
+                                <LocationItem key={index} url={url} onClick={() => handleSelect(url)} />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                    {visableUrls.map((endpoint, index) => (
+                      <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
+                    ))}
                 </tbody>
               </table>
             </div> {/* Closing the div wrapping the table */}
