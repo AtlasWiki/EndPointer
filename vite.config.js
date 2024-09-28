@@ -73,7 +73,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         ...getFeatureDirectories().reduce((acc, feature) => {
-          acc[`${feature}/index`] = resolve(__dirname, `src/${feature}/${feature}.html`);
+          if (feature === 'DevTool' || feature === 'PopUp') {
+            acc[`${feature}/index`] = resolve(__dirname, `src/${feature}/${feature}.html`);
+          }
           if (feature === 'DevTool') {
             acc[`${feature}/DevtoolRouter`] = resolve(__dirname, `src/${feature}/DevtoolRouter.tsx`);
           }
@@ -87,7 +89,7 @@ export default defineConfig({
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('/');
           const feature = info[0];
-          if (getFeatureDirectories().includes(feature)) {
+          if (['DevTool', 'PopUp'].includes(feature)) {
             if (assetInfo.name.endsWith('.html')) {
               return `${feature}/[name][extname]`;
             }

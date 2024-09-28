@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
-import { ExtensionState, URLParserStorage } from '../sharedTypes/message_types';
-import { REL_REGEX, ABS_REGEX } from '../sharedTypes/regex_constants';
+import { ExtensionState, URLParserStorage } from '../constants/message_types';
+import { REL_REGEX, ABS_REGEX } from '../constants/regex_constants';
 
 // Define interfaces for URL-PARSER storage structure
 interface URLParserStorageItem {

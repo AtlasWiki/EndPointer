@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
-import { parseURLs, reparse, countURLs, countJSFiles } from './components/content/urlParser';
-import { Message, MessageResponse } from './components/sharedTypes/message_types';
+import { parseURLs, reparse, countURLs, countJSFiles } from './content/urlParser';
+import { Message, MessageResponse } from './constants/message_types';
 
 let isAutoParserEnabled = false;
 

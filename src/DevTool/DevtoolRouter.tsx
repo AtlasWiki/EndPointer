@@ -7,9 +7,9 @@ import {
   Route,
   Routes,
 } from 'react-router-dom'
-import { URLsDefaultView } from './routes/urls-defaultview'
-import { URLsTreeView } from './routes/urls-treeview'
-import { URLs } from './routes/urls';
+import { URLsDefaultView } from '../routes/urls-defaultview'
+import { URLsTreeView } from '../routes/urls-treeview'
+import { URLs } from '../routes/urls';
 
 
 

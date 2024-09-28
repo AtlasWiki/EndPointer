@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import browser from 'webextension-polyfill';
 import './App.css';
-import { MessageResponse } from '../components/sharedTypes/message_types';
+import { MessageResponse } from '../constants/message_types';
 
 interface AppState {
   urlParser: boolean;
