@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "description": "An endpoint parser and extractor with many flexible features",
   "icons": {
-    "16": "icons/EndPointer-removebg.png",
-    "32": "icons/EndPointer-removebg.png",
-    "48": "icons/EndPointer-removebg.png",
-    "128": "icons/EndPointer-removebg.png"
+    "16": "icons/EndPointer.png",
+    "32": "icons/EndPointer.png",
+    "48": "icons/EndPointer.png",
+    "128": "icons/EndPointer.png"
   },
   "permissions": [
     "storage",
