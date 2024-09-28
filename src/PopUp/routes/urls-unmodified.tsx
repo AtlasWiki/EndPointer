@@ -31,49 +31,49 @@ export function URLsUnmodified() {
   useEffect(() => {
     const fetchData = () => {
       let allEndpoints: Endpoint[] = [];
-
-      browser.storage.local.get("URL-PARSER"), (data: { [key: string]: URLParser }) => {
+  
+      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
         const urlParser = data["URL-PARSER"];
-
+  
         Object.keys(urlParser).forEach((key) => {
           if (key !== "current") {
-            const currURLEndpoints = urlParser[key].currPage;
-            const currURLExtJSFiles = urlParser[key].externalJSFiles;
-
+            const currURLEndpoints: string[] = urlParser[key].currPage; // Explicitly typing as string array
+            const currURLExtJSFiles: Record<string, string[]> = urlParser[key].externalJSFiles; // Assuming it's an object with string arrays
+  
             // Add currPage endpoints (only store URL)
             allEndpoints.push(
-              ...currURLEndpoints.map((endpoint): Endpoint => ({
+              ...currURLEndpoints.map((endpoint: string): Endpoint => ({
                 url: endpoint,
               }))
             );
-
+  
             // Add externalJSFiles endpoints (only store URL)
-            Object.values(currURLExtJSFiles).forEach((endpoints) => {
+            Object.values(currURLExtJSFiles).forEach((endpoints: string[]) => {
               allEndpoints.push(
-                ...endpoints.map((endpoint): Endpoint => ({
+                ...endpoints.map((endpoint: string): Endpoint => ({
                   url: endpoint,
                 }))
               );
             });
           }
         });
-
+  
         setURLs(allEndpoints); // Update state with URLs only
-      };
+      });
     };
-
+  
     // Initial fetch
     fetchData();
-
+  
     // Listener for storage changes
     const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
         fetchData(); // Re-fetch data when URL-PARSER changes
       }
     };
-
+  
     browser.storage.onChanged.addListener(handleStorageChange);
-
+  
     // Cleanup listener on component unmount
     return () => {
       browser.storage.onChanged.removeListener(handleStorageChange);
