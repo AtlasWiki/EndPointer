@@ -29,9 +29,10 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
       break;
     case 'setAutoParserState':
       isAutoParserEnabled = typedMessage.state ?? false;
-      browser.storage.local.set({ autoParserEnabled: isAutoParserEnabled });
+      if (isAutoParserEnabled) {
+        parseURLs();
+      }
       typedSendResponse({ success: true });
-      break;
     case 'clearURLs':
       browser.storage.local.set({ "URL-PARSER": {} }).then(() => typedSendResponse({ success: true }));
       break;
@@ -43,8 +44,8 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
 });
 
 // Initialize content script
-browser.storage.local.get('autoParserEnabled').then((result) => {
-(isAutoParserEnabled as any) = result.autoParserEnabled || false;
+browser.runtime.sendMessage({ action: 'getAutoParserState' }).then((response: any) => {
+  isAutoParserEnabled = response.state ?? false;
   if (isAutoParserEnabled) {
     parseURLs();
   }
