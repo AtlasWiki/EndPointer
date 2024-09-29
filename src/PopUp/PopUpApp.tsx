@@ -23,27 +23,51 @@ function PopUpApp() {
 
   useEffect(() => {
     updateAllState();
-  }, []);
 
+    const listener = (changes: { [key: string]: browser.Storage.StorageChange }) => {
+      if (changes.autoParserEnabled) {
+        setState(prevState => ({
+          ...prevState,
+          urlParser: changes.autoParserEnabled.newValue as boolean
+        }));
+      }
+    };
+
+    browser.storage.onChanged.addListener(listener);
+
+    return () => {
+      browser.storage.onChanged.removeListener(listener);
+    };
+  }, []);
+  
   const updateAllState = async () => {
     try {
+      const [autoParserState, scopeResult, reqAmtResult] = await Promise.all([
+        browser.runtime.sendMessage({ action: 'getAutoParserState' }) as Promise<MessageResponse>,
+        browser.storage.local.get("scope"),
+        browser.storage.local.get("requests")
+      ]);
+
+      setState(prevState => ({
+        ...prevState,
+        urlParser: autoParserState.state ?? false,
+        scopes: scopeResult.scope as string[] || [],
+        reqAmt: reqAmtResult.requests as number || 1,
+      }));
+
+      // Only update URL and JS file counts if there's an active tab
       const tabs = await browser.tabs.query({active: true, currentWindow: true});
       if (tabs[0]?.id) {
-        const [autoParserState, urlCount, jsFileCount] = await Promise.all([
-          browser.tabs.sendMessage(tabs[0].id, { action: 'getAutoParserState' }) as Promise<MessageResponse>,
+        const [urlCount, jsFileCount] = await Promise.all([
           browser.tabs.sendMessage(tabs[0].id, { action: 'countURLs' }) as Promise<MessageResponse>,
           browser.tabs.sendMessage(tabs[0].id, { action: 'countJSFiles' }) as Promise<MessageResponse>,
         ]);
-        const scopeResult = await browser.storage.local.get("scope");
-        const reqAmtResult = await browser.storage.local.get("requests");
-  
-        setState({
-          urlParser: autoParserState.state ?? false,
+
+        setState(prevState => ({
+          ...prevState,
           urlCount: urlCount.count ?? 0,
           jsFileCount: jsFileCount.count ?? 0,
-          scopes: scopeResult.scope as string[] || [],
-          reqAmt: reqAmtResult.requests as number || 1,
-        });
+        }));
       }
     } catch (error) {
       console.error('Failed to update state:', error);
@@ -81,7 +105,10 @@ function PopUpApp() {
 
   const toggleUrlParserState = async () => {
     const newState = !state.urlParser;
-    await handleAction('setAutoParserState', { state: newState });
+    const response = await browser.runtime.sendMessage({ action: 'setAutoParserState', state: newState }) as MessageResponse;
+    if (response.success) {
+      setState(prevState => ({ ...prevState, urlParser: newState }));
+    }
   };
 
   const handleAddScope = () => {
