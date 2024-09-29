@@ -13,7 +13,9 @@
     "storage",
     "activeTab",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+    "http://*/*",
+    "https://*/*"
   ],
   "host_permissions": ["<all_urls>"],
   "action": {

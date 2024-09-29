@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { js as beautify } from 'js-beautify';
-import { Endpoint, HttpMethod } from '../constants/message_types';
-import { sanitizeURL, highlightSearchQuery, fetchWithTimeout } from '../utils/defaultview_utils';
-import { CSS_CLASSES, MODAL_NAMES, HTTP_METHODS, FETCH_TIMEOUT } from '../constants/defaultview_contants';
+import browser from 'webextension-polyfill';
+import { Endpoint, HttpMethod, MessageListener } from '../constants/message_types';
+import { sanitizeURL, highlightSearchQuery } from '../utils/defaultview_utils';
+import { CSS_CLASSES, MODAL_NAMES, HTTP_METHODS } from '../constants/defaultview_contants';
 
 interface URLPropsProps {
   endpoint: Endpoint;
@@ -21,20 +22,21 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
   );
 
   const [respStatusMessage, setRespStatusMessage] = useState<Record<HttpMethod, string>>(
-    Object.fromEntries(HTTP_METHODS.map(method => [method, ""])) as Record<HttpMethod, string>
+    Object.fromEntries(HTTP_METHODS.map(method => [method, ''])) as Record<HttpMethod, string>
   );
 
   const [respBody, setRespBody] = useState<Record<HttpMethod, string>>(
-    Object.fromEntries(HTTP_METHODS.map(method => [method, ""])) as Record<HttpMethod, string>
+    Object.fromEntries(HTTP_METHODS.map(method => [method, ''])) as Record<HttpMethod, string>
   );
 
   const [currentMethod, setCurrentMethod] = useState<HttpMethod>("GET");
 
-  const [headers, setHeaders] = useState<Record<HttpMethod, string[]>>({
-    GET: [],
-    POST: [],
-    PUT: [],
-    OPTIONS: []
+  const [headers, setHeaders] = useState<Record<HttpMethod, string[]>>(() => {
+    const initialHeaders: Partial<Record<HttpMethod, string[]>> = {};
+    HTTP_METHODS.forEach(method => {
+      initialHeaders[method] = [];
+    });
+    return initialHeaders as Record<HttpMethod, string[]>;
   });
 
   const [editableRequest, setEditableRequest] = useState({
@@ -46,6 +48,7 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
 
   const [activeTab, setActiveTab] = useState<'request' | 'response'>('response');
   const [isEditing, setIsEditing] = useState(false);
+  const [requestId, setRequestId] = useState<string | null>(null);
 
   const closeAllModals = () => {
     setModalState(Object.fromEntries(
@@ -56,56 +59,59 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
   useEffect(() => {
     if (modalState[MODAL_NAMES.seeResponse]) {
       for (const method of HTTP_METHODS) {
-        fetchData(method);
+        sendRequest(method);
       }
     }
   }, [modalState[MODAL_NAMES.seeResponse], endpoint]);
 
-  const fetchData = async (method: HttpMethod, customRequest?: typeof editableRequest) => {
+  useEffect(() => {
+    const listener = (message: any) => {
+      if (message.type === 'responseReceived' && message.requestId === requestId) {
+        const { method, status, statusText, responseHeaders, responseBody } = message;
+        setRespStatus(prev => ({ ...prev, [method]: status }));
+        setRespStatusMessage(prev => ({ ...prev, [method]: statusText }));
+        setHeaders(prev => ({ ...prev, [method]: responseHeaders }));
+        setRespBody(prev => ({ ...prev, [method]: beautify(responseBody, {
+          indent_size: 2,
+          indent_char: ' ',
+          max_preserve_newlines: 2,
+          preserve_newlines: true,
+          keep_array_indentation: false,
+          break_chained_methods: false,
+          brace_style: "collapse",
+          space_before_conditional: true,
+          unescape_strings: false,
+          jslint_happy: false,
+          end_with_newline: false,
+          wrap_line_length: 0,
+          indent_inner_html: false,
+          comma_first: false,
+          e4x: false,
+          indent_empty_lines: false
+        } as any) }));
+      }
+    };
+
+    browser.runtime.onMessage.addListener((listener as any));
+
+    return () => {
+      browser.runtime.onMessage.removeListener((listener as any));
+    };
+  }, [requestId]);
+
+  const sendRequest = async (method: HttpMethod, customRequest?: typeof editableRequest) => {
     const request = customRequest || { url: sanitizeURL(endpoint), method, headers: {}, body: '' };
-    try {
-      const response = await fetchWithTimeout(request.url, { 
-        method: request.method,
-        headers: request.headers,
-        body: request.method !== 'GET' ? request.body : undefined
-      }, FETCH_TIMEOUT);
+    const newRequestId = Date.now().toString();
+    setRequestId(newRequestId);
 
-      const fetchedHeaders: string[] = [];
-      response.headers.forEach((value, key) => {
-        fetchedHeaders.push(`${key}: ${value}`);
-      });
-      setHeaders(prev => ({ ...prev, [method]: fetchedHeaders }));
-      setRespStatus(prev => ({ ...prev, [method]: response.status }));
-      setRespStatusMessage(prev => ({ ...prev, [method]: response.statusText }));
-
-      const responseBody = await response.text();
-      const beautifiedBody = beautify(responseBody, {
-        indent_size: 2,
-        indent_char: ' ',
-        max_preserve_newlines: 2,
-        preserve_newlines: true,
-        keep_array_indentation: false,
-        break_chained_methods: false,
-        indent_scripts: "separate",
-        brace_style: "collapse",
-        space_before_conditional: true,
-        unescape_strings: false,
-        jslint_happy: false,
-        end_with_newline: false,
-        wrap_line_length: 0,
-        indent_inner_html: false,
-        comma_first: false,
-        e4x: false,
-        indent_empty_lines: false
-      } as any);
-      setRespBody(prev => ({ ...prev, [method]: beautifiedBody }));
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setHeaders(prev => ({ ...prev, [method]: [`Error: ${error}`] }));
-      setRespStatus(prev => ({ ...prev, [method]: 0 }));
-      setRespStatusMessage(prev => ({ ...prev, [method]: "Failed to fetch" }));
-      setRespBody(prev => ({ ...prev, [method]: "Failed to fetch body" }));
-    }
+    await browser.runtime.sendMessage({
+      type: 'sendRequest',
+      requestId: newRequestId,
+      url: request.url,
+      method: request.method,
+      headers: request.headers,
+      body: request.method !== 'GET' ? request.body : undefined
+    });
   };
 
   const handleEditRequest = () => {
@@ -113,17 +119,17 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
     setEditableRequest({
       url: sanitizeURL(endpoint),
       method: currentMethod,
-      headers: Object.fromEntries(headers[currentMethod].map(header => {
+      headers: Object.fromEntries(headers[currentMethod]?.map(header => {
         const [key, value] = header.split(': ');
         return [key, value];
-      })),
-      body: respBody[currentMethod],
+      }) || []),
+      body: respBody[currentMethod] || '',
     });
   };
 
   const handleSaveRequest = async () => {
     setIsEditing(false);
-    await fetchData(editableRequest.method as HttpMethod, editableRequest);
+    await sendRequest(editableRequest.method as HttpMethod, editableRequest);
     setCurrentMethod(editableRequest.method as HttpMethod);
   };
 
@@ -328,5 +334,4 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
       <td className="break-words max-w-lg text-center">{endpoint.webpage}</td>
     </tr>
   );
-
 }
