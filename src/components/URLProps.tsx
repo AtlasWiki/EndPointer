@@ -58,11 +58,9 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
 
   useEffect(() => {
     if (modalState[MODAL_NAMES.seeResponse]) {
-      for (const method of HTTP_METHODS) {
-        sendRequest(method);
-      }
+      sendRequest(currentMethod);
     }
-  }, [modalState[MODAL_NAMES.seeResponse], endpoint]);
+  }, [modalState[MODAL_NAMES.seeResponse]]);
 
   useEffect(() => {
     const listener = (message: any) => {
@@ -100,7 +98,12 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
   }, [requestId]);
 
   const sendRequest = async (method: HttpMethod, customRequest?: typeof editableRequest) => {
-    const request = customRequest || { url: sanitizeURL(endpoint), method, headers: {}, body: '' };
+    const request = customRequest || { 
+      url: sanitizeURL(endpoint), 
+      method, 
+      headers: {}, 
+      body: '' 
+    };
     const newRequestId = Date.now().toString();
     setRequestId(newRequestId);
 
@@ -125,6 +128,11 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
       }) || []),
       body: respBody[currentMethod] || '',
     });
+  };
+
+  const handleMethodChange = (newMethod: HttpMethod) => {
+    setCurrentMethod(newMethod);
+    sendRequest(newMethod);
   };
 
   const handleSaveRequest = async () => {
@@ -168,12 +176,14 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
                   <>
                     <h4 className="text-white font-semibold mb-2">Edit Request:</h4>
                     <select 
-                      className="w-full mb-2 p-2 bg-gray-700 text-white"
-                      value={editableRequest.method}
-                      onChange={(e) => setEditableRequest(prev => ({ ...prev, method: e.target.value as HttpMethod }))}
+                      className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
+                      value={currentMethod}
+                      onChange={(e) => handleMethodChange(e.target.value as HttpMethod)}
                     >
                       {HTTP_METHODS.map(method => (
-                        <option key={method} value={method}>{method}</option>
+                        <option key={method} value={method}>
+                          [{respStatus[method] || 'N/A'}] {respStatusMessage[method] || 'N/A'} {method}
+                        </option>
                       ))}
                     </select>
                     <input 
