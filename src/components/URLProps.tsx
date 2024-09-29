@@ -1,5 +1,3 @@
-// src/components/URLProps.tsx
-
 import React, { useState, useEffect } from 'react';
 import { js as beautify } from 'js-beautify';
 import { Endpoint, HttpMethod} from '../constants/message_types';
@@ -10,7 +8,6 @@ interface URLPropsProps {
   endpoint: Endpoint;
   searchQuery: string;
 }
-
 
 export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
   const [modalState, setModalState] = useState({
@@ -42,6 +39,7 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
 
   const [codeSnippet, setCodeSnippet] = useState<string[]>([]);
   const [keywordHits, setKeywordHits] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<'request' | 'response'>('response');
 
   const closeAllModals = () => {
     setModalState(Object.fromEntries(
@@ -137,7 +135,21 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
       case MODAL_NAMES.seeResponse:
         content = (
           <div className="mt-3">
-            <h3 className="text-lg font-semibold text-gray-400 mb-5">Response</h3>
+            <h3 className="text-lg font-semibold text-gray-400 mb-5">Request/Response Details</h3>
+            <div className="flex mb-4">
+              <button
+                className={`px-4 py-2 ${activeTab === 'request' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'}`}
+                onClick={() => setActiveTab('request')}
+              >
+                Request
+              </button>
+              <button
+                className={`px-4 py-2 ${activeTab === 'response' ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-700'}`}
+                onClick={() => setActiveTab('response')}
+              >
+                Response
+              </button>
+            </div>
             <select 
               className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
               value={currentMethod}
@@ -149,22 +161,38 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
                 </option>
               ))}
             </select>
-            <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-160">
-              {headers[currentMethod].map((header, index) => {
-                const [headerName, ...rest] = header.split(': ');
-                return (
-                  <li key={index} className="p-1">
-                    <span className="font-bold text-purple-200">{headerName}:</span>
-                    <span className="text-gray-200"> {rest.join(': ')}</span>
-                  </li>
-                );
-              })}
-              <li>
-                <pre className="mt-5">
-                  <span className="text-gray-200">{respBody[currentMethod]}</span>
+            {activeTab === 'request' ? (
+              <div className="bg-[#363333] opacity-85 rounded-md p-4">
+                <h4 className="text-white font-semibold mb-2">Request URL:</h4>
+                <pre className="text-gray-200 mb-4">{sanitizeURL(endpoint)}</pre>
+                <h4 className="text-white font-semibold mb-2">Request Method:</h4>
+                <pre className="text-gray-200 mb-4">{currentMethod}</pre>
+                <h4 className="text-white font-semibold mb-2">Request Headers:</h4>
+                <pre className="text-gray-200">
+                  {`Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+User-Agent: YourExtensionName/1.0`}
                 </pre>
-              </li>
-            </ul>
+              </div>
+            ) : (
+              <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-160">
+                {headers[currentMethod].map((header, index) => {
+                  const [headerName, ...rest] = header.split(': ');
+                  return (
+                    <li key={index} className="p-1">
+                      <span className="font-bold text-purple-200">{headerName}:</span>
+                      <span className="text-gray-200"> {rest.join(': ')}</span>
+                    </li>
+                  );
+                })}
+                <li>
+                  <pre className="mt-5">
+                    <span className="text-gray-200">{respBody[currentMethod]}</span>
+                  </pre>
+                </li>
+              </ul>
+            )}
           </div>
         );
         break;
@@ -176,7 +204,7 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
           <h2 className="text-xl font-bold text-gray-400 mb-5">
             {modalName === MODAL_NAMES.generateReport ? "Generate Report for " :
              modalName === MODAL_NAMES.viewCode ? "View Code Snippet for " :
-             "See Response for "}
+             "See Request/Response for "}
             {sanitizeURL(endpoint)}
           </h2>
           {content}
@@ -207,7 +235,7 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
             <svg className="cursor-pointer hover:opacity-80" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path fill="#3da28f" d="M20 4H6c-1.103 0-2 .897-2 2v5h2V8l6.4 4.8a1 1 0 0 0 1.2 0L20 8v9h-8v2h8c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2m-7 6.75L6.666 6h12.668z"/>
               <path fill="#3da28f" d="M2 12h7v2H2zm2 3h6v2H4zm3 3h4v2H7z"/>
-              <title>See Response</title>
+              <title>See Request/Response</title>
             </svg>
           </button>
         </div>
