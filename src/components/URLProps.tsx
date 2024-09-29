@@ -282,7 +282,15 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
                 </select>
                 <h4 className="text-white font-semibold mb-2">Response Headers:</h4>
                 <pre className="text-gray-200 mb-4">
-                  {headers[currentMethod].join('\n')}
+                {headers[currentMethod].map((header, index) => {
+                    const [headerName, ...rest] = header.split(': ');
+                    return (
+                      <div key={index} className="p-1">
+                        <span className="font-bold text-purple-200">{headerName}:</span>
+                        <span className="text-gray-200"> {rest.join(': ')}</span>
+                      </div>
+                    );
+                  })}
                 </pre>
                 <h4 className="text-white font-semibold mb-2">Response Body:</h4>
                 <pre className="text-gray-200 whitespace-pre-wrap">
