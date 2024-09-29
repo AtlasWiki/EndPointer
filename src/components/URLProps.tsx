@@ -3,7 +3,7 @@ import { js as beautify } from 'js-beautify';
 import { Endpoint, HttpMethod} from '../constants/message_types';
 import { sanitizeURL, highlightSearchQuery, fetchWithTimeout } from '../utils/defaultview_utils';
 import { CSS_CLASSES, MODAL_NAMES, HTTP_METHODS, FETCH_TIMEOUT  } from '../constants/defaultview_contants';
-
+import browser from 'webextension-polyfill';
 interface URLPropsProps {
   endpoint: Endpoint;
   searchQuery: string;
@@ -15,6 +15,8 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
     [MODAL_NAMES.viewCode]: false,
     [MODAL_NAMES.seeResponse]: false,
   });
+
+  const [requestDetails, setRequestDetails] = useState<any>(null);
   
   const [respStatus, setRespStatus] = useState<Record<HttpMethod, number>>(
     Object.fromEntries(HTTP_METHODS.map(method => [method, 0])) as Record<HttpMethod, number>
@@ -47,11 +49,27 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
     ) as typeof modalState);
   };
 
+ 
   useEffect(() => {
     if (modalState[MODAL_NAMES.seeResponse]) {
       HTTP_METHODS.forEach(fetchData);
+      fetchRequestDetails();
     }
   }, [modalState[MODAL_NAMES.seeResponse], endpoint]);
+
+  const fetchRequestDetails = async () => {
+    try {
+      const response = await browser.runtime.sendMessage({
+        action: 'getRequestDetails',
+        url: sanitizeURL(endpoint)
+      });
+      if ((response as any).success) {
+        setRequestDetails((response as any).details);
+      }
+    } catch (error) {
+      console.error("Failed to fetch request details:", error);
+    }
+  };
 
   useEffect(() => {
     if (modalState[MODAL_NAMES.viewCode]) {
@@ -166,14 +184,21 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
                 <h4 className="text-white font-semibold mb-2">Request URL:</h4>
                 <pre className="text-gray-200 mb-4">{sanitizeURL(endpoint)}</pre>
                 <h4 className="text-white font-semibold mb-2">Request Method:</h4>
-                <pre className="text-gray-200 mb-4">{currentMethod}</pre>
+                <pre className="text-gray-200 mb-4">{requestDetails?.method || currentMethod}</pre>
                 <h4 className="text-white font-semibold mb-2">Request Headers:</h4>
                 <pre className="text-gray-200">
-                  {`Accept: */*
-Accept-Encoding: gzip, deflate, br
-Connection: keep-alive
-User-Agent: YourExtensionName/1.0`}
+                  {requestDetails?.requestHeaders
+                    ? requestDetails.requestHeaders.map((header: any) => `${header.name}: ${header.value}`).join('\n')
+                    : 'No headers available'}
                 </pre>
+                {requestDetails?.requestBody && (
+                  <>
+                    <h4 className="text-white font-semibold mb-2 mt-4">Request Body:</h4>
+                    <pre className="text-gray-200">
+                      {JSON.stringify(requestDetails.requestBody, null, 2)}
+                    </pre>
+                  </>
+                )}
               </div>
             ) : (
               <ul className="text-black overflow-y-auto p-2 bg-[#363333] opacity-85 rounded-md max-h-160">

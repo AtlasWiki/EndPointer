@@ -9,18 +9,22 @@ export type MessageAction =
   | 'clearURLs'
   | 'updateURLCount'
   | 'updateJSFileCount'
-  | 'reparse';
-
+  | 'reparse'
+  | 'getRequestDetails'
+  | 'checkContentScriptInjected'
+  | 'autoParserStateChanged';
+  
 export interface Message {
   action: MessageAction;
   state?: boolean;
   count?: number;
+  url?: string;
 }
 
 export interface MessageResponse {
   success: boolean;
   error?: string;
-  details?: string;
+  details?: any;
   count?: number;
   state?: boolean;
 }
