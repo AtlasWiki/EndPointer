@@ -6,6 +6,7 @@ import { LocationItem } from '../components/Locationitem';
 import { useURLData } from '../hooks/useURLData';
 import { clearURLs } from '../utils/defaultview_utils';
 import { VISIBLE_URL_SIZE, CSS_CLASSES } from '../constants/defaultview_contants';
+import { NavBar } from '../components/navbar';
 
 export function URLsDefaultView() {
   const [selected, setSelected] = useState<string>('All');
@@ -49,6 +50,7 @@ export function URLsDefaultView() {
 
   return (
     <div className="w-full min-h-screen flex justify-center">
+      {(document.location.pathname.toLowerCase().includes("devtool") && <NavBar />)}
       <div className="mt-5 flex">
         <div className="py-1 w-full flex flex-col gap-10">
           <div className="w-full max-h-[760px] overflow-auto" ref={tableRef} onScroll={handleScroll}>

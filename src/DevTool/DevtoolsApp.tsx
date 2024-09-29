@@ -93,7 +93,7 @@ function DevToolsApp() {
                 className="a-item a-color font-semibold" 
                 onClick={handleURLButtonClick}
               >
-                <span className="text-violet-500">URLs</span> ({urlCount})
+                <span className="text-violet-500">URLs</span> <span className="text-blue-500">({urlCount})</span>
               </button>
           </div>
         </div>
