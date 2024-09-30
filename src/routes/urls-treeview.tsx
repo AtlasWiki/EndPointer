@@ -1,80 +1,41 @@
-import { useEffect, useState } from "react";
-import browser from "webextension-polyfill";
+
+import browser from 'webextension-polyfill';
+import React, { useEffect, useState } from "react";
+import { formatURLData } from '../utils/URLdataFormatter_utils';
+import { Endpoint, Location } from '../constants/message_types';
 
 export function URLsTreeView() {
-  interface Endpoint {
-    url: string;
-    foundAt: string;
-    webpage: string;
-  }
-
-  interface URLHierarchy {
+  const [hierarchy, setHierarchy] = useState<{
     [webpage: string]: {
       mainPage: Endpoint[];
       jsFiles: {
         [jsFile: string]: Endpoint[];
       };
     };
-  }
-
-  const [hierarchy, setHierarchy] = useState<URLHierarchy>({});
-  const [jsFiles, setJSFiles] = useState<string[]>([]);
+  }>({});
+  const [jsFiles, setJSFiles] = useState<Location[]>([]);
   const [selected, setSelected] = useState<string>('All');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const fetchData = () => {
-      let newHierarchy: URLHierarchy = {};
-      let allJsFiles: string[] = [];
-
-      browser.storage.local.get("URL-PARSER"), (data: { [key: string]: any }) => {
-        const urlParser = data["URL-PARSER"];
-
-        Object.keys(urlParser).forEach((key) => {
-          if (key !== "current") {
-            const webpage = decodeURIComponent(key);
-            newHierarchy[webpage] = { mainPage: [], jsFiles: {} };
-
-            // Add currPage endpoints
-            newHierarchy[webpage].mainPage = urlParser[key].currPage.map((url: string): Endpoint => ({
-              url,
-              foundAt: 'Main Page',
-              webpage,
-            }));
-
-            // Add externalJSFiles endpoints
-            Object.entries(urlParser[key].externalJSFiles).forEach(([jsFile, endpoints]) => {
-              const decodedJsFile = decodeURIComponent(jsFile);
-              allJsFiles.push(decodedJsFile);
-              newHierarchy[webpage].jsFiles[decodedJsFile] = (endpoints as string[]).map((url): Endpoint => ({
-                url,
-                foundAt: decodedJsFile,
-                webpage,
-              }));
-            });
-          }
-        });
-
-        setHierarchy(newHierarchy);
-        setJSFiles(['All', ...Array.from(new Set(allJsFiles))]);
-      };
+    const fetchData = async () => {
+      const { hierarchy: newHierarchy, locations } = await formatURLData();
+      setHierarchy(newHierarchy);
+      setJSFiles(locations);
     };
 
-    // Initial fetch
     fetchData();
 
-    // Listener for storage changes
     const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
-        fetchData(); // Re-fetch data when URL-PARSER changes
+        fetchData();
       }
     };
 
     browser.storage.onChanged.addListener(handleStorageChange);
 
-    // Cleanup listener on component unmount
     return () => {
       browser.storage.onChanged.removeListener(handleStorageChange);
     };
