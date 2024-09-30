@@ -1,9 +1,7 @@
-// src/hooks/useURLData.ts
-
 import { useState, useEffect } from 'react';
+import { Endpoint, Location } from '../constants/message_types';
+import { formatURLData } from '../utils/URLdataFormatter_utils';
 import browser from 'webextension-polyfill';
-import { Endpoint, Location, URLParser } from '../constants/message_types';
-
 export function useURLData(
   selected: string,
   searchQuery: string,
@@ -15,52 +13,14 @@ export function useURLData(
   const [visibleUrls, setVisibleUrls] = useState<Endpoint[]>([]);
 
   useEffect(() => {
-    const fetchData = () => {
-      let allEndpoints: Endpoint[] = [];
-      let locations: Location[] = [];
-
-      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
-        const urlParser: URLParser = data["URL-PARSER"];
-
-        Object.keys(urlParser).forEach((key) => {
-          if (key !== "current") {
-            const currURLEndpoints = urlParser[key].currPage;
-            const currURLExtJSFiles = urlParser[key].externalJSFiles;
-            locations.push(decodeURIComponent(key));
-
-            // Add currPage endpoints
-            allEndpoints.push(...currURLEndpoints.map((endpoint: string): Endpoint => ({
-              url: endpoint,
-              foundAt: decodeURIComponent(key),
-              webpage: decodeURIComponent(key),
-            })));
-
-            // Add externalJSFiles endpoints
-            Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
-              const decodedJsFile = decodeURIComponent(jsFile);
-              if (!locations.includes(decodedJsFile)) {
-                locations.push(decodedJsFile);
-              }
-              allEndpoints.push(...(endpoints as string[]).map((endpoint: string): Endpoint => ({
-                url: endpoint,
-                foundAt: decodedJsFile,
-                webpage: decodeURIComponent(key),
-              })));
-            });
-          }
-        });
-
-        // Ensure "All" is included only once and other locations are unique
-        const uniqueLocations = Array.from(new Set(['All', ...locations]));
-        setURLs(allEndpoints);
-        setJSFiles(uniqueLocations);
-      });
+    const fetchData = async () => {
+      const { allEndpoints, locations } = await formatURLData();
+      setURLs(allEndpoints);
+      setJSFiles(locations);
     };
 
-    // Initial fetch
     fetchData();
 
-    // Listener for storage changes
     const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
         fetchData();
@@ -69,11 +29,11 @@ export function useURLData(
 
     browser.storage.onChanged.addListener(handleStorageChange);
 
-    // Cleanup listener on hook unmount
     return () => {
       browser.storage.onChanged.removeListener(handleStorageChange);
     };
   }, []);
+
 
   const filteredURLs = urls.filter(endpoint => {
     const matchesLocation = selected === 'All' || endpoint.foundAt === selected;
