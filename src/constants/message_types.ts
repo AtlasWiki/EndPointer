@@ -1,4 +1,5 @@
 import { Runtime } from 'webextension-polyfill';
+import React from 'react';
 
 export type MessageAction =
   | 'parseURLs'
@@ -12,13 +13,18 @@ export type MessageAction =
   | 'reparse'
   | 'getRequestDetails'
   | 'checkContentScriptInjected'
-  | 'autoParserStateChanged';
-  
+  | 'autoParserStateChanged'
+  | 'sendRequest'
+  | 'clearResponseCache';
+
 export interface Message {
   action: MessageAction;
   state?: boolean;
   count?: number;
   url?: string;
+  endpoint?: Endpoint;
+  method?: HttpMethod;
+  customRequest?: RequestDetails;
 }
 
 export interface MessageResponse {
@@ -27,6 +33,11 @@ export interface MessageResponse {
   details?: any;
   count?: number;
   state?: boolean;
+  url?: string;
+  status?: number;
+  statusText?: string;
+  headers?: Record<string, string>;
+  body?: string;
 }
 
 export type MessageSender = Runtime.MessageSender;
@@ -54,9 +65,6 @@ export interface URLParserStorage {
   current?: string;
   [key: string]: URLParserStorageItem | string | undefined;
 }
-
-
-// src/types/index.ts
 
 export interface Endpoint {
   url: string;
@@ -104,3 +112,23 @@ export interface UseURLDataResult {
   visibleUrls: Endpoint[];
   setVisibleUrls: React.Dispatch<React.SetStateAction<Endpoint[]>>;
 }
+
+
+
+export interface RequestDetails {
+  url: string;
+  method: HttpMethod;
+  headers: Record<string, string>;
+  body?: string;
+}
+
+export interface ResponseDetails {
+  success: boolean;
+  url: string;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  body: string;
+}
+
+export type ResponseCache = Record<string, Record<HttpMethod, ResponseDetails | null>>;

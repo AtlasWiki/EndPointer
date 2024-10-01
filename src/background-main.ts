@@ -1,64 +1,104 @@
 import browser from 'webextension-polyfill';
-import { Message, MessageListener, MessageResponse } from './constants/message_types';
-import { sendRequest, RequestDetails, ResponseData } from './utils/request_Util';
+import { Message, MessageResponse, HttpMethod, Endpoint, RequestDetails, MessageSender } from './constants/message_types';
+import { handleSendRequest, initRequestHandler, clearResponseCache, getRequestDetails } from './background/httpRequestHandler';
 
 let isAutoParserEnabled = false;
 
-// Initialize the auto parser state
+// Initialize the auto parser state and request handler
 browser.storage.local.get('autoParserEnabled').then((result) => {
   (isAutoParserEnabled as any) = result.autoParserEnabled || false;
 });
+initRequestHandler();
 
 // Listen for messages from popup and content scripts
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Received message in background script:', message);
-
-  if ((message as Message).action === 'getAutoParserState') {
-    sendResponse({ success: true, state: isAutoParserEnabled });
-  } else if ((message as Message).action === 'setAutoParserState') {
-    isAutoParserEnabled = (message as any).state;
-    browser.storage.local.set({ autoParserEnabled: isAutoParserEnabled });
-    sendResponse({ success: true });
-
-    // Notify all tabs about the state change
-    browser.tabs.query({}).then((tabs) => {
-      tabs.forEach((tab) => {
-        if (tab.id) {
-          browser.tabs.sendMessage(tab.id, { action: 'autoParserStateChanged', state: isAutoParserEnabled })
-          .catch(() => {
-            // Silent fail if the tab doesn't have the content script loaded
+browser.runtime.onMessage.addListener((message: unknown, sender: MessageSender, sendResponse: (response: unknown) => void) => {
+  const typedMessage = message as Message;
+  
+  switch (typedMessage.action) {
+    case 'getAutoParserState':
+      sendResponse({ success: true, state: isAutoParserEnabled });
+      break;
+    case 'setAutoParserState':
+      if (typeof typedMessage.state === 'boolean') {
+        isAutoParserEnabled = typedMessage.state;
+        browser.storage.local.set({ autoParserEnabled: isAutoParserEnabled });
+        sendResponse({ success: true });
+        notifyAllTabs();
+      } else {
+        sendResponse({ success: false, error: 'Invalid state provided' });
+      }
+      break;
+    case 'sendRequest':
+      if (typedMessage.endpoint && typedMessage.method) {
+        handleSendRequest(typedMessage.endpoint as Endpoint, typedMessage.method as HttpMethod, typedMessage.customRequest as RequestDetails | null)
+          .then(response => {
+            sendResponse(response);
+          })
+          .catch(error => {
+            console.error('Error in handleSendRequest:', error);
+            sendResponse({
+              success: false,
+              error: error.message,
+              url: typedMessage.customRequest?.url || (typedMessage.endpoint as any).url,
+              status: 0,
+              statusText: 'Error',
+              headers: { 'Error': error.toString() },
+              body: 'Failed to fetch'
+            });
           });
-        }
-      });
-    });
-  } else if ((message as any).type === 'sendRequest') {
-    handleSendRequest(message as RequestDetails)
-      .then(sendResponse)
-      .catch(error => {
-        console.error('Error in handleSendRequest:', error);
-        sendResponse({ success: false, error: error.message });
-      });
-    return true; // Indicates that the response will be sent asynchronously
+        return true; // Indicates that the response will be sent asynchronously
+      } else {
+        sendResponse({ success: false, error: 'Invalid endpoint or method provided' });
+      }
+      break;
+    case 'clearResponseCache':
+      clearResponseCache();
+      sendResponse({ success: true });
+      break;
+    case 'getRequestDetails':
+      if (typedMessage.url) {
+        getRequestDetails(typedMessage.url)
+          .then(details => sendResponse({ success: true, details }))
+          .catch(error => sendResponse({ success: false, error: error.message }));
+        return true; // Indicates that the response will be sent asynchronously
+      } else {
+        sendResponse({ success: false, error: 'URL not provided' });
+      }
+      break;
+    default:
+      sendResponse({ success: false, error: 'Unknown action' });
   }
 });
 
-async function handleSendRequest(details: RequestDetails): Promise<ResponseData> {
-  console.log('Handling send request in background script:', details);
-  try {
-    const response = await sendRequest(details);
-    console.log('Request response:', response);
-    return response;
-  } catch (error) {
-    console.error('Error in background script:', error);
-    throw error;
-  }
+function notifyAllTabs() {
+  browser.tabs.query({}).then((tabs) => {
+    tabs.forEach((tab) => {
+      if (tab.id) {
+        browser.tabs.sendMessage(tab.id, { action: 'autoParserStateChanged', state: isAutoParserEnabled })
+        .catch(() => {
+          // Silent fail if the tab doesn't have the content script loaded
+        });
+      }
+    });
+  });
 }
 
-// Make sure the background script stays active
-browser.runtime.onInstalled.addListener(() => {
-  console.log('Background script installed');
+// Listen for tab updates to inject content script if necessary
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
+    browser.tabs.sendMessage(tabId, { action: 'checkContentScriptInjected' }).catch(() => {
+      // If the content script is not injected, inject it
+      browser.tabs.executeScript(tabId, { file: 'content-script.js' }).then(() => {
+        // After injection, send the current auto parser state
+        browser.tabs.sendMessage(tabId, { action: 'autoParserStateChanged', state: isAutoParserEnabled });
+      });
+    });
+  }
 });
 
-browser.runtime.onStartup.addListener(() => {
-  console.log('Background script started');
+// Optional: Add listener for extension install or update
+browser.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install' || details.reason === 'update') {
+    clearResponseCache();
+  }
 });
