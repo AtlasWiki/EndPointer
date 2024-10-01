@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
 import { Message, MessageListener, MessageResponse } from './constants/message_types';
+import { sendRequest, RequestDetails, ResponseData } from './utils/request_Util';
 
 let isAutoParserEnabled = false;
 
@@ -10,10 +11,12 @@ browser.storage.local.get('autoParserEnabled').then((result) => {
 
 // Listen for messages from popup and content scripts
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('Received message in background script:', message);
+
   if ((message as Message).action === 'getAutoParserState') {
     sendResponse({ success: true, state: isAutoParserEnabled });
   } else if ((message as Message).action === 'setAutoParserState') {
-    (isAutoParserEnabled as any) = (message as Message).state;
+    isAutoParserEnabled = (message as any).state;
     browser.storage.local.set({ autoParserEnabled: isAutoParserEnabled });
     sendResponse({ success: true });
 
@@ -29,67 +32,33 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
   } else if ((message as any).type === 'sendRequest') {
-    handleSendRequest(message, sender)
+    handleSendRequest(message as RequestDetails)
       .then(sendResponse)
-      .catch(error => sendResponse({ success: false, error: error.message }));
+      .catch(error => {
+        console.error('Error in handleSendRequest:', error);
+        sendResponse({ success: false, error: error.message });
+      });
     return true; // Indicates that the response will be sent asynchronously
   }
 });
 
-async function handleSendRequest(message: any, sender: browser.Runtime.MessageSender) {
+async function handleSendRequest(details: RequestDetails): Promise<ResponseData> {
+  console.log('Handling send request in background script:', details);
   try {
-    const response = await fetch(message.url, {
-      method: message.method,
-      headers: message.headers,
-      body: message.method !== 'GET' ? message.body : undefined
-    });
-
-    const responseHeaders: string[] = [];
-    response.headers.forEach((value, name) => {
-      responseHeaders.push(`${name}: ${value}`);
-    });
-
-    const responseBody = await response.text();
-
-    if (sender.tab && sender.tab.id) {
-      await browser.tabs.sendMessage(sender.tab.id, {
-        type: 'responseReceived',
-        requestId: message.requestId,
-        method: message.method,
-        status: response.status,
-        statusText: response.statusText,
-        responseHeaders,
-        responseBody
-      });
-    }
-
-    return { success: true };
+    const response = await sendRequest(details);
+    console.log('Request response:', response);
+    return response;
   } catch (error) {
     console.error('Error in background script:', error);
-    if (sender.tab && sender.tab.id) {
-      await browser.tabs.sendMessage(sender.tab.id, {
-        type: 'responseReceived',
-        requestId: message.requestId,
-        method: message.method,
-        status: 0,
-        statusText: 'Error',
-        responseHeaders: [`Error: ${error}`],
-        responseBody: 'Failed to fetch'
-      });
-    }
     throw error;
   }
 }
 
-// Listen for tab updates to inject content script if necessary
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
-    browser.tabs.sendMessage(tabId, { action: 'checkContentScriptInjected' }).catch(() => {
-      // If the content script is not injected, inject it
-      browser.tabs.executeScript(tabId, { file: 'content-script.js' }).then(() => {
-        // After injection, send the current auto parser state
-        browser.tabs.sendMessage(tabId, { action: 'autoParserStateChanged', state: isAutoParserEnabled });
-      });
-    });
-  }
+// Make sure the background script stays active
+browser.runtime.onInstalled.addListener(() => {
+  console.log('Background script installed');
+});
+
+browser.runtime.onStartup.addListener(() => {
+  console.log('Background script started');
 });
