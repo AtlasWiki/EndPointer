@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { js as beautify } from 'js-beautify';
 import browser from 'webextension-polyfill';
-import { Endpoint, HttpMethod, MessageListener } from '../constants/message_types';
+import { Endpoint, HttpMethod } from '../constants/message_types';
 import { sanitizeURL, highlightSearchQuery } from '../utils/defaultview_utils';
 import { CSS_CLASSES, MODAL_NAMES, HTTP_METHODS } from '../constants/defaultview_contants';
+import { sendRequest, RequestDetails, ResponseData } from '../utils/request_Util';
 
 interface URLPropsProps {
   endpoint: Endpoint;
@@ -48,7 +49,6 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
 
   const [activeTab, setActiveTab] = useState<'request' | 'response'>('response');
   const [isEditing, setIsEditing] = useState(false);
-  const [requestId, setRequestId] = useState<string | null>(null);
 
   const closeAllModals = () => {
     setModalState(Object.fromEntries(
@@ -58,63 +58,53 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
 
   useEffect(() => {
     if (modalState[MODAL_NAMES.seeResponse]) {
-      sendRequest(currentMethod);
+      sendHttpRequest(currentMethod);
     }
   }, [modalState[MODAL_NAMES.seeResponse]]);
 
-  useEffect(() => {
-    const listener = (message: any) => {
-      if (message.type === 'responseReceived' && message.requestId === requestId) {
-        const { method, status, statusText, responseHeaders, responseBody } = message;
-        setRespStatus(prev => ({ ...prev, [method]: status }));
-        setRespStatusMessage(prev => ({ ...prev, [method]: statusText }));
-        setHeaders(prev => ({ ...prev, [method]: responseHeaders }));
-        setRespBody(prev => ({ ...prev, [method]: beautify(responseBody, {
-          indent_size: 2,
-          indent_char: ' ',
-          max_preserve_newlines: 2,
-          preserve_newlines: true,
-          keep_array_indentation: false,
-          break_chained_methods: false,
-          brace_style: "collapse",
-          space_before_conditional: true,
-          unescape_strings: false,
-          jslint_happy: false,
-          end_with_newline: false,
-          wrap_line_length: 0,
-          indent_inner_html: false,
-          comma_first: false,
-          e4x: false,
-          indent_empty_lines: false
-        } as any) }));
-      }
-    };
-
-    browser.runtime.onMessage.addListener((listener as any));
-
-    return () => {
-      browser.runtime.onMessage.removeListener((listener as any));
-    };
-  }, [requestId]);
-
-  const sendRequest = async (method: HttpMethod, customRequest?: typeof editableRequest) => {
+  const sendHttpRequest = async (method: HttpMethod, customRequest?: typeof editableRequest) => {
     const request = customRequest || { 
       url: sanitizeURL(endpoint), 
       method, 
       headers: {}, 
       body: '' 
     };
-    const newRequestId = Date.now().toString();
-    setRequestId(newRequestId);
 
-    await browser.runtime.sendMessage({
-      type: 'sendRequest',
-      requestId: newRequestId,
-      url: request.url,
-      method: request.method,
-      headers: request.headers,
-      body: request.method !== 'GET' ? request.body : undefined
-    });
+    try {
+      console.log('Sending request:', request);
+      const response = await sendRequest({
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        body: request.method !== 'GET' ? request.body : undefined
+      });
+      console.log('Received response:', response);
+
+      setRespStatus(prev => ({ ...prev, [method]: response.status }));
+      setRespStatusMessage(prev => ({ ...prev, [method]: response.statusText }));
+      setHeaders(prev => ({ ...prev, [method]: response.headers }));
+      setRespBody(prev => ({ ...prev, [method]: beautify(response.body, {
+        indent_size: 2,
+        indent_char: ' ',
+        max_preserve_newlines: 2,
+        preserve_newlines: true,
+        keep_array_indentation: false,
+        break_chained_methods: false,
+        brace_style: "collapse",
+        space_before_conditional: true,
+        unescape_strings: false,
+        jslint_happy: false,
+        end_with_newline: false,
+        wrap_line_length: 0,
+        indent_inner_html: false,
+        comma_first: false,
+        e4x: false,
+        indent_empty_lines: false
+      } as any) }));
+    } catch (error) {
+      console.error('Error sending request:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   const handleEditRequest = () => {
@@ -132,12 +122,12 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
 
   const handleMethodChange = (newMethod: HttpMethod) => {
     setCurrentMethod(newMethod);
-    sendRequest(newMethod);
+    sendHttpRequest(newMethod);
   };
 
   const handleSaveRequest = async () => {
     setIsEditing(false);
-    await sendRequest(editableRequest.method as HttpMethod, editableRequest);
+    await sendHttpRequest(editableRequest.method as HttpMethod, editableRequest);
     setCurrentMethod(editableRequest.method as HttpMethod);
   };
 
