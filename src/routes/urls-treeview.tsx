@@ -3,6 +3,7 @@ import browser from 'webextension-polyfill';
 import React, { useEffect, useState } from "react";
 import { formatURLData } from '../utils/URLdataFormatter_utils';
 import { Endpoint, Location } from '../constants/message_types';
+import { NavBar } from '../components/navbar';
 
 export function URLsTreeView() {
   const [hierarchy, setHierarchy] = useState<{
@@ -151,6 +152,7 @@ export function URLsTreeView() {
   }
   return (
     <div className="w-full min-h-screen">
+      {(document.location.pathname.toLowerCase().includes("devtool") && <NavBar />)}
       <div className="mt-5 p-5">
         <div className="mb-5 flex gap-4">
           <input
