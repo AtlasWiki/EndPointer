@@ -3,6 +3,7 @@ import { Endpoint, HttpMethod, ResponseDetails } from '../../constants/message_t
 import { sanitizeURL } from '../../utils/defaultview_utils';
 import { HTTP_METHODS } from '../../constants/defaultview_contants';
 import browser from 'webextension-polyfill';
+import { sendRequest } from '../../utils/request_Util';
 
 interface SeeResponseModalProps {
   endpoint: Endpoint;
@@ -208,7 +209,7 @@ export const SeeResponseModal: React.FC<SeeResponseModalProps> = ({ endpoint, on
               </button>
               <h4 className="text-white font-semibold mb-2 mt-4">Body:</h4>
               <textarea 
-                className="w-full p-2 bg-gray-700 text-white"
+                className="w-full p-2 bg-gray-700 text-white min-h-40"
                 value={editableRequest.body}
                 onChange={(e) => setEditableRequest(prev => ({ ...prev, body: e.target.value }))}
                 disabled={editableRequest.method === 'GET'}
@@ -245,12 +246,20 @@ export const SeeResponseModal: React.FC<SeeResponseModalProps> = ({ endpoint, on
                   <pre className="text-gray-200">{currentRequest.body || ''}</pre>
                 </>
               )}
-              <button 
-                className="mt-4 bg-blue-500 text-white p-2 rounded"
-                onClick={handleEditRequest}
-              >
-                Edit Request
-              </button>
+              <div className="flex gap-1">
+                <button 
+                  className="mt-4 bg-blue-500 text-white p-2 rounded"
+                  onClick={handleEditRequest}
+                >
+                  Edit Request
+                </button>
+                <button 
+                  className="mt-4 bg-rose-500 text-white p-2 rounded"
+                  onClick={() => sendRequest(currentRequest)}
+                >
+                  Send
+                </button>
+              </div>
             </>
           )}
         </div>
