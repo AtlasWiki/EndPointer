@@ -1,18 +1,21 @@
 {
   "manifest_version": 3,
   "name": "EndPointer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An endpoint parser and extractor with many flexible features",
   "icons": {
-    "16": "icons/endPointer_logo_16x16.png",
-    "48": "icons/endPointer_logo_48x48.png",
-    "128": "icons/endPointer_logo_128x128.png"
+    "16": "icons/EndPointer.png",
+    "32": "icons/EndPointer.png",
+    "48": "icons/EndPointer.png",
+    "128": "icons/EndPointer.png"
   },
   "permissions": [
     "storage",
     "activeTab",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+    "http://*/*",
+    "https://*/*"
   ],
   "host_permissions": ["<all_urls>"],
   "action": {
@@ -20,18 +23,21 @@
     "default_title": "Endpoint Extractor for Hackers"
   },
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
-    {
+    { 
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "type": "module"
     }
   ],
   "devtools_page": "DevTool/DevTool.html",
   "web_accessible_resources": [
     {
-      "resources": ["DevTool/background.js"],
+      "resources": [ "DevTool/background.js"],
       "matches": ["<all_urls>"]
     }
   ],
