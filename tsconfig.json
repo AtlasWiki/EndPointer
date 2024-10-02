@@ -15,7 +15,8 @@
       "isolatedModules": true,
       "noEmit": true,
       "jsx": "react-jsx",
-      "types": ["chrome"]
+      "types": ["webextension-polyfill", "node"],
+      "typeRoots": ["./node_modules/@types", "./src/sharedTypes"]
     },
-    "include": ["src"],
+    "include": ["src/**/*"],
 }

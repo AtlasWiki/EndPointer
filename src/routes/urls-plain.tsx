@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import browser from 'webextension-polyfill';
 
-export function URLsCSV() {
+export function URLsPlain() {
   interface Endpoint {
     url: string;
     foundAt: string;
@@ -37,16 +38,13 @@ export function URLsCSV() {
     return verifiedURL;
   };
 
-  // Function to download URLs as a .csv file
-  const downloadURLsAsCsv = () => {
-    const csvHeader = 'endpoint,parsed from,root webpage\n'; // CSV header
-    const csvContent = urls.map((endpoint) => 
-      `${sanitizedURL(endpoint)},${endpoint.foundAt},${endpoint.webpage}`
-    ).join('\n'); // Join each endpoint row with newline
-    const blob = new Blob([csvHeader + csvContent], { type: 'text/csv' });
+  // Function to download URLs as a .txt file
+  const downloadURLsAsTxt = () => {
+    const urlStrings = urls.map(sanitizedURL).join('\n'); // Join URLs as newline-separated strings
+    const blob = new Blob([urlStrings], { type: 'text/plain' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'urls.csv';
+    link.download = 'urls.txt';
     link.click();
   };
 
@@ -55,7 +53,7 @@ export function URLsCSV() {
       let allEndpoints: Endpoint[] = [];
       let locations: Location[] = [];
 
-      chrome.storage.local.get("URL-PARSER", (data: { [key: string]: URLParser }) => {
+      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
         const urlParser = data["URL-PARSER"];
 
         Object.keys(urlParser).forEach((key) => {
@@ -65,7 +63,7 @@ export function URLsCSV() {
             locations.push(decodeURIComponent(key));
 
             // Add currPage endpoints
-            allEndpoints.push(...currURLEndpoints.map((endpoint): Endpoint => ({
+            allEndpoints.push(...currURLEndpoints.map((endpoint: any): Endpoint => ({
               url: endpoint,
               foundAt: decodeURIComponent(key), // Found at the main webpage
               webpage: decodeURIComponent(key),
@@ -77,7 +75,7 @@ export function URLsCSV() {
               if (!locations.includes(decodedJsFile)) {
                 locations.push(decodedJsFile);
               }
-              allEndpoints.push(...endpoints.map((endpoint): Endpoint => ({
+              allEndpoints.push(...(endpoints as any).map((endpoint: any): Endpoint => ({
                 url: endpoint,
                 foundAt: decodedJsFile, // Found at the specific JS file
                 webpage: decodeURIComponent(key),
@@ -95,35 +93,35 @@ export function URLsCSV() {
     fetchData();
 
     // Listener for storage changes
-    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+    const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
       if (changes["URL-PARSER"]) {
         fetchData(); // Re-fetch data when URL-PARSER changes
       }
     };
 
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    browser.storage.onChanged.addListener(handleStorageChange);
 
     // Cleanup listener on component unmount
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      browser.storage.onChanged.removeListener(handleStorageChange);
     };
   }, []);
 
   return (
     <div className="mt-2 ml-1">
-      <button onClick={downloadURLsAsCsv} className="mt-4 p-2 text-white bg-transparent border border-gray-500 mb-5 rounded">
-        Download URLs as .csv
-      </button>
-      {/* CSV Syntax Display */}
-      <pre className="bg-gray-500 p-2 mb-4">
-        endpoint,parsed from,root webpage
-      </pre>
-      {/* Display URLs in CSV format */}
-      <pre className="text-md p-2">
-        {urls.map((endpoint, index) => 
-          `${sanitizedURL(endpoint)},${endpoint.foundAt},${endpoint.webpage}`
-        ).join('\n')}
-      </pre>
+        <button onClick={downloadURLsAsTxt} className="mt-4 p-2 text-white bg-transparent border border-gray-500 mb-5 rounded">
+            Download URLs as .txt
+        </button>
+        <pre className="bg-gray-500 p-2 mb-4">
+                  {`
+          Showing modified relative paths (format: root webpage + relative paths)
+          Example: https://www.example.com + /help: https://www.example.com/help
+          and absolute urls
+          `}
+        </pre>
+        {urls.map((endpoint, index) => (
+            <p className="" key={index}>{sanitizedURL(endpoint)}</p>
+        ))}
     </div>
   );
 }
