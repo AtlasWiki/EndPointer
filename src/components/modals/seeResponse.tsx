@@ -201,12 +201,20 @@ export const SeeResponseModal: React.FC<SeeResponseModalProps> = ({ endpoint, on
                   </button>
                 </div>
               ))}
-              <button 
-                className="bg-blue-500 text-white p-2 rounded mt-2"
-                onClick={handleAddHeader}
-              >
-                Add Header
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  className="bg-blue-500 text-white p-2 rounded mt-2"
+                  onClick={handleAddHeader}
+                >
+                  Add Header
+                </button>
+                <button 
+                  className="bg-rose-500 text-white p-2 rounded mt-2"
+                  onClick={() => editableRequest.headers = {}}
+                >
+                  Clear Headers
+                </button>
+              </div>
               <h4 className="text-white font-semibold mb-2 mt-4">Body:</h4>
               <textarea 
                 className="w-full p-2 bg-gray-700 text-white min-h-40"
