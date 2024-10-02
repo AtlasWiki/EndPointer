@@ -2,6 +2,10 @@
 
 ![Endpointer(B) (1)](https://github.com/user-attachments/assets/5a8002f8-3f2b-4981-84a0-a34228077dfe)
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+![Endpointer(banner V2)-modified](https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53)
 
 
 
