@@ -2,15 +2,17 @@
 
 import React, { useState, useRef } from 'react';
 import { URLProps } from '../components/URLProps';
-import { LocationItem } from '../components/Locationitem';
+import { LocationItem, WebpageItem } from '../components/Locationitem';
 import { useURLData } from '../hooks/useURLData';
 import { clearURLs } from '../utils/defaultview_utils';
 import { VISIBLE_URL_SIZE, CSS_CLASSES } from '../constants/defaultview_contants';
 import { NavBar } from '../components/navbar';
 
 export function URLsDefaultView() {
-  const [selected, setSelected] = useState<string>('All');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedLocation, setSelectedLocation] = useState<string>('All');
+  const [selectedWebpage, setSelectedWebpage] = useState<string>('All');
+  const [isOpenLocation, setIsOpenLocation] = useState<boolean>(false);
+  const [isOpenWebpage, setIsOpenWebpage] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [startIndex, setStartIndex] = useState(0);
   const tableRef = useRef<HTMLDivElement>(null);
@@ -20,12 +22,19 @@ export function URLsDefaultView() {
     jsFiles, 
     filteredURLs, 
     visibleUrls, 
-    setVisibleUrls 
-  } = useURLData(selected, searchQuery, startIndex, VISIBLE_URL_SIZE);
+    setVisibleUrls,
+    webpages
+  } = useURLData(selectedLocation, selectedWebpage, searchQuery, startIndex, VISIBLE_URL_SIZE);
 
-  const handleSelect = (url: string) => {
-    setSelected(url);
-    setIsOpen(false);
+  const handleSelectLocation = (url: string) => {
+    setSelectedLocation(url);
+    setIsOpenLocation(false);
+    setStartIndex(0);
+  };
+
+  const handleSelectWebpage = (url: string) => {
+    setSelectedWebpage(url);
+    setIsOpenWebpage(false);
     setStartIndex(0);
   };
 
@@ -59,7 +68,7 @@ export function URLsDefaultView() {
                 <tr className="text-5xl">
                   <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
                   <th className="border-b-2 pb-10">SOURCE <span className="text-[#3da28f]">({jsFiles.length})</span></th>
-                  <th className="border-b-2 pb-10">WEBPAGE</th>
+                  <th className="border-b-2 pb-10">WEBPAGE <span className="text-[#3da28f]">({webpages.length})</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -78,15 +87,32 @@ export function URLsDefaultView() {
                   <td>
                     <div className="relative w-full max-w-lg mt-5">
                       <button
-                        onClick={() => setIsOpen(!isOpen)}
+                        onClick={() => setIsOpenLocation(!isOpenLocation)}
                         className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
                       >
-                        {selected}
+                        {selectedLocation}
                       </button>
-                      {isOpen && (
+                      {isOpenLocation && (
                         <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
                           {jsFiles.map((url, index) => (
-                            <LocationItem key={index} url={url} onClick={() => handleSelect(url)} />
+                            <LocationItem key={index} url={url} onClick={() => handleSelectLocation(url)} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="relative w-full max-w-lg mt-5">
+                      <button
+                        onClick={() => setIsOpenWebpage(!isOpenWebpage)}
+                        className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                      >
+                        {selectedWebpage}
+                      </button>
+                      {isOpenWebpage && (
+                        <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                          {webpages.map((url, index) => (
+                            <WebpageItem key={index} url={url} onClick={() => handleSelectWebpage(url)} />
                           ))}
                         </div>
                       )}

@@ -83,6 +83,8 @@ export interface URLParser {
 
 export type Location = string;
 
+export type Webpage = string;
+
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'OPTIONS';
 
 export interface ResponseData {
@@ -108,6 +110,7 @@ export interface URLPropsState {
 export interface UseURLDataResult {
   urls: Endpoint[];
   jsFiles: Location[];
+  webpages: Webpage[];
   filteredURLs: Endpoint[];
   visibleUrls: Endpoint[];
   setVisibleUrls: React.Dispatch<React.SetStateAction<Endpoint[]>>;

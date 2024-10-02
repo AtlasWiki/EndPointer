@@ -1,9 +1,10 @@
 import browser from 'webextension-polyfill';
-import { Endpoint, Location, URLParser } from '../constants/message_types';
+import { Endpoint, Location, URLParser, Webpage } from '../constants/message_types';
 
 interface FormattedURLData {
   allEndpoints: Endpoint[];
   locations: Location[];
+  webpages: Webpage[];
   hierarchy: {
     [webpage: string]: {
       mainPage: Endpoint[];
@@ -20,6 +21,7 @@ export async function formatURLData(): Promise<FormattedURLData> {
 
   let allEndpoints: Endpoint[] = [];
   let locations: Location[] = [];
+  let webpages: Webpage[] = [];
   let hierarchy: FormattedURLData['hierarchy'] = {};
 
   Object.keys(urlParser).forEach((key) => {
@@ -29,6 +31,7 @@ export async function formatURLData(): Promise<FormattedURLData> {
       const currURLExtJSFiles = urlParser[key].externalJSFiles;
 
       locations.push(webpage);
+      webpages.push(webpage)
       hierarchy[webpage] = { mainPage: [], jsFiles: {} };
 
       // Add currPage endpoints
@@ -59,10 +62,11 @@ export async function formatURLData(): Promise<FormattedURLData> {
 
   // Ensure "All" is included only once and other locations are unique
   const uniqueLocations = Array.from(new Set(['All', ...locations]));
-
+  const uniqueWebpages = Array.from(new Set(['All', ...webpages]));
   return {
     allEndpoints,
     locations: uniqueLocations,
+    webpages: uniqueWebpages,
     hierarchy
   };
 }
