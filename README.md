@@ -61,7 +61,7 @@ This tool has benefited from the invaluable contributions of individuals who hav
 
 Main Contributors:
 - <p><a href="https://github.com/AtlasWiki">AtlasWiki / Mrunoriginal</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/AtlasWiki"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
-- <p><a href="https://github.com/LordCat">Dooma</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/LordCat"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
+- <p><a href="https://github.com/LordCat">LordCat / Dooma</a> <a href="https://www.linkedin.com/in/kristian-alex-kelly/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/LordCat"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
 
 Contributors:
 - <p><a href="https://github.com/Hacking-Notes">Hacking Notes</a> <a href="https://www.linkedin.com/in/alexis-savard/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/Hacking-Notes"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
