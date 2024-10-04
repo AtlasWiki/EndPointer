@@ -3,6 +3,8 @@ import browser from 'webextension-polyfill'
 import { useNavigate } from 'react-router-dom'
 import './index.css'
 import './App.css'
+import Logo from '../../dist/icons/EndPointer.png';
+
 
 function DevToolsApp() {
   const [urlCount, setURLCount] = useState(0)
@@ -80,7 +82,10 @@ function DevToolsApp() {
         </button>
       </div>
       <div className="mt-10 mb-10 w-full">
-        <h1 className="text-3xl md:text-6xl mb-3 font-bold">EndPointer Dashboard</h1>
+        <div className="flex items-center gap-1">
+          <img src={Logo} style={{ width: "5%", height: "5%" }} />
+          <h1 className="text-3xl md:text-6xl mb-3 font-bold">EndPointer Dashboard</h1>
+        </div>
         <p className="text-gray-400/60 md:text-lg">An endpoint parser and extractor with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
         <hr className="w-full mt-5"></hr>
       </div>

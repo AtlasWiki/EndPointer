@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import browser from 'webextension-polyfill';
 import './App.css';
 import { MessageResponse } from '../constants/message_types';
+import Logo from '../../dist/icons/EndPointer.png';
 
 interface AppState {
   urlParser: boolean;
@@ -181,7 +182,11 @@ function PopUpApp() {
 
   return (
     <div className="w-full md:h-screen m-0  md:justify-center py-5"> 
-      <div className="mt-5 mb-1 text-center">
+      <div className="text-center">
+        <div className="flex items-center justify-center gap-1">
+          <img src={Logo} style={{ width: "32%", height: "32%" }} />
+        </div>
+       
         <h1 className="text-4xl font-bold md:text-6xl mb-1">EndPointer</h1>
         <p className="text-gray-400/60 md:text-lg">An endpoint parser and extractor with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
         <div className="mt-3 flex flex-col justify-center gap-2 items-center mx-0">
