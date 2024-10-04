@@ -1,7 +1,6 @@
-<p align="center"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></p>
-
-
 # EndPointer: URL Finder for JavaScript Files
+
+<a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
 
 ### What is EndPointer?
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -11,12 +10,9 @@ Key Features:
 - Standardized Note-Taking Methodology: A clear structure to help you organize findings, categorize vulnerabilities, and link key information for quick access.
 - Collaboration-Ready: Use third-party cloud providers to easily share notes and collaborate on security research.
 - Folder and File Organization: Automatically convert Burp Suite output into an organized folder structure, making it easier to navigate through projects.
-  
-<br>
-
-<a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
 
 <br>
+<p align="center"><a href="#Download"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></a></p>
 
 To make things simpliuer we have made this section .... blablabla. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 <br>
