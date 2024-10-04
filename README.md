@@ -7,14 +7,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Key Features:
 
-- Standardized Note-Taking Methodology: A clear structure to help you organize findings, categorize vulnerabilities, and link key information for quick access.
-- Collaboration-Ready: Use third-party cloud providers to easily share notes and collaborate on security research.
-- Folder and File Organization: Automatically convert Burp Suite output into an organized folder structure, making it easier to navigate through projects.
+- Key Feature 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Key Feature 2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Key Feature 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 <br>
 <p align="center"><a href="#Download"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></a></p>
 
-To make things simpliuer we have made this section .... blablabla. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+To streamline the use of these tools, we've created an easy-to-navigate menu that lets you quickly select the information you need. Below, you can find informations for downloading the tool, exploring its features, checking ongoing development, and learning about our generous contributors.
+
 <br>
 <br>
 <div align="center">
@@ -23,25 +24,44 @@ To make things simpliuer we have made this section .... blablabla. Lorem ipsum d
 <br>
 
 <a name="Download"></a>
-<h2><img src="https://github.com/user-attachments/assets/466328bf-6dce-4cf3-bb53-ce427e8d7f25" width="30"> How to Download</h2>
+<h2><img src="https://github.com/user-attachments/assets/466328bf-6dce-4cf3-bb53-ce427e8d7f25" width="30"> Download & Installation</h2>
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+<br>
 
 <a name="Functionalities"></a>
-<h2><img src="https://github.com/user-attachments/assets/499bb537-9478-4341-8d55-773069796de8" width="30"> Tool Functionalities</h2>
+<h2><img src="https://github.com/user-attachments/assets/499bb537-9478-4341-8d55-773069796de8" width="30"> Key Features & Functionalities</h2>
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+<br>
 
 <a name="Development"></a>
-<h2><img src="https://github.com/user-attachments/assets/6f0ac000-6590-47e4-83ea-776fb27ca1fb" width="30"> Fixes & Developments</h2>
+<h2><img src="https://github.com/user-attachments/assets/6f0ac000-6590-47e4-83ea-776fb27ca1fb" width="30"> Developments & Fixes</h2>
 
+We are committed to consistently improving this tool with regular updates and welcome contributions from the community to enhance its functionality. That’s why we’ve made it open source, enabling individuals to contribute their improvements. Here are some of the latest developments and fixes:
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Developments:
+  - [ ] Development 1
+  - [ ] Development 2
+  - [ ] Development 3
+
+Fixes:
+  - [ ] Fixe 1
+  - [ ] Fixe 2
+  - [ ] Fixe 3
+
+<br>
 
 <a name="Contributors"></a>
 <h2><img src="https://github.com/user-attachments/assets/e4c573d8-62cb-42e1-a95e-b20264e5e2bb" width="30"> Contributors</h2>
 
+This tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- <p><a href="https://github.com/Hacking-Notes">Hacking Notes</a></p>
+
+<br>
 
 ## Disclaimer
 The tool provided on this GitHub page is intended for educational and research purposes only. The creators and maintainers of this tool are not responsible for any misuse or illegal use of the tool. It is the responsibility of the users to ensure that they comply with all applicable laws and regulations while using the tool.
