@@ -28,7 +28,11 @@ To streamline the use of these tools, we've created an easy-to-navigate menu tha
 <a name="Download"></a>
 <h2><img src="https://github.com/user-attachments/assets/466328bf-6dce-4cf3-bb53-ce427e8d7f25" width="30"> Download & Installation</h2>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+You have several options to download the extension. You can install it directly from the Chrome Web Store or, if you're using Firefox, from the Firefox Add-ons site. Alternatively, you can download the extension from GitHub, giving you access to the source code.
+
+<div align="left">
+<a href="https://chromewebstore.google.com/"><img src="https://github.com/user-attachments/assets/834eb360-3809-421c-9223-7b254957ae37" alt="image (1)" width="170"/></a><a href="https://addons.mozilla.org/en-US/firefox/extensions/"><img src="https://github.com/user-attachments/assets/7585ac45-b59d-4d9e-a4a3-ddfd2d59b533" alt="image (2)" width="170"/></a>
+</div>
 
 <br>
 
