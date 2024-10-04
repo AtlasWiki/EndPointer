@@ -1,63 +1,72 @@
-# Chrome/FireFox Vite-React w/ tailwindcss Extension Template
+# EndPointer: URL Finder for JavaScript Files
 
-A basic extension template to fork and build from, using Vite, React, and Tailwind CSS, created by LordCat and AtlasWiki/mrunoriginal. Comes with three UI templates - developer tools tab/panel, extension popup, and accessible webpage through `chrome-extension` url.
+<a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
+
+### What is EndPointer?
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Key Features:
+
+- Key Feature 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Key Feature 2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- Key Feature 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+<br>
+<p align="center"><a href="#Download"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></a></p>
+
+To streamline the use of these tools, we've created an easy-to-navigate menu that lets you quickly select the information you need. Below, you can find information for <b>downloading the tool, exploring its features, checking ongoing development, and learning about our generous contributors</b>.
+
+<br>
+<br>
+<div align="center">
+<a href="#Download"><img src="https://github.com/user-attachments/assets/0a9ff34c-eb1b-4b84-a0ab-0a53e9b733af" alt="image (1)" width="83.5"/></a><a href="#Functionalities"><img src="https://github.com/user-attachments/assets/81d51a7e-f179-4d62-bbe3-cc9617bcfe07" alt="image (2)" width="70"/></a><a href="#Development"><img src="https://github.com/user-attachments/assets/f724c998-5ae3-456f-a863-225978ac25c3" alt="image (3)" width="70"/></a><a href="#Contributors"><img src="https://github.com/user-attachments/assets/efbfa71d-37df-4b6c-ae42-4c5d70132a8d" alt="image (4)" width="84"/></a>
+</div>
+<br>
+
+<a name="Download"></a>
+<h2><img src="https://github.com/user-attachments/assets/466328bf-6dce-4cf3-bb53-ce427e8d7f25" width="30"> Download & Installation</h2>
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 <br>
 
+<a name="Functionalities"></a>
+<h2><img src="https://github.com/user-attachments/assets/499bb537-9478-4341-8d55-773069796de8" width="30"> Key Features & Functionalities</h2>
 
-https://github.com/user-attachments/assets/216ab206-27f3-402d-8153-8c05458f431d
-
-
-## Key Features
-- **Accessbility** - Accessible in the extension popup, devtools, and `chrome-extension` url as a webpage.
-- **Modularity** - Comes with an organized structure that can be expand upon.
-- **Routing** - Includes page routing/navigation throgh react components.
-- **Easy Template Use** - Allows you to use reactjs, tailwindcss, and even expand this simple structure, simplifying the intial extension set up allowing you to focus on building your extension!
-- **Typescript Support** - Prefer your type definitions at compile time? Typescript support included.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 <br>
 
-## Getting Started
+<a name="Development"></a>
+<h2><img src="https://github.com/user-attachments/assets/6f0ac000-6590-47e4-83ea-776fb27ca1fb" width="30"> Developments & Fixes</h2>
 
-### Prerequisites
+We are committed to consistently improving this tool with regular updates and welcome contributions from the community to enhance its functionality. That’s why we’ve made it open source, enabling individuals to contribute their improvements. Here are some of the latest developments and fixes:
 
-- Node.js and npm installed on your system
+Developments:
+  - [ ] Development 1
+  - [ ] Development 2
+  - [ ] Development 3
 
-### Clone the Repository
+Fixes:
+  - [ ] Fixe 1
+  - [ ] Fixe 2
+  - [ ] Fixe 3
 
-```bash
-git clone https://github.com/LordCat/PlaceHolder-Extension.git
-cd PlaceHolder-Extension
-```
+<br>
 
-### Install Dependencies
+<a name="Contributors"></a>
+<h2><img src="https://github.com/user-attachments/assets/e4c573d8-62cb-42e1-a95e-b20264e5e2bb" width="30"> Contributors</h2>
 
-```bash
-npm install
-```
+This tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
 
-### Build the Project
+Main Contributors:
+- <p><a href="https://github.com/AtlasWiki">AtlasWiki / Mrunoriginal</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/AtlasWiki"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a> <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/c34d7a96-88dd-4d05-806d-4993c3a1917e"/></a></p>
+- <p><a href="https://github.com/LordCat">LordCat / Dooma</a> <a href="https://www.linkedin.com/in/kristian-alex-kelly/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/LordCat"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a>  <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/525f3024-68c7-4d6d-adab-4eb21d655743"/></a></p>
 
-```bash
-npm run build
-```
+Contributors:
+- <p><a href="https://github.com/Hacking-Notes">Hacking Notes</a> <a href="https://www.linkedin.com/in/alexis-savard/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/Hacking-Notes"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a> <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/1afd8d87-50fb-49b0-93a7-11a93dfed826"/></a></p>
 
-### Load the Extension
+<br>
 
-1. Open your Chrome-based web browser
-2. Go to the Extensions page (chrome://extensions)
-3. Enable "Developer mode" (top right corner)
-4. Click "Load unpacked"
-5. Select the `dist` folder in your project directory
-
-## Resources
-
-- [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/)
-- [Vite Documentation](https://vitejs.dev/guide/)
-- [React Documentation](https://reactjs.org/docs/getting-started.html)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+## Disclaimer
+The tool provided on this GitHub page is intended for educational and research purposes only. The creators and maintainers of this tool are not responsible for any misuse or illegal use of the tool. It is the responsibility of the users to ensure that they comply with all applicable laws and regulations while using the tool.
