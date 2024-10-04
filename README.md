@@ -14,7 +14,7 @@ Key Features:
 <br>
 <p align="center"><a href="#Download"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></a></p>
 
-To streamline the use of these tools, we've created an easy-to-navigate menu that lets you quickly select the information you need. Below, you can find informations for downloading the tool, exploring its features, checking ongoing development, and learning about our generous contributors.
+To streamline the use of these tools, we've created an easy-to-navigate menu that lets you quickly select the information you need. Below, you can find information for <b>downloading the tool, exploring its features, checking ongoing development, and learning about our generous contributors</b>.
 
 <br>
 <br>
