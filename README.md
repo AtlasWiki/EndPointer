@@ -59,7 +59,12 @@ Fixes:
 
 This tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
 
-- <p><a href="https://github.com/Hacking-Notes">Hacking Notes</a></p>
+Main Contributors:
+- <p><a href="https://github.com/AtlasWiki">AtlasWiki / Mrunoriginal</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/AtlasWiki"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
+- <p><a href="https://github.com/Hacking-Notes">Dooma</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/Hacking-Notes"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
+
+Contributors:
+- <p><a href="https://github.com/Hacking-Notes">Hacking Notes</a> <a href="https://www.linkedin.com/in/alexis-savard/"><img height="15" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/Hacking-Notes"><img height="15" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a></p>
 
 <br>
 
