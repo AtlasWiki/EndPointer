@@ -20,7 +20,7 @@ To make things simpliuer we have made this section .... blablabla. Lorem ipsum d
 <br>
 <br>
 <div align="center">
-<a href="#Download"><img src="https://github.com/user-attachments/assets/0a9ff34c-eb1b-4b84-a0ab-0a53e9b733af" alt="image (1)" width="83.5"/></a><a href="#Functionnalities"><img src="https://github.com/user-attachments/assets/81d51a7e-f179-4d62-bbe3-cc9617bcfe07" alt="image (2)" width="70"/></a><a href="#Development"><img src="https://github.com/user-attachments/assets/f724c998-5ae3-456f-a863-225978ac25c3" alt="image (3)" width="70"/></a><a href="#Contributors"><img src="https://github.com/user-attachments/assets/efbfa71d-37df-4b6c-ae42-4c5d70132a8d" alt="image (4)" width="84"/></a>
+<a href="#Download"><img src="https://github.com/user-attachments/assets/0a9ff34c-eb1b-4b84-a0ab-0a53e9b733af" alt="image (1)" width="83.5"/></a><a href="#Functionalities"><img src="https://github.com/user-attachments/assets/81d51a7e-f179-4d62-bbe3-cc9617bcfe07" alt="image (2)" width="70"/></a><a href="#Development"><img src="https://github.com/user-attachments/assets/f724c998-5ae3-456f-a863-225978ac25c3" alt="image (3)" width="70"/></a><a href="#Contributors"><img src="https://github.com/user-attachments/assets/efbfa71d-37df-4b6c-ae42-4c5d70132a8d" alt="image (4)" width="84"/></a>
 </div>
 <br>
 
@@ -29,13 +29,13 @@ To make things simpliuer we have made this section .... blablabla. Lorem ipsum d
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-<a name="Functionnalities"></a>
-## Functionnalities
+<a name="Functionalities"></a>
+## Tool Functionalities
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 <a name="Development"></a>
-## Fix & Development / Contribution
+## Fix & Development
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
