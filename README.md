@@ -1,4 +1,4 @@
-# EndPointer: URL Finder for JavaScript Files
+# EndPointer: URL Finder for JavaScript Files and Webpages
 
 <a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
 
