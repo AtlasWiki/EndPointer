@@ -3,13 +3,15 @@
 <a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
 
 ### What is EndPointer?
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+EndPointer is a browser extension designed for ethical hackers and web developers to discover potentially vulnerable endpoints on the current webpage and its linked JavaScript files. It offers customizable features that allow users to control the scan settings, making it adaptable for various use cases. One standout feature is its ability to capture dynamically loaded JavaScript files, ensuring even asynchronously loaded scripts are analyzed. With EndPointer, users can efficiently identify exposed endpoints and improve the security posture of web applications.
 
 Key Features:
 
-- Key Feature 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- Key Feature 2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- Key Feature 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- <b>URL/Endpoint parsing:</b> Parse for URLs in the current webpage and externally linked javascript files
+- <b>Dynamic Script Loading:</b> Parses and checks for dynamically loaded script tags upon initial load
+- <b>Auto parsing:</b> Parses automatically when the document is loaded
+- <b>Manual parsing:</b> Parses when the "REPARSE" button is clicked
+- ...
 
 <br>
 <p align="center"><a href="#Download"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></a></p>
@@ -33,7 +35,23 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <a name="Functionalities"></a>
 <h2><img src="https://github.com/user-attachments/assets/499bb537-9478-4341-8d55-773069796de8" width="30"> Key Features & Functionalities</h2>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+EndPointer offers a wide range of capabilities aimed at simplifying the process of finding and analyzing endpoints across webpages and JavaScript files. Designed with flexibility and ease of use in mind, this tool allows users to control parsing behavior, interact with results, and dynamically capture changes in web content. Whether you need real-time updates or manual control, EndPointer provides the tools necessary to streamline the process of endpoint discovery and security analysis.
+
+Key Features:
+
+| Key Feature | Description |
+| ----------- | ----------- |
+| **URL/Endpoint Parsing:** | Extracts URLs from the current webpage and externally linked JavaScript files.|
+| **Dynamic Script Loading:** | Automatically parses dynamically loaded script tags upon initial load. |
+| **Auto Parsing:** | Automatically triggers parsing when the document is fully loaded. |
+| **Manual Parsing:** | Provides the option to manually trigger parsing using the "REPARSE" button. |
+| **Scope Declaration:** | Allows users to define parsing scope based on the second-level domain (SLD) and top-level domain (TLD), or individual subdomains. |
+| **Concurrent Request Setting:** | Configures the number of concurrent requests to optimize performance during scans. |
+| **Interactive UI:** | Offers multiple interface options, including DevTools, popups, and web page interactions. |
+| **Interactivity with URLs:** | Search, filter, view code snippets, and inspect responses for each URL. |
+| **Output Results:** | Provides different viewing formats, such as Default View and Tree View, for better clarity. |
+| **Output Saving:** | Export results in TXT, CSV, or raw unmodified formats for further analysis. |
+| **Dynamic Loading/Live Updating:** | URL results and counts are updated in real-time without requiring page refreshes. |
 
 <br>
 
