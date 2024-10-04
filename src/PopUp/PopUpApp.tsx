@@ -184,10 +184,10 @@ function PopUpApp() {
     <div className="w-full md:h-screen m-0  md:justify-center py-5"> 
       <div className="text-center">
         <div className="flex items-center justify-center gap-1">
-          <img src={Logo} style={{ width: "32%", height: "32%" }} />
+          <img src={Logo} style={{ width: "30%", height: "30%" }} />
         </div>
        
-        <h1 className="text-4xl font-bold md:text-6xl mb-1">EndPointer</h1>
+        <h1 className="text-3xl font-bold md:text-6xl mb-1">EndPointer</h1>
         <p className="text-gray-400/60 md:text-lg">An endpoint parser and extractor with many flexible features by AtlasWiki/mrunoriginal and LordCat</p>
         <div className="mt-3 flex flex-col justify-center gap-2 items-center mx-0">
           <div className="flex flex-col gap-1 md:gap-5">
