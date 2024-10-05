@@ -90,5 +90,12 @@ Contributors:
 
 <br>
 
+How to contribute: 
+1. Clone the repo
+2. Create a branch called Contribution/{feature name}
+3. Send a pull request to this repo with your changes from Contribution/{feature name}
+
+<br>
+
 ## Disclaimer
 The tool provided on this GitHub page is intended for educational and research purposes only. The creators and maintainers of this tool are not responsible for any misuse or illegal use of the tool. It is the responsibility of the users to ensure that they comply with all applicable laws and regulations while using the tool.
