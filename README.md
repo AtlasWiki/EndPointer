@@ -28,7 +28,7 @@ To streamline the use of these tools, we've created an easy-to-navigate menu tha
 <a name="Download"></a>
 <h2><img src="https://github.com/user-attachments/assets/466328bf-6dce-4cf3-bb53-ce427e8d7f25" width="30"> Download & Installation</h2>
 
-You have several options to download the extension. You can install it directly from the Chrome Web Store or, if you're using Firefox, from the Firefox Add-ons site. Alternatively, you can download the extension from GitHub, giving you access to the source code.
+You have several options to download the extension. You can install it directly from the Chrome Web Store or, if you're using Firefox, from the Firefox Add-ons site. Alternatively, you can download the extension from GitHub, giving you access to the source code. For those who want to load it up locally: be sure to run `npm i && npm run build` to download all packages and to create the dist/ file. Then, load the dist/ file as unpacked in Chrome/Firefox.
 
 <div align="left">
 <a href="https://chromewebstore.google.com/"><img src="https://github.com/user-attachments/assets/834eb360-3809-421c-9223-7b254957ae37" alt="image (1)" width="170"/></a><a href="https://addons.mozilla.org/en-US/firefox/extensions/"><img src="https://github.com/user-attachments/assets/7585ac45-b59d-4d9e-a4a3-ddfd2d59b533" alt="image (2)" width="170"/></a>
