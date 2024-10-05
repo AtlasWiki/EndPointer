@@ -3,7 +3,7 @@
 <a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
 
 ### What is EndPointer?
-EndPointer is a browser extension designed for ethical hackers and web developers to discover potentially vulnerable endpoints on the current webpage and its linked JavaScript files. It offers customizable features that allow users to control the scan settings, making it adaptable for various use cases. One standout feature is its ability to capture dynamically loaded JavaScript files, ensuring even asynchronously loaded scripts are analyzed. With EndPointer, users can efficiently identify exposed endpoints and improve the security posture of web applications.
+EndPointer is a browser extension designed for ethical hackers and web developers to discover potentially vulnerable endpoints on the current webpage and its linked JavaScript files. It offers customizable features that allow users to control the scan settings, making it adaptable for various use cases. One standout feature is its ability to capture dynamically loaded JavaScript files, ensuring even asynchronously loaded scripts are analyzed. With EndPointer, users can efficiently identify exposed endpoints and improve the security posture of web applications. This extension was made using our custom extension template in react with many features: https://github.com/LordCat/PlaceHolder-Extension
 
 Key Features:
 
