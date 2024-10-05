@@ -13,11 +13,8 @@
     "storage",
     "activeTab",
     "tabs",
-    "webNavigation",
-    "http://*/*",
-    "https://*/*"
+    "webNavigation"
   ],
-  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "PopUp/popup.html",
     "default_title": "Endpoint Extractor for Hackers"
