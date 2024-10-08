@@ -3,7 +3,7 @@ import browser from 'webextension-polyfill'
 import { useNavigate } from 'react-router-dom'
 import './index.css'
 import './App.css'
-import Logo from '../../dist/icons/EndPointer.png';
+import Logo from '../../public/icons/EndPointer.png';
 
 
 function DevToolsApp() {

@@ -11,9 +11,7 @@
   },
   "permissions": [
     "storage",
-    "activeTab",
-    "tabs",
-    "webNavigation"
+    "tabs"
   ],
   "action": {
     "default_popup": "PopUp/popup.html",
