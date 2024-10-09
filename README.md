@@ -56,6 +56,8 @@ Key Features:
 | **Output Results:** | Provides different viewing formats, such as Default View and Tree View, for better clarity. |
 | **Output Saving:** | Export results in TXT, CSV, or raw unmodified formats for further analysis. |
 | **Dynamic Loading/Live Updating:** | URL results and counts are updated in real-time without requiring page refreshes. |
+| **CSP friendly:** | Compatible with web apps with strict CSP policies. |
+| **Browser States:** | Can parse URLs in an authenticated state or states relying the use of local storage and indexeddb. |
 
 <br>
 
@@ -79,7 +81,8 @@ Fixes:
 <a name="Contributors"></a>
 <h2><img src="https://github.com/user-attachments/assets/e4c573d8-62cb-42e1-a95e-b20264e5e2bb" width="30"> Contributors</h2>
 
-This tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
+This tool has been developed in-house by Interloper Security Group, a loose knit collection of developers and cybersecurity specialists.
+The tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
 
 Creators / Developers:
 - <p><a href="https://github.com/AtlasWiki">AtlasWiki / mrunoriginal</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/AtlasWiki"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a> <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/c34d7a96-88dd-4d05-806d-4993c3a1917e"/></a></p>
