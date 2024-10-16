@@ -1,6 +1,7 @@
 # EndPointer: URL Finder for JavaScript Files and Webpages
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ppliilneafplhagjhhphcjmjdmbjagcp)](https://chrome.google.com/webstore/detail/endpointer/ppliilneafplhagjhhphcjmjdmbjagcp) ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ppliilneafplhagjhhphcjmjdmbjagcp)
 [![Firefox Add-on](https://img.shields.io/amo/v/endpointer)](https://addons.mozilla.org/en-US/firefox/addon/endpointer/) ![Firefox Add-on Users](https://img.shields.io/amo/users/endpointer)
+![GitHub License](https://img.shields.io/github/license/AtlasWiki/endPointer)
 
 
 <img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53">
