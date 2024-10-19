@@ -152,6 +152,16 @@ function PopUpApp() {
     setState(prevState => ({ ...prevState, scopes: [] }));
   };
 
+  function windowPanel() {
+    const popupWidth = 1450;
+    const popupHeight = 1100;
+
+    window.open(
+        document.location.origin + "/PopUp/popup.html#urls", 
+        "urls", 
+        `width=${popupWidth},height=${popupHeight},top=${popupWidth},left=${popupHeight},toolbar=no,menubar=no,scrollbars=no,resizable=yes,location=no,status=no`
+    );
+}
 
   // UI Components
   const DisplayState: React.FC<{ state: boolean }> = ({ state }) => (
@@ -206,7 +216,8 @@ function PopUpApp() {
             </div>
           </div>
           <div className="flex mb-3 gap-2 justify-content items-center">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 py-2 px-2 rounded-md font-semibold text-[#646cff]">Panel</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 py-2 px-2 rounded-md font-semibold text-[#646cff]">Panel Tab</a>
+            <button onClick={windowPanel} className="bg-gray-950 py-2 px-2 rounded-md font-semibold text-[#646cff]">Panel Window</button>
             <button className="a-item a-color rounded-md text-green-500 font-semibold bg-gray-950" onClick={parseURLs}>REPARSE</button>
           </div>
         </div>
