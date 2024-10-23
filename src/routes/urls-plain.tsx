@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import browser from 'webextension-polyfill';
+import { CSS_CLASSES } from "../constants/defaultview_contants";
 
 export function URLsPlain() {
   interface Endpoint {
@@ -108,7 +109,7 @@ export function URLsPlain() {
   }, []);
 
   return (
-    <div className="mt-2 ml-1">
+    <div className="mt-2 w-full ml-1">
         <button onClick={downloadURLsAsTxt} className="mt-4 p-2 text-white bg-transparent border border-gray-500 mb-5 rounded">
             Download URLs as .txt
         </button>
