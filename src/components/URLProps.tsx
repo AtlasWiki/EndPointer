@@ -6,6 +6,7 @@ import { Modal } from './modals/modal';
 import { GenerateReportModal } from './modals/generateReport';
 import { ViewCodeModal } from './modals/viewcode';
 import { SeeResponseModal } from './modals/seeResponse';
+import { CSS_CLASSES } from '../constants/defaultview_contants';
 
 interface URLPropsProps {
   endpoint: Endpoint;
@@ -34,6 +35,29 @@ export function URLProps({ endpoint, searchQuery }: URLPropsProps) {
     <tr>
       <td className="break-words max-w-lg">
         {highlightSearchQuery(endpoint.url, searchQuery)}
+        <div className="mt-2 flex gap-1">
+          <span className={`${CSS_CLASSES.API_ENDPOINT}`}>API</span>
+          <span className={`${CSS_CLASSES.URL_DATA_ACCESS}`}>User Data Access</span>
+          <span className={`${CSS_CLASSES.DATABASE_OPERATION}`}>Database Operation</span>
+          <span className={`${CSS_CLASSES.SENSITIVE_DATA}`}>Sensitive Data</span>
+          {/* <span className={`${CSS_CLASSES.UNSECURED_API}`}>Unsecured API</span>
+          <span className={`${CSS_CLASSES.AUTHENTICATION_ENDPOINT}`}>Authentication Endpoint</span>
+          <span className={`${CSS_CLASSES.DATA_TRANSFER}`}>Data Transfer</span>
+          <span className={`${CSS_CLASSES.ADMIN_PANEL}`}>Admin Panel</span>
+          <span className={`${CSS_CLASSES.PAYMENT_PROCESSING}`}>Payment Processing</span>
+          <span className={`${CSS_CLASSES.FILE_ACCESS}`}>File Access</span>
+          <span className={`${CSS_CLASSES.LEGACY_ENDPOINT}`}>Legacy Endpoint</span>
+          <span className={`${CSS_CLASSES.DYNAMIC_CONTENT}`}>Dynamic Content</span>
+          <span className={`${CSS_CLASSES.WEBSOCKET}`}>WebSocket</span>
+          <span className={`${CSS_CLASSES.INTERNAL_NETWORK}`}>Internal Network</span>
+          <span className={`${CSS_CLASSES.THIRD_PARTY_INTEGRATION}`}>Third-Party Integration</span>
+          <span className={`${CSS_CLASSES.DEBUG_ENDPOINT}`}>Debug Endpoint</span>
+          <span className={`${CSS_CLASSES.POTENTIALLY_VULNERABLE}`}>Potentially Vulnerable</span>
+          <span className={`${CSS_CLASSES.PARAMETERIZED_ENDPOINT}`}>Parameterized Endpoint</span>
+          <span className={`${CSS_CLASSES.NON_STANDARD_PORT}`}>Non-Standard Port</span>
+          <span className={`${CSS_CLASSES.BASE64_ENCODED_SEGMENT}`}>Base64 Encoded Segment</span> */}
+        </div>
+
         <div className="flex mt-2 items-center gap-1">
           <button
             className="i-button"
