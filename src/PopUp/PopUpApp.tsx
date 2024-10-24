@@ -67,15 +67,11 @@ function PopUpApp() {
       });
       if (tabs[0]?.id) {
         const [urlCount, jsFileCount] = await Promise.all([
-          browser.tabs.sendMessage(tabs[0].id, {
-            action: "countURLs",
-          }) as Promise<MessageResponse>,
-          browser.tabs.sendMessage(tabs[0].id, {
-            action: "countJSFiles",
-          }) as Promise<MessageResponse>,
+          browser.tabs.sendMessage(tabs[0].id, { action: 'countURLs' }) as Promise<MessageResponse>,
+          browser.tabs.sendMessage(tabs[0].id, { action: 'countJSFiles' }) as Promise<MessageResponse>,
         ]);
 
-        setState((prevState) => ({
+        setState(prevState => ({
           ...prevState,
           urlCount: urlCount.count ?? 0,
           jsFileCount: jsFileCount.count ?? 0,
@@ -88,15 +84,9 @@ function PopUpApp() {
 
   const handleAction = async (action: string, payload?: any) => {
     try {
-      const tabs = await browser.tabs.query({
-        active: true,
-        currentWindow: true,
-      });
+      const tabs = await browser.tabs.query({active: true, currentWindow: true});
       if (tabs[0]?.id) {
-        const response = (await browser.tabs.sendMessage(tabs[0].id, {
-          action,
-          ...payload,
-        })) as MessageResponse;
+        const response = await browser.tabs.sendMessage(tabs[0].id, { action, ...payload }) as MessageResponse;
         if (!response.success) {
           throw new Error(response.error);
         }
@@ -123,19 +113,16 @@ function PopUpApp() {
 
   const toggleUrlParserState = async () => {
     const newState = !state.urlParser;
-    const response = (await browser.runtime.sendMessage({
-      action: "setAutoParserState",
-      state: newState,
-    })) as MessageResponse;
+    const response = await browser.runtime.sendMessage({ action: 'setAutoParserState', state: newState }) as MessageResponse;
     if (response.success) {
-      setState((prevState) => ({ ...prevState, urlParser: newState }));
+      setState(prevState => ({ ...prevState, urlParser: newState }));
     }
   };
 
   const handleAddScope = () => {
     const newScope = inputRef.current?.value;
     if (newScope) {
-      setState((prevState) => {
+      setState(prevState => {
         const updatedScopes = [...prevState.scopes, newScope];
         browser.storage.local.set({ scope: updatedScopes });
         return { ...prevState, scopes: updatedScopes };
@@ -147,10 +134,8 @@ function PopUpApp() {
   };
 
   const handleRemoveScope = (scopeToRemove: string) => {
-    setState((prevState) => {
-      const updatedScopes = prevState.scopes.filter(
-        (scope) => scope !== scopeToRemove
-      );
+    setState(prevState => {
+      const updatedScopes = prevState.scopes.filter(scope => scope !== scopeToRemove);
       browser.storage.local.set({ scope: updatedScopes });
       return { ...prevState, scopes: updatedScopes };
     });
@@ -158,7 +143,7 @@ function PopUpApp() {
 
   const handleReqAmt = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newReqAmtValue = Number(e.target.value);
-    setState((prevState) => ({ ...prevState, reqAmt: newReqAmtValue }));
+    setState(prevState => ({ ...prevState, reqAmt: newReqAmtValue }));
     browser.storage.local.set({ requests: newReqAmtValue });
     console.log(`set requests to ${newReqAmtValue}`);
   };
@@ -170,8 +155,8 @@ function PopUpApp() {
   };
 
   const clearAllScopes = () => {
-    browser.storage.local.set({ scope: [] });
-    setState((prevState) => ({ ...prevState, scopes: [] }));
+    browser.storage.local.set({scope: []});
+    setState(prevState => ({ ...prevState, scopes: [] }));
   };
 
   // UI Components
