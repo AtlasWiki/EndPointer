@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "EndPointer",
+  "version": "0.1.0",
+  "description": "An endpoint parser and extractor with many flexible features",
+  "icons": {
+    "16": "icons/EndPointer.png",
+    "32": "icons/EndPointer.png",
+    "48": "icons/EndPointer.png",
+    "128": "icons/EndPointer.png"
+  },
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "PopUp/popup.html",
+    "default_title": "Endpoint Extractor for Hackers"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    { 
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "type": "module"
+    }
+  ],
+  "devtools_page": "DevTool/DevTool.html",
+  "web_accessible_resources": [
+    {
+      "resources": [ "DevTool/background.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
