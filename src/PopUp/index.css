@@ -93,18 +93,7 @@ a:hover {
   border-color: #316e7d;
   opacity: 80;
 }
-.container {
-  position: relative; /* Add this to create a positioning context */
-}
 
-.deleteIcon {
-  position: absolute; /* Change this to absolute */
-  bottom: 10px; /* Adjust as needed */
-  right: 10px; /* Adjust as needed */
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
