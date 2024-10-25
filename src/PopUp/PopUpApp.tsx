@@ -332,24 +332,24 @@ function PopUpApp() {
         </div>
       </div>
 
-      <div className="w-full text-center flex flex-col justify-center items-center">
-        {/* <hr className="w-full border-gray-400/60 mb-5" /> */}
-        <h1 className="text-2xl text-customRed font-semibold mb-2">SCOPE</h1>
-        <div className="flex gap-0.5">
-          <p className="text-white mb-3">
-            Keep scope empty if you want to parse from all scopes
-          </p>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="12"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill="#615c5c"
-              d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412l-1 4.705c-.07.34.029.533.304.533c.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598c-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081l.082-.381l2.29-.287zM8 5.5a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
-            />
-            <title>
+      <div className="w-full text-center flex flex-col justify-center items-center p-6  rounded-lg shadow-lg">
+  <h1 className="text-3xl text-customRed font-semibold mb-4">SCOPE</h1>
+  <div className="flex gap-1 items-center">
+    <p className="text-gray-300 w-full mb-3 text-sm">
+      Keep scope empty if you want to parse from all scopes
+    </p>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      className="text-gray-500 hover:text-blue-400 cursor-pointer"
+    >
+      <path
+        fill="currentColor"
+        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412l-1 4.705c-.07.34.029.533.304.533c.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598c-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081l.082-.381l2.29-.287zM8 5.5a1 1 0 1 1 0-2a1 1 0 0 1 0 2"
+      />
+                  <title>
               You can either specify SLD + TLD (example.com) or subdomains
               (www.example.com). For example, example.com would cover all
               subdomains (all other hosts belonging to example.com like
@@ -357,54 +357,55 @@ function PopUpApp() {
               host/domain. Or scope can be left empty to parse all web apps you
               go to.
             </title>
-          </svg>
-        </div>
-        <div className="flex items-center justify-center w-full gap-0.5">
-          <input
-            type="text"
-            ref={inputRef}
-            className="w-full border-gray-400/60 text-gray-400/60 outline-none border-2 py-1 rounded-sm px-2 bg-transparent"
-            placeholder="example.com or www.example.com"
+    </svg>
+  </div>
+  <div className="flex items-center justify-center w-full gap-2 mt-4">
+    <input
+      type="text"
+      ref={inputRef}
+      className="w-full border-gray-600 text-gray-200 outline-none border-2 py-2 rounded-sm px-3 bg-gray-800 placeholder-gray-500 transition duration-200 focus:border-2 focus:border-customFont focus:ring "
+      placeholder="example.com or www.example.com"
+    />
+    <button
+      className="bg-customFont text-white rounded-sm py-1 px-2 font-bold transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring focus:border-2 focus:border-customFont"
+      onClick={handleAddScope}
+    >
+      +
+    </button>
+  </div>
+
+  <div className="flex w-full justify-between gap-2 mt-6">
+    <div className="flex w-full text-center border-2 border-gray-600 overflow-auto h-20 pb-5 rounded-sm bg-gray-800 shadow-inner">
+      <div className="mt-5 flex flex-col px-2">
+        {state.scopes.map((scope, index) => (
+          <DisplayScope
+            key={index}
+            scope={scope}
+            onRemove={() => handleRemoveScope(scope)}
           />
-          <button
-            className="bg-transparent text-xl text-customFont rounded-sm py-1 px-2 font-bold"
-            onClick={handleAddScope}
-          >
-            +
-          </button>
-        </div>
-
-        <div className="flex w-full justify-between gap-2">
-          <div className="flex mt-5 w-full text-center border-2 border-gray-400/60 overflow-auto h-20 pb-5 rounded-md container">
-            <div className="mt-5 flex flex-col px-1">
-              {state.scopes.map((scope, index) => (
-                <DisplayScope
-                  key={index}
-                  scope={scope}
-                  onRemove={() => handleRemoveScope(scope)}
-                />
-              ))}
-            </div>
-            <button className="mt-2 bg-transparent deleteIcon " onClick={clearAllScopes}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="#e96c4c"
-                d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"
-              />
-              <title>Clear All</title>
-            </svg>
-          </button>
-          </div>
-         
-        </div>
-
-        {/* <hr className="w-full bg-gray-400/60 border-gray-400/60 mb-5 mt-5" /> */}
+        ))}
       </div>
+    </div>
+
+    <button className="mt-14 bg-transparent" onClick={clearAllScopes}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        className="text-red-500 hover:text-red-400 transition duration-200"
+      >
+        <path
+          fill="currentColor"
+          d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"
+        />
+            <title>Clear All</title>
+      </svg>
+    </button>
+  </div>
+</div>
+
+
 
       <div>
         <p className="text-customFont mt-8 mb-5 md:text-lg">
