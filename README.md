@@ -1,15 +1,21 @@
-# EndPointer: URL Finder for JavaScript Files
+# EndPointer: URL Finder for JavaScript Files and Webpages
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ppliilneafplhagjhhphcjmjdmbjagcp)](https://chrome.google.com/webstore/detail/endpointer/ppliilneafplhagjhhphcjmjdmbjagcp) ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ppliilneafplhagjhhphcjmjdmbjagcp)
+[![Firefox Add-on](https://img.shields.io/amo/v/endpointer)](https://addons.mozilla.org/en-US/firefox/addon/endpointer/) ![Firefox Add-on Users](https://img.shields.io/amo/users/endpointer)
+![GitHub License](https://img.shields.io/github/license/AtlasWiki/endPointer)
 
-<a href="#Download"><img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53"></a>
+
+<img src="https://github.com/user-attachments/assets/ff950ea9-b861-4557-9217-e7c22f591b53">
 
 ### What is EndPointer?
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+EndPointer is a browser extension designed for ethical hackers and web developers to discover potentially vulnerable endpoints on the current webpage and its linked JavaScript files. It offers customizable features that allow users to control the scan settings, making it adaptable for various use cases. One standout feature is its ability to capture dynamically loaded JavaScript files, ensuring even asynchronously loaded scripts are analyzed. With EndPointer, users can efficiently identify exposed endpoints and improve the security posture of web applications. This extension was made using our custom extension template in react with many features: https://github.com/LordCat/PlaceHolder-Extension
 
 Key Features:
 
-- Key Feature 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- Key Feature 2: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-- Key Feature 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- <b>URL/Endpoint parsing:</b> Parse for URLs in the current webpage and externally linked javascript files
+- <b>Dynamic Script Loading:</b> Parses and checks for dynamically loaded script tags upon initial load
+- <b>Auto parsing:</b> Parses automatically when the document is loaded
+- <b>Manual parsing:</b> Parses when the "REPARSE" button is clicked
+- ...
 
 <br>
 <p align="center"><a href="#Download"><img src="https://github.com/user-attachments/assets/5ed1d651-ea44-4f00-87ad-b3fcb3e75e68"></a></p>
@@ -26,14 +32,36 @@ To streamline the use of these tools, we've created an easy-to-navigate menu tha
 <a name="Download"></a>
 <h2><img src="https://github.com/user-attachments/assets/466328bf-6dce-4cf3-bb53-ce427e8d7f25" width="30"> Download & Installation</h2>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+You have several options to download the extension. You can install it directly from the Chrome Web Store or, if you're using Firefox, from the Firefox Add-ons site. Alternatively, you can download the extension from GitHub, giving you access to the source code. For those who want to load it up locally: be sure to run `npm i && npm run build` to download all packages and to create the dist/ file. Then, load the dist/ file as unpacked in Chrome/Firefox.
+
+<div align="left">
+<a href="https://chromewebstore.google.com/detail/endpointer/ppliilneafplhagjhhphcjmjdmbjagcp"><img src="https://github.com/user-attachments/assets/834eb360-3809-421c-9223-7b254957ae37" alt="image (1)" width="170"/></a><a href="https://addons.mozilla.org/en-US/firefox/addon/endpointer/"><img src="https://github.com/user-attachments/assets/7585ac45-b59d-4d9e-a4a3-ddfd2d59b533" alt="image (2)" width="170"/></a>
+</div>
 
 <br>
 
 <a name="Functionalities"></a>
 <h2><img src="https://github.com/user-attachments/assets/499bb537-9478-4341-8d55-773069796de8" width="30"> Key Features & Functionalities</h2>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+EndPointer offers a wide range of capabilities aimed at simplifying the process of finding and analyzing endpoints across webpages and JavaScript files. Designed with flexibility and ease of use in mind, this tool allows users to control parsing behavior, interact with results, and dynamically capture changes in web content. Whether you need real-time updates or manual control, EndPointer provides the tools necessary to streamline the process of endpoint discovery and security analysis.
+
+Key Features:
+
+| Key Feature | Description |
+| ----------- | ----------- |
+| **URL/Endpoint Parsing:** | Extracts URLs from the current webpage and externally linked JavaScript files.|
+| **Dynamic Script Loading:** | Automatically parses dynamically loaded script tags upon initial load. |
+| **Auto Parsing:** | Automatically triggers parsing when the document is fully loaded. |
+| **Manual Parsing:** | Provides the option to manually trigger parsing using the "REPARSE" button. |
+| **Scope Declaration:** | Allows users to define parsing scope based on the second-level domain (SLD) and top-level domain (TLD), or individual subdomains. |
+| **Concurrent Request Setting:** | Configures the number of concurrent requests to optimize performance during scans. |
+| **Interactive UI:** | Offers multiple interface options, including DevTools, popups, and web page interactions. |
+| **Interactivity with URLs:** | Search, filter, view code snippets, and inspect responses for each URL. |
+| **Output Results:** | Provides different viewing formats, such as Default View and Tree View, for better clarity. |
+| **Output Saving:** | Export results in TXT, CSV, or raw unmodified formats for further analysis. |
+| **Dynamic Loading/Live Updating:** | URL results and counts are updated in real-time without requiring page refreshes. |
+| **CSP friendly:** | Compatible with web apps with strict CSP policies. |
+| **Browser States:** | Can parse URLs in an authenticated state or states relying the use of local storage and indexeddb. |
 
 <br>
 
@@ -57,14 +85,22 @@ Fixes:
 <a name="Contributors"></a>
 <h2><img src="https://github.com/user-attachments/assets/e4c573d8-62cb-42e1-a95e-b20264e5e2bb" width="30"> Contributors</h2>
 
-This tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
+This tool has been developed in-house by Interloper Security Group, a loose knit collection of developers and cybersecurity specialists.
+The tool has benefited from the invaluable contributions of individuals who have helped enhance specific features and functionality. We would like to acknowledge and thank those who have generously offered their expertise and support. Your efforts have played a key role in making this tool more robust and effective.
 
-Main Contributors:
-- <p><a href="https://github.com/AtlasWiki">AtlasWiki / Mrunoriginal</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/AtlasWiki"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a> <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/c34d7a96-88dd-4d05-806d-4993c3a1917e"/></a></p>
+Creators / Developers:
+- <p><a href="https://github.com/AtlasWiki">AtlasWiki / mrunoriginal</a> <a href="https://www.linkedin.com/in/nathan-w-76ba78202/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/AtlasWiki"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a> <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/c34d7a96-88dd-4d05-806d-4993c3a1917e"/></a></p>
 - <p><a href="https://github.com/LordCat">LordCat / Dooma</a> <a href="https://www.linkedin.com/in/kristian-alex-kelly/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/LordCat"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a>  <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/525f3024-68c7-4d6d-adab-4eb21d655743"/></a></p>
 
 Contributors:
 - <p><a href="https://github.com/Hacking-Notes">Hacking Notes</a> <a href="https://www.linkedin.com/in/alexis-savard/"><img height="20" src="https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_in-306.png"/></a> <a href="https://github.com/Hacking-Notes"><img height="20" src="https://github.com/user-attachments/assets/6bb139a7-b21a-4d05-ae32-1eedab692041"/></a> <a href="https://discord.com/"><img height="20" src="https://github.com/user-attachments/assets/1afd8d87-50fb-49b0-93a7-11a93dfed826"/></a></p>
+
+<br>
+
+How to contribute: 
+1. Clone the repo
+2. Create a branch called Contribution/{feature name}
+3. Send a pull request to this repo with your changes from Contribution/{feature name}
 
 <br>
 

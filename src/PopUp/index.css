@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #141e24;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #316e7d;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #2b5967;
+}
+
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -42,7 +61,6 @@ h1 {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #64748B;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -59,11 +77,8 @@ h1 {
   transition: border-color 0.25s;
 }
 
-.a-color{
-  background-color: #1a1a1a;
-}
 
-.i-button{
+.i-button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 5px 10px;
@@ -73,8 +88,9 @@ h1 {
   transition: border-color 0.25s;
 }
 
-button:hover, a:hover {
-  border-color: #495057;
+button:hover,
+a:hover {
+  border-color: #316e7d;
   opacity: 80;
 }
 
@@ -83,9 +99,11 @@ button:hover, a:hover {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }

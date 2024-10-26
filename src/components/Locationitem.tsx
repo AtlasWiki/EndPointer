@@ -1,18 +1,11 @@
-// src/components/LocationItem.tsx
-
 import React from 'react';
 
-interface LocationItemProps {
+interface ItemProps {
   url: string;
   onClick: () => void;
 }
 
-interface WebpageItemProps {
-  url: string;
-  onClick: () => void;
-}
-
-export function LocationItem({ url, onClick }: LocationItemProps) {
+function Item({ url, onClick }: ItemProps) {
   return (
     <div
       onClick={onClick}
@@ -23,13 +16,10 @@ export function LocationItem({ url, onClick }: LocationItemProps) {
   );
 }
 
-export function WebpageItem({ url, onClick }: WebpageItemProps) {
-  return (
-    <div
-      onClick={onClick}
-      className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
-    >
-      {url}
-    </div>
-  );
+export function LocationItem(props: ItemProps) {
+  return <Item {...props} />;
+}
+
+export function WebpageItem(props: ItemProps) {
+  return <Item {...props} />;
 }
