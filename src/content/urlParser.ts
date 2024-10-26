@@ -16,8 +16,8 @@ export class Parser {
 
   constructor() {
     this.pageParser = new PageParser();
-    this.jsFileProcessor = new JSFileProcessor();
     this.progressBar = new ProgressBar();
+    this.jsFileProcessor = new JSFileProcessor(this.progressBar);  // Pass the instance
   }
 
   async parseURLs(): Promise<void> {
@@ -57,7 +57,7 @@ export class Parser {
   }
 
   async reparse(): Promise<void> {
-    this.jsFileProcessor = new JSFileProcessor();
+    this.jsFileProcessor = new JSFileProcessor(this.progressBar);  // Pass the existing progressBar instance
     return this.parseURLs();
   }
 

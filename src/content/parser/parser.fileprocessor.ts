@@ -1,12 +1,18 @@
 import { PARSER_CONFIG } from './parser.config';
 import { StorageService } from './storage.service';
 import { REL_REGEX, ABS_REGEX } from '../../constants/regex_constants';
+import { ProgressBar } from '../../components/ProgressBar';
 
 export class JSFileProcessor {
   private parsedJSFiles: Set<string> = new Set();
   private successfullyFetchedFiles: Set<string> = new Set();
   private failedFetchAttempts: Map<string, number> = new Map();
   private concurrentRequests: number = 1;
+  private progressBar: ProgressBar;
+
+  constructor(progressBar: ProgressBar) {
+    this.progressBar = progressBar;
+  }
 
   async processBatch(js_files: string[]): Promise<void> {
     const processingStart = Date.now();
@@ -33,6 +39,7 @@ export class JSFileProcessor {
 
         if (Date.now() - lastLogTime > 100 || processedFiles >= totalFiles) {
           console.log(`Processed ${processedFiles} out of ${totalFiles} JS files. ${this.successfullyFetchedFiles.size} successful, ${this.failedFetchAttempts.size} failed.`);
+          this.progressBar.update(progress, `Parsing... (${processedFiles}/${totalFiles})`);  // Call on instance
           lastLogTime = Date.now();
         }
       }
