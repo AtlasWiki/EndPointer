@@ -1,8 +1,9 @@
 import browser from 'webextension-polyfill';
-import { parseURLs, reparse, countURLs, countJSFiles } from './content/urlParser';
+import { Parser } from './content/urlParser';
 import { Message, MessageResponse } from './constants/message_types';
 
 let isAutoParserEnabled = false;
+const parser = new Parser();
 
 // Set up message listener for content script
 browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime.MessageSender, sendResponse: (response: unknown) => void) => {
@@ -13,16 +14,16 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
 
   switch (typedMessage.action) {
     case 'parseURLs':
-      parseURLs().then(() => typedSendResponse({ success: true }));
+      parser.parseURLs().then(() => typedSendResponse({ success: true }));
       break;
     case 'reparse':
-      reparse().then(() => typedSendResponse({ success: true }));
+      parser.reparse().then(() => typedSendResponse({ success: true }));
       break;
     case 'countURLs':
-      countURLs().then(count => typedSendResponse({ success: true, count }));
+      Parser.countURLs().then(count => typedSendResponse({ success: true, count }));
       break;
     case 'countJSFiles':
-      countJSFiles().then(count => typedSendResponse({ success: true, count }));
+      Parser.countJSFiles().then(count => typedSendResponse({ success: true, count }));
       break;
     case 'getAutoParserState':
       typedSendResponse({ success: true, state: isAutoParserEnabled });
@@ -30,7 +31,7 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
     case 'setAutoParserState':
       isAutoParserEnabled = typedMessage.state ?? false;
       if (isAutoParserEnabled) {
-        parseURLs();
+        parser.parseURLs();
       }
       typedSendResponse({ success: true });
     case 'clearURLs':
@@ -47,13 +48,13 @@ browser.runtime.onMessage.addListener((message: unknown, sender: browser.Runtime
 browser.runtime.sendMessage({ action: 'getAutoParserState' }).then((response: any) => {
   isAutoParserEnabled = response.state ?? false;
   if (isAutoParserEnabled) {
-    parseURLs();
+    parser.parseURLs();
   }
 });
 
 // Parse URLs on page load if autoParser is enabled
 window.addEventListener('load', function () {
   if (isAutoParserEnabled) {
-    parseURLs();
+    parser.parseURLs();
   }
 });
