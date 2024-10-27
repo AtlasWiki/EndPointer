@@ -61,14 +61,14 @@ export function URLsDefaultView() {
     <div className="w-full min-h-screen flex justify-center">
         {(document.location.pathname.toLowerCase().includes("devtool") && <NavBar />)}
       <div className="mt-5 flex">
-        <div className="py-1 w-full flex flex-col gap-10">
+        <div className="py-1 w-full flex flex-col gap-20">
           <div className="w-full max-h-[760px] overflow-auto" ref={tableRef} onScroll={handleScroll}>
             <table className="w-full border-collapse">
               <thead>
-                <tr className="text-5xl">
-                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-[#3da28f]">({filteredURLs.length})</span></th>
-                  <th className="border-b-2 pb-10">SOURCE <span className="text-[#3da28f]">({jsFiles.length})</span></th>
-                  <th className="border-b-2 pb-10">WEBPAGE <span className="text-[#3da28f]">({webpages.length})</span></th>
+                <tr className="text-3xl text-white">
+                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-customFont">({filteredURLs.length})</span></th>
+                  <th className="border-b-2 pb-10">SOURCE <span className="text-customFont">({jsFiles.length})</span></th>
+                  <th className="border-b-2 pb-10">WEBPAGE <span className="text-customFont">({webpages.length})</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -88,7 +88,7 @@ export function URLsDefaultView() {
                     <div className="relative w-full max-w-lg mt-5">
                       <button
                         onClick={() => setIsOpenLocation(!isOpenLocation)}
-                        className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                        className=" w-full px-2 border-2 border-customFont text-white bg-transparent text-lg rounded-md overflow-hidden whitespace-nowrap py-2 mb-2 hover:border-gray-300 hover:border-2 "
                       >
                         {selectedLocation}
                       </button>
@@ -102,10 +102,10 @@ export function URLsDefaultView() {
                     </div>
                   </td>
                   <td>
-                    <div className="relative w-full max-w-lg mt-5">
+                    <div className="relative w-full h-full max-w-lg mt-5">
                       <button
                         onClick={() => setIsOpenWebpage(!isOpenWebpage)}
-                        className="a-item w-full px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+                        className="w-full px-2 border-2 border-customFont text-white bg-transparent text-lg rounded-md overflow-hidden whitespace-nowrap py-2 mb-2 hover:border-gray-300 hover:border-2"
                       >
                         {selectedWebpage}
                       </button>
@@ -125,14 +125,14 @@ export function URLsDefaultView() {
               </tbody>
             </table>
           </div>
-          <div className="text-lg flex items-center space-x-4 px-5">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md font-semibold text-[#646cff]">WEBPAGE PANEL</a>
-            <button className="a-item bg-gray-600 p-3 rounded-md" onClick={clearURLs}>
+          <div className="text-lg flex  items-start space-x-44 px-5 w-full">
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="text-sm flex flex-col items-start space-x-4 px-5 rounded-md py-5 w-40 bg-customFont text-white mb-5 border-2 border-customFont ml-4 ">WEBPAGE PANEL</a>
+            <button className="text-center justify-center border-customFont bg-gradient-to-r from-customFont to-customBg text-white text-sm flex flex-col items-start space-x-4 px-5 rounded-md py-5 w-40 mb-5" onClick={clearURLs}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="none" stroke="black" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>
+                <path fill="none" stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>
               </svg>
             </button>
-            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md font-semibold text-gray-300">OUTPUT</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="text-sm flex flex-col items-start space-x-4 px-5 rounded-md py-5 w-40 bg-customBg border-2 border-customFont text-white">OUTPUT</a>
           </div>
         </div>
       </div>

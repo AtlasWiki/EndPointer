@@ -1,8 +1,12 @@
 td, th {
+
   padding: 25px 40px;
   /* text-align: center; */
 }
-
+td{
+  height: 100%;
+  width: 100%;
+}
 .secrets-td, .secrets-th {
   text-align: center;
 }
