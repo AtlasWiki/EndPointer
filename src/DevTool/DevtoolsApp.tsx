@@ -61,7 +61,7 @@ function DevToolsApp() {
   }
 
   const clearURLs = async () => {
-    await browser.storage.local.remove('URL-PARSER')
+    await browser.storage.local.set({ "URL-PARSER": {} })
     console.log('URL-PARSER has been removed.')
     updateURLCount()
   }
@@ -77,7 +77,7 @@ function DevToolsApp() {
         <hr className="w-full mt-5"></hr>
       </div>
       <div className="w-full flex gap-4">
-        <button className="bg-customFont border-2 border-customFont  text-white rounded-sm p-3" onClick={updateURLCount}>
+        <button className="bg-customFont border-2 border-customFont  text-white rounded-sm p-3" onClick={() => { location.reload() }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#ffffff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"><path d="M19.933 13.041a8 8 0 1 1-9.925-8.788c3.899-1 7.935 1.007 9.425 4.747"/><path d="M20 4v5h-5"/></g></svg>
         </button>
         <button className="border-customFont border-2 bg-gradient-to-r from-customFont to-customBg text-white text-center p-3 " onClick={clearCache}>
