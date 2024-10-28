@@ -58,81 +58,92 @@ export function URLsDefaultView() {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center">
-        {(document.location.pathname.toLowerCase().includes("devtool") && <NavBar />)}
-      <div className="mt-5 flex">
-        <div className="py-1 w-full flex flex-col gap-20">
-          <div className="w-full max-h-[760px] overflow-auto" ref={tableRef} onScroll={handleScroll}>
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="text-3xl text-white">
-                  <th className="border-b-2 pb-10">ENDPOINT <span className="text-customFont">({filteredURLs.length})</span></th>
-                  <th className="border-b-2 pb-10">SOURCE <span className="text-customFont">({jsFiles.length})</span></th>
-                  <th className="border-b-2 pb-10">WEBPAGE <span className="text-customFont">({webpages.length})</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div className="mt-5 w-full">
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        className={CSS_CLASSES.INPUT}
-                        placeholder="Search endpoints..."
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div className="relative w-full max-w-lg mt-5">
-                      <button
-                        onClick={() => setIsOpenLocation(!isOpenLocation)}
-                        className=" w-full px-2 border-2 border-customFont text-white bg-transparent text-lg rounded-md overflow-hidden whitespace-nowrap py-2 mb-2 hover:border-gray-300 hover:border-2 "
-                      >
-                        {selectedLocation}
-                      </button>
-                      {isOpenLocation && (
-                        <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
-                          {jsFiles.map((url, index) => (
-                            <LocationItem key={index} url={url} onClick={() => handleSelectLocation(url)} />
-                          ))}
+    <div className="w-full min-h-screen flex flex-col items-center px-4 md:px-8">
+      {(document.location.pathname.toLowerCase().includes("devtool") && <NavBar />)}
+      
+      <div className="w-full max-w-7xl mt-5">
+        <div className="flex flex-col gap-8">
+          <div className="w-full max-h-[760px] overflow-auto rounded-lg" ref={tableRef} onScroll={handleScroll}>
+            <div className="min-w-full inline-block align-middle">
+              <div className="overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-700">
+                  <thead>
+                    <tr className="text-xl md:text-3xl text-white">
+                      <th className="border-b-2 pb-6 md:pb-10 px-2 md:px-4">
+                        ENDPOINT <span className="text-customFont">({filteredURLs.length})</span>
+                      </th>
+                      <th className="border-b-2 pb-6 md:pb-10 px-2 md:px-4">
+                        SOURCE <span className="text-customFont">({jsFiles.length})</span>
+                      </th>
+                      <th className="border-b-2 pb-6 md:pb-10 px-2 md:px-4">
+                        WEBPAGE <span className="text-customFont">({webpages.length})</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-700">
+                    <tr>
+                      <td className="px-2 md:px-4">
+                        <div className="mt-5 w-full">
+                          <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            className={`${CSS_CLASSES.INPUT} w-full`}
+                            placeholder="Search endpoints..."
+                          />
                         </div>
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="relative w-full h-full max-w-lg mt-5">
-                      <button
-                        onClick={() => setIsOpenWebpage(!isOpenWebpage)}
-                        className="w-full px-2 border-2 border-customFont text-white bg-transparent text-lg rounded-md overflow-hidden whitespace-nowrap py-2 mb-2 hover:border-gray-300 hover:border-2"
-                      >
-                        {selectedWebpage}
-                      </button>
-                      {isOpenWebpage && (
-                        <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
-                          {webpages.map((url, index) => (
-                            <WebpageItem key={index} url={url} onClick={() => handleSelectWebpage(url)} />
-                          ))}
+                      </td>
+                      <td className="px-2 md:px-4">
+                        <div className="relative mt-5 w-full">
+                          <button
+                            onClick={() => setIsOpenLocation(!isOpenLocation)}
+                            className="w-full px-2 border-2 border-customFont text-white bg-transparent text-sm md:text-lg rounded-md overflow-hidden whitespace-nowrap py-2 mb-2 hover:border-gray-300 hover:border-2"
+                          >
+                            {selectedLocation}
+                          </button>
+                          {isOpenLocation && (
+                            <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                              {jsFiles.map((url, index) => (
+                                <LocationItem key={index} url={url} onClick={() => handleSelectLocation(url)} />
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                {visibleUrls.map((endpoint, index) => (
-                  <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                      <td className="px-2 md:px-4">
+                        <div className="relative mt-5 w-full">
+                          <button
+                            onClick={() => setIsOpenWebpage(!isOpenWebpage)}
+                            className="w-full px-2 border-2 border-customFont text-white bg-transparent text-sm md:text-lg rounded-md overflow-hidden whitespace-nowrap py-2 mb-2 hover:border-gray-300 hover:border-2"
+                          >
+                            {selectedWebpage}
+                          </button>
+                          {isOpenWebpage && (
+                            <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+                              {webpages.map((url, index) => (
+                                <WebpageItem key={index} url={url} onClick={() => handleSelectWebpage(url)} />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                    {visibleUrls.map((endpoint, index) => (
+                      <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-          <div className="text-lg flex  items-start space-x-44 px-5 w-full">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="text-sm flex flex-col items-start space-x-4 px-5 rounded-md py-5 w-40 bg-customFont text-white mb-5 border-2 border-customFont ml-4 ">WEBPAGE PANEL</a>
-            <button className="text-center justify-center border-customFont bg-gradient-to-r from-customFont to-customBg text-white text-sm flex flex-col items-start space-x-4 px-5 rounded-md py-5 w-40 mb-5" onClick={clearURLs}>
+          <div className="text-lg flex items-start space-x-8 px-4 w-full">
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="text-sm flex flex-col items-center space-x-2 px-5 rounded-md py-3 bg-customFont text-white border-2 border-customFont">WEBPAGE PANEL</a>
+            <button className="text-center border-customFont bg-gradient-to-r from-customFont to-customBg text-white text-sm flex items-center px-5 rounded-md py-3" onClick={clearURLs}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="none" stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>
               </svg>
             </button>
-            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="text-sm flex flex-col items-start space-x-4 px-5 rounded-md py-5 w-40 bg-customBg border-2 border-customFont text-white">OUTPUT</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="text-sm flex flex-col items-center px-5 rounded-md py-3 bg-customBg border-2 border-customFont text-white">OUTPUT</a>
           </div>
         </div>
       </div>
