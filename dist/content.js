@@ -1455,30 +1455,33 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: #353535;
-    padding: 10px;
+    background-color: #1e2a31; /* Darker background for contrast */
+    padding: 15px;
     z-index: 9999;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    border-bottom: 2px solid #316e7d; /* Bottom border for emphasis */
   `;
 	    const statusText = document.createElement('div');
 	    statusText.style.cssText = `
     text-align: center;
     margin-bottom: 5px;
-    color: white;
+    color: #e0e0e0; /* Lighter color for better visibility */
+    font-weight: bold; /* Make text bold */
   `;
 	    const progressBar = document.createElement('div');
 	    progressBar.style.cssText = `
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 10px;
+    height: 15px; /* Slightly taller for better visibility */
+    background-color: #3b4b54; /* Lighter gray background */
+    border-radius: 8px; /* Rounder corners */
     overflow: hidden;
   `;
 	    const progressFill = document.createElement('div');
 	    progressFill.style.cssText = `
     height: 100%;
     width: 0%;
-    background-color: #4CAF50;
-    transition: width 0.3s ease-in-out;
+    background-color: #2ca9b8; /* Brighter color for the fill */
+    transition: width 0.4s ease; /* Slightly slower transition */
   `;
 	    progressBar.appendChild(progressFill);
 	    container.appendChild(statusText);
