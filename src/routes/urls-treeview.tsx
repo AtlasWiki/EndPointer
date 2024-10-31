@@ -159,24 +159,24 @@ export function URLsTreeView() {
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            className="px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md
+            className="px-2 border-2 border-white text-white bg-transparent text-lg w-full pb-3 pt-3 rounded-md
               cursor-pointer hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400"
             placeholder="Search endpoints..."
           />
           <div className="relative w-64">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-full py-4 px-2 border-2 border-gray-300 bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap"
+              className="w-full py-4 px-2 border-2 border-customFont bg-transparent text-lg rounded-md overflow-hidden text-ellipsis whitespace-nowrap text-white"
             >
               {selected}
             </button>
             {isOpen && (
-              <div className="absolute mt-1 w-full bg-white border-2 border-gray-500 rounded-md shadow-lg z-10 max-h-60 overflow-auto">
+              <div className="absolute mt-1 w-full bg-customBg border-2 border-customFont text-customFont rounded-md shadow-lg z-10 max-h-60 overflow-auto">
                 {jsFiles.map((url, index) => (
                   <div
                     key={index}
                     onClick={() => handleSelect(url)}
-                    className="bg-gray-500 text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
+                    className="bg-customBg text-white p-2 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap hover:bg-gray-600"
                   >
                     {url}
                   </div>
@@ -189,11 +189,11 @@ export function URLsTreeView() {
           {renderHierarchicalView()}
         </div>
         <div className="text-lg flex items-center space-x-4 mt-5">
-            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="bg-gray-950 p-3 rounded-md font-semibold text-[#646cff]">WEBPAGE PANEL</a>
-            <button className="a-item bg-gray-600 p-3 rounded-md" onClick={clearURLs}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
+            <a href={document.location.origin + "/PopUp/popup.html#urls"} target="_blank" className="text-sm flex flex-col items-center space-x-2 px-5 rounded-md py-3 bg-customFont text-white border-2 border-customFont">WEBPAGE PANEL</a>
+            <button className="text-center border-customFont bg-gradient-to-r from-customFont to-customBg text-white text-sm flex items-center px-5 rounded-md py-3" onClick={clearURLs}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>
             </button>
-            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="a-item bg-gray-600 p-3 rounded-md font-semibold text-gray-300">OUTPUT</a>
+            <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="text-sm flex flex-col items-center px-5 rounded-md py-3 bg-customBg border-2 border-customFont text-white">OUTPUT</a>
         </div>
       </div>
     </div>
