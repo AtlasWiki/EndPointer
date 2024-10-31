@@ -5,7 +5,7 @@ import { URLProps } from '../components/URLProps';
 import { LocationItem, WebpageItem } from '../components/Locationitem';
 import { useURLData } from '../hooks/useURLData';
 import { clearURLs } from '../utils/defaultview_utils';
-import { VISIBLE_URL_SIZE, CSS_CLASSES } from '../constants/defaultview_contants';
+import { VISIBLE_URL_SIZE, CSS_CLASSES, FILTER_CATEGORIES } from '../constants/defaultview_contants';
 import { NavBar } from '../components/navbar';
 
 export function URLsDefaultView() {
@@ -15,6 +15,7 @@ export function URLsDefaultView() {
   const [isOpenWebpage, setIsOpenWebpage] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [startIndex, setStartIndex] = useState(0);
+  const [filterToggle, setFilterToggle] = useState(false)
   const tableRef = useRef<HTMLDivElement>(null);
 
   const { 
@@ -83,6 +84,7 @@ export function URLsDefaultView() {
                   <tbody className="divide-y divide-gray-700">
                     <tr>
                       <td className="px-2 md:px-4">
+                        {/* Search button */}
                         <div className="mt-5 w-full flex gap-6">
                           {/* <button className="bg-transparent border-2 border-customFont hover:border-gray-300 hover:border-2 py-2 px-4 rounded-md">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#316E7D" stroke="#316E7D" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 3h16a1 1 0 0 1 1 1v1.586a1 1 0 0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707v6.305a1 1 0 0 1-1.242.97l-2-.5a1 1 0 0 1-.758-.97v-5.805a1 1 0 0 0-.293-.707L3.293 6.293A1 1 0 0 1 3 5.586V4a1 1 0 0 1 1-1"/></svg>
@@ -94,12 +96,22 @@ export function URLsDefaultView() {
                             className={`${CSS_CLASSES.INPUT} w-full`}
                             placeholder="Search endpoints..."
                           />
-                         <button className="bg-transparent border-2 border-customFont hover:border-gray-300 hover:border-2 py-2 px-4 rounded-md">
+                        {/* Filter button */}
+                         <button className="bg-transparent border-2 border-customFont hover:border-gray-300 hover:border-2 py-2 px-4 rounded-md" onClick={() => {setFilterToggle(!filterToggle)}}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#316E7D" stroke="#316E7D" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 3h16a1 1 0 0 1 1 1v1.586a1 1 0 0 1-.293.707l-6.414 6.414a1 1 0 0 0-.293.707v6.305a1 1 0 0 1-1.242.97l-2-.5a1 1 0 0 1-.758-.97v-5.805a1 1 0 0 0-.293-.707L3.293 6.293A1 1 0 0 1 3 5.586V4a1 1 0 0 1 1-1"/></svg>
                           </button>
                         </div>
+                        {/* Filter menu */}
+                        {filterToggle && <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-4 gap-8 p-10 rounded-sm">
+                          {Object.entries(FILTER_CATEGORIES).map(([category, colorClass]) => (
+                            <label key={category} className={`${colorClass} font-semibold text-sm`}>
+                              <input type="checkbox" value={category} /> {category.replace(/_/g, ' ')}
+                            </label>
+                          ))}
+                        </div>}
                         
                       </td>
+                      {/* Location/Source */}
                       <td className="px-2 md:px-4">
                         <div className="relative mt-5 w-full">
                           <button
@@ -117,6 +129,7 @@ export function URLsDefaultView() {
                           )}
                         </div>
                       </td>
+                      {/* Webpage */}
                       <td className="px-2 md:px-4">
                         <div className="relative mt-5 w-full">
                           <button

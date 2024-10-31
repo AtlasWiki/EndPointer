@@ -44,3 +44,26 @@ export const CSS_CLASSES = {
   NON_STANDARD_PORT: 'bg-[#8b0000] text-white py-1 px-2 rounded-md text-sm font-semibold',
   BASE64_ENCODED_SEGMENT: 'bg-[#4682b4] text-white py-1 px-2 rounded-md text-sm font-semibold'
 } as const;
+
+export const FILTER_CATEGORIES = {
+  API_ENDPOINT: "text-green-500",
+  URL_DATA_ACCESS: "text-blue-500",
+  DATABASE_OPERATION: "text-purple-500",
+  SENSITIVE_DATA: "text-red-500",
+  UNSECURED_API: "text-red-600",
+  AUTHENTICATION_ENDPOINT: "text-blue-900",
+  DATA_TRANSFER: "text-yellow-500",
+  ADMIN_PANEL: "text-green-700",
+  PAYMENT_PROCESSING: "text-indigo-700",
+  FILE_ACCESS: "text-orange-600",
+  LEGACY_ENDPOINT: "text-gray-500",
+  DYNAMIC_CONTENT: "text-purple-700",
+  WEBSOCKET: "text-yellow-800",
+  INTERNAL_NETWORK: "text-green-600",
+  THIRD_PARTY_INTEGRATION: "text-blue-400",
+  DEBUG_ENDPOINT: "text-gray-600",
+  POTENTIALLY_VULNERABLE: "text-orange-700",
+  PARAMETERIZED_ENDPOINT: "text-orange-600",
+  NON_STANDARD_PORT: "text-red-800",
+  BASE64_ENCODED_SEGMENT: "text-blue-600",
+};
