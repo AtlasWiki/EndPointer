@@ -128,6 +128,13 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
                 ],
                 keywords: ['websocket', 'socket', 'real-time']
             },
+            isGraphQL: {
+                name: "GraphQL",
+                patterns: [
+
+                ],
+                keywords: ['graphQL']
+            },
             isInternalNetwork: {
                 name: "Internal Network",
                 patterns: [
@@ -185,6 +192,7 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
                     /[A-Za-z0-9+/]{4,}(?:[A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)/
                 ]
             }
+    
         });
     }
 }
