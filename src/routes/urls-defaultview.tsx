@@ -128,8 +128,8 @@ export function URLsDefaultView() {
                         </div>
                         {/* Filter menu */}
                         {filterToggle && (
-                          <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-3 gap-9 p-10 rounded-sm">
-                            <label className="font-semibold text-sm flex items-center gap-2">
+                          <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-2 lg:grid-cols-3 gap-8 p-8 rounded-sm">
+                            <label className="font-semibold text-sm flex gap-2 "> {/* Make the label span all columns */}
                               {/* Custom Select All Checkbox */}
                               <div
                                 className={`cursor-pointer w-6 h-6 border-2 border-customFont ${allSelected ? 'bg-[#316E7D]' : 'bg-transparent'} flex items-center justify-center`}
@@ -138,11 +138,11 @@ export function URLsDefaultView() {
                               Toggle All
                             </label>
                             {Object.entries(FILTER_CATEGORIES).map(([category, colorClass]) => (
-                              <label key={category} className={`flex items-center w-full gap-2 font-semibold text-sm`}>
+                              <label key={category} className={`flex w-full gap-2 font-semibold text-sm`}>
                                 {/* Custom Checkbox for each category with color codes */}
                                 <div
                                   className={`cursor-pointer w-6 h-6 border-2 border-customFont ${selectedCategories[category] ? 'bg-[#316E7D]' : 'bg-transparent'} flex items-center justify-center`}
-                                  onClick={() => handleCheckboxChange(category)} // Handle individual checkbox clicks
+                                onClick={() => handleCheckboxChange(category)} // Handle individual checkbox clicks
                                 />
                                 <span className={colorClass}>{category.replace(/_/g, ' ')}</span> {/* Use color codes for text */}
                               </label>
