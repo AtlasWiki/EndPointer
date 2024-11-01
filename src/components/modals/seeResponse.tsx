@@ -160,12 +160,12 @@ export const SeeResponseModal: React.FC<SeeResponseModalProps> = ({ endpoint, on
         </button>
       </div>
       {activeTab === 'request' ? (
-        <div className="bg-[#363333] opacity-85 rounded-md p-4">
+        <div className="bg-[#141e24] opacity-85 rounded-md p-4">
           {isEditing ? (
             <>
               <h4 className="text-white font-semibold mb-2">Edit Request:</h4>
               <select 
-                className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
+                className="font-bold text-2xl text-customFont mb-4 bg-gray-600 w-full py-2 px-2"
                 value={editableRequest.method}
                 onChange={(e) => setEditableRequest(prev => ({ ...prev, method: e.target.value as HttpMethod, body: e.target.value === 'GET' ? '' : prev.body }))}
               >
@@ -272,9 +272,9 @@ export const SeeResponseModal: React.FC<SeeResponseModalProps> = ({ endpoint, on
           )}
         </div>
       ) : (
-        <div className="bg-[#363333] opacity-85 rounded-md p-4">
+        <div className="bg-[#141e24] opacity-85 rounded-md p-4">
           <select 
-            className="font-bold text-2xl text-purple-200 mb-4 bg-gray-600 w-full py-2 px-2"
+            className="font-bold text-2xl opacity-1 text-white mb-4 bg-gray-600 w-full py-2 px-2"
             value={currentMethod}
             onChange={(e) => handleMethodChange(e.target.value as HttpMethod)}
           >
@@ -290,7 +290,7 @@ export const SeeResponseModal: React.FC<SeeResponseModalProps> = ({ endpoint, on
           <pre className="text-gray-200 mb-4">
             {Object.entries(currentResponse?.headers || {}).map(([key, value]) => (
               <div key={key} className="p-1">
-                <span className="font-bold text-purple-200">{key}:</span>
+                <span className="font-bold text-customFont opacity-8">{key}:</span>
                 <span className="text-gray-200"> {value}</span>
               </div>
             ))}

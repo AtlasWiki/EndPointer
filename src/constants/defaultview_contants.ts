@@ -21,8 +21,8 @@ export const LOCAL_STORAGE_KEYS = {
 export const CSS_CLASSES = {
   BUTTON: 'px-4 py-2 bg-black text-white rounded hover:bg-blue-600',
   INPUT: 'px-2 border-2 border-gray-300 bg-transparent text-lg w-full pb-3 pt-3 rounded-md cursor-pointer text-gray-300 hover:border-gray-500 outline-none focus:border-gray-500 transition-all duration-400',
-  MODAL_OVERLAY: 'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50',
-  MODAL_CONTENT: 'bg-[#363333] opacity-85 p-5 rounded-lg shadow-lg',
+  MODAL_OVERLAY: 'fixed inset-0 flex items-center justify-center bg-[#141e24] bg-opacity-50',
+  MODAL_CONTENT: 'bg-[#141e24] opacity-85 p-5 rounded-lg shadow-lg',
   API_ENDPOINT: 'bg-black text-green-500 py-1 px-2 rounded-md text-sm font-semibold',
   URL_DATA_ACCESS: 'bg-black text-blue-500 py-1 px-2 rounded-md text-sm font-semibold',
   DATABASE_OPERATION: 'bg-black text-purple-500 py-1 px-2 rounded-md text-sm font-semibold',
