@@ -5,6 +5,7 @@ import { JSFileProcessor } from './parser/parser.fileprocessor';
 import { URLParserStorage } from '../constants/message_types';
 import { URLParserStorageItem } from './parser/parser.types';
 import { ProgressBar } from '../components/ProgressBar';
+
 import browser from 'webextension-polyfill'
 
 
@@ -13,6 +14,7 @@ export class Parser {
   private jsFileProcessor: JSFileProcessor;
   private progressBar: ProgressBar;
   private scriptFiles: string[] = [];
+  
 
   constructor() {
     this.pageParser = new PageParser();
@@ -30,6 +32,7 @@ export class Parser {
       try {
         await this.pageParser.parseCurrentPage();
         await this.parseExternalFiles();
+
         this.progressBar.update(100, 'Done');
       } catch (error) {
         console.error("Error during parsing:", error);
