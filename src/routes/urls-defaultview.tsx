@@ -18,7 +18,7 @@ export function URLsDefaultView() {
   const [filterToggle, setFilterToggle] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState<Record<string, boolean>>(
     Object.keys(FILTER_CATEGORIES).reduce((acc, category) => {
-      acc[category] = false; // Start all as unchecked
+      acc[category] = true; // Start all as unchecked
       return acc;
     }, {} as Record<string, boolean>)
   );
@@ -135,7 +135,7 @@ export function URLsDefaultView() {
                                 className={`cursor-pointer w-6 h-6 border-2 border-customFont ${allSelected ? 'bg-[#316E7D]' : 'bg-transparent'} flex items-center justify-center`}
                                 onClick={handleSelectAllChange}
                               />
-                              Select All
+                              Toggle All
                             </label>
                             {Object.entries(FILTER_CATEGORIES).map(([category, colorClass]) => (
                               <label key={category} className={`flex items-center w-full gap-2 font-semibold text-sm`}>
