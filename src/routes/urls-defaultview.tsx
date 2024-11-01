@@ -16,6 +16,12 @@ export function URLsDefaultView() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [startIndex, setStartIndex] = useState(0);
   const [filterToggle, setFilterToggle] = useState(false)
+  const [selectedCategories, setSelectedCategories] = useState<Record<string, boolean>>(
+    Object.keys(FILTER_CATEGORIES).reduce((acc, category) => {
+      acc[category] = false; // Start all as unchecked
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
   const tableRef = useRef<HTMLDivElement>(null);
 
   const { 
@@ -56,6 +62,25 @@ export function URLsDefaultView() {
         setStartIndex(prev => Math.max(prev - 20, 0));
       }
     }
+  };
+
+  const allSelected = Object.keys(FILTER_CATEGORIES).length > 0 &&
+    Object.values(selectedCategories).every(value => value);
+
+  const handleSelectAllChange = () => {
+    const newSelectedCategories = Object.keys(FILTER_CATEGORIES).reduce((acc, category) => {
+      acc[category] = !allSelected; // Toggle the selection based on current state
+      return acc;
+    }, {} as Record<string, boolean>);
+    
+    setSelectedCategories(newSelectedCategories); // Update state with new selections
+  };
+
+  const handleCheckboxChange = (category: string) => {
+    setSelectedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category], // Toggle the individual checkbox
+    }));
   };
 
   return (
@@ -102,14 +127,28 @@ export function URLsDefaultView() {
                           </button>
                         </div>
                         {/* Filter menu */}
-                        {filterToggle && <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-4 gap-8 p-10 rounded-sm">
-                          {Object.entries(FILTER_CATEGORIES).map(([category, colorClass]) => (
-                            <label key={category} className={`${colorClass} font-semibold text-sm`}>
-                              <input type="checkbox" value={category} /> {category.replace(/_/g, ' ')}
+                        {filterToggle && (
+                          <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-3 gap-9 p-10 rounded-sm">
+                            <label className="font-semibold text-sm flex items-center gap-2">
+                              {/* Custom Select All Checkbox */}
+                              <div
+                                className={`cursor-pointer w-6 h-6 border-2 border-customFont ${allSelected ? 'bg-teal-500' : 'bg-transparent'} flex items-center justify-center`}
+                                onClick={handleSelectAllChange}
+                              />
+                              Select All
                             </label>
-                          ))}
-                        </div>}
-                        
+                            {Object.entries(FILTER_CATEGORIES).map(([category, colorClass]) => (
+                              <label key={category} className={`flex items-center w-full gap-2 font-semibold text-sm`}>
+                                {/* Custom Checkbox for each category with color codes */}
+                                <div
+                                  className={`cursor-pointer w-6 h-6 border-2 border-customFont ${selectedCategories[category] ? 'bg-teal-500' : 'bg-transparent'} flex items-center justify-center`}
+                                  onClick={() => handleCheckboxChange(category)} // Handle individual checkbox clicks
+                                />
+                                <span className={colorClass}>{category.replace(/_/g, ' ')}</span> {/* Use color codes for text */}
+                              </label>
+                            ))}
+                          </div>
+                        )}
                       </td>
                       {/* Location/Source */}
                       <td className="px-2 md:px-4">
