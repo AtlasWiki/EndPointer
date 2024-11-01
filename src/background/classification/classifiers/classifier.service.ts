@@ -1,7 +1,7 @@
 import { BaseClassifier } from "./classifier.base";
 import { IClassifierService } from "./classifier.interface";
-import type {ClassificationResults, URLClassification, URLParserStorageItem } from './classifier.types';
-import type { URLParserStorage } from "../../../constants/message_types";
+import type {ClassificationResults, URLClassification} from './classifier.types';
+import type { URLParserStorage, URLParserStorageItem } from "../../../constants/message_types";
 import browser from 'webextension-polyfill';
 
 
