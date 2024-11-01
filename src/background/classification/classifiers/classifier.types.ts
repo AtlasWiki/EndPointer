@@ -11,12 +11,6 @@ export interface ClassificationResults<T> {
     patterns: string[];
 }
 
-export interface URLParserStorageItem {
-    currPage: string[];
-    externalJSFiles: Record<string, string[]>;
-    classifications?: Record<string, ClassificationResults<URLClassification>>;
-}
-
 export type URLClassification = {
     isAPIEndpoint: boolean;
     isUserDataAccess: boolean;
@@ -31,6 +25,7 @@ export type URLClassification = {
     isLegacyEndpoint: boolean;
     isDynamicContent: boolean;
     isWebSocket: boolean;
+    isGraphQL: boolean;
     isInternalNetwork: boolean;
     isThirdPartyIntegration: boolean;
     isDebugEndpoint: boolean;
