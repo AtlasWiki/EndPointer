@@ -1,4 +1,5 @@
 import { Runtime } from 'webextension-polyfill';
+import { ClassificationResults, URLClassification } from '../background/classification/classifiers/classifier.types';
 import React from 'react';
 
 export type MessageAction =
@@ -57,8 +58,9 @@ export interface ExtensionState {
 export interface URLParserStorageItem {
   currPage: string[];
   externalJSFiles: {
-    [key: string]: string[];
+      [key: string]: string[];
   };
+  classifications?: Record<string, ClassificationResults<URLClassification>>;
 }
 
 export interface URLParserStorage {
