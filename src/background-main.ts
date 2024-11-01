@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill';
 import { Message, MessageResponse, HttpMethod, Endpoint, RequestDetails, MessageSender } from './constants/message_types';
 import { handleSendRequest, initRequestHandler, clearResponseCache, getRequestDetails } from './background/httpRequestHandler';
+import { ClassificationManager } from './background/classification.service';
 
 let isAutoParserEnabled = false;
 
@@ -8,7 +9,11 @@ let isAutoParserEnabled = false;
 browser.storage.local.get('autoParserEnabled').then((result) => {
   (isAutoParserEnabled as any) = result.autoParserEnabled || false;
 });
+
+
 initRequestHandler();
+
+const classificationManager = new ClassificationManager();
 
 // Listen for messages from popup and content scripts
 browser.runtime.onMessage.addListener((message: unknown, sender: MessageSender, sendResponse: (response: unknown) => void) => {
