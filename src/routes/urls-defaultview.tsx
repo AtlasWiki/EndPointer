@@ -132,7 +132,7 @@ export function URLsDefaultView() {
                             <label className="font-semibold text-sm flex items-center gap-2">
                               {/* Custom Select All Checkbox */}
                               <div
-                                className={`cursor-pointer w-6 h-6 border-2 border-customFont ${allSelected ? 'bg-teal-500' : 'bg-transparent'} flex items-center justify-center`}
+                                className={`cursor-pointer w-6 h-6 border-2 border-customFont ${allSelected ? 'bg-[#316E7D]' : 'bg-transparent'} flex items-center justify-center`}
                                 onClick={handleSelectAllChange}
                               />
                               Select All
@@ -141,7 +141,7 @@ export function URLsDefaultView() {
                               <label key={category} className={`flex items-center w-full gap-2 font-semibold text-sm`}>
                                 {/* Custom Checkbox for each category with color codes */}
                                 <div
-                                  className={`cursor-pointer w-6 h-6 border-2 border-customFont ${selectedCategories[category] ? 'bg-teal-500' : 'bg-transparent'} flex items-center justify-center`}
+                                  className={`cursor-pointer w-6 h-6 border-2 border-customFont ${selectedCategories[category] ? 'bg-[#316E7D]' : 'bg-transparent'} flex items-center justify-center`}
                                   onClick={() => handleCheckboxChange(category)} // Handle individual checkbox clicks
                                 />
                                 <span className={colorClass}>{category.replace(/_/g, ' ')}</span> {/* Use color codes for text */}
