@@ -73,7 +73,7 @@ export class Parser {
       const currentPageData = urlParser[currentURL] as URLParserStorageItem;
       const pageURLs = currentPageData.currPage.length;
       const externalURLs = Object.values(currentPageData.externalJSFiles)
-        .reduce((total, urls) => total + (urls as string[]).length, 0);
+        .reduce((total, urls) => total + urls.length, 0);
       return pageURLs + externalURLs;
     }
     return 0;

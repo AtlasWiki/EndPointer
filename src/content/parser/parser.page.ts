@@ -2,6 +2,7 @@ import { REL_REGEX, ABS_REGEX } from '../../constants/regex_constants';
 import { StorageService } from './storage.service';
 import browser from 'webextension-polyfill';
 import { URLParserStorageWithOptionalCurrent } from './parser.types';
+import { URLClassification } from '../../background/classification/classifiers/classifier.types';
 
 export class PageParser {
   async parseCurrentPage(): Promise<Set<string>> {
@@ -22,12 +23,16 @@ export class PageParser {
     const urlParser = (result['URL-PARSER'] as URLParserStorageWithOptionalCurrent) || {};
     
     if (!urlParser[currPage]) {
-      urlParser[currPage] = { currPage: [], externalJSFiles: {} };
+      urlParser[currPage] = {
+        currPage: Array.from(pageURLs).map(url => ({
+          url,
+          classifications: {} as URLClassification
+        })),
+        externalJSFiles: {}
+      };
     }
 
     urlParser.current = currPage;
-    urlParser[currPage].currPage = Array.from(pageURLs);
-
     await browser.storage.local.set({ 'URL-PARSER': urlParser });
   }
 

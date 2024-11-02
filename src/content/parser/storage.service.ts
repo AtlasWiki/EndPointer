@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill';
 import { URLParserStorageWithOptionalCurrent, URLParserStorageItem } from './parser.types';
+import { URLClassification } from '../../background/classification/classifiers/classifier.types';
 
 export class StorageService {
   static async getConcurrencySetting(): Promise<number> {
@@ -22,16 +23,24 @@ export class StorageService {
     const currentURL = urlParser.current || '';
     
     if (!urlParser[currentURL]) {
-      urlParser[currentURL] = { currPage: [], externalJSFiles: {} };
+      urlParser[currentURL] = { 
+        currPage: [],
+        externalJSFiles: {}
+      };
     }
     
     if (!urlParser[currentURL].externalJSFiles) {
       urlParser[currentURL].externalJSFiles = {};
     }
 
-    urlParser[currentURL].externalJSFiles[encodedURL] = urls;
+    urlParser[currentURL].externalJSFiles[encodedURL] = urls.map(url => ({
+      url,
+      classifications: {} as URLClassification
+    }));
+
     await browser.storage.local.set({ 'URL-PARSER': urlParser });
   }
+
 
   static async updateURLCount(count: number): Promise<void> {
     await browser.storage.local.set({ urlCount: count });
