@@ -12,7 +12,6 @@ export class ClassificationManager {
         this.classifierService = new ClassifierService(new URLClassifier());
         this.initializeStorageListener();
         
-        // Initial processing of stored URLs
         this.processStoredUrls().catch(error => {
             console.error('Error in initial URL processing:', error);
         });
@@ -50,51 +49,60 @@ export class ClassificationManager {
                 const typedPageData = pageData as URLParserStorageItem;
                 if (!typedPageData) continue;
 
-                
-                const allUrls = [
-                    ...typedPageData.currPage,
-                    ...Object.values(typedPageData.externalJSFiles).flat()
-                ].filter(url => !this.processedUrls.has(url));
+                const unprocessedUrls = [
+                    ...typedPageData.currPage.filter(item => !this.processedUrls.has(item.url)),
+                    ...Object.values(typedPageData.externalJSFiles)
+                        .flat()
+                        .filter(item => !this.processedUrls.has(item.url))
+                ];
 
-                if (allUrls.length > 0) {
+                if (unprocessedUrls.length > 0) {
                     try {
                         
-                        const newClassifications = this.classifierService.classifyUrls(allUrls);
+                        typedPageData.currPage = typedPageData.currPage.map(item => ({
+                            url: item.url,
+                            classifications: this.processedUrls.has(item.url) ? 
+                                item.classifications : 
+                                this.classifierService.classifyUrl(item.url)
+                        }));
 
                         
-                        urlParser[pageUrl] = {
-                            ...typedPageData,
-                            classifications: {
-                                ...typedPageData.classifications,
-                                ...newClassifications
-                            }
-                        };
+                        Object.keys(typedPageData.externalJSFiles).forEach(key => {
+                            typedPageData.externalJSFiles[key] = typedPageData.externalJSFiles[key].map(item => ({
+                                url: item.url,
+                                classifications: this.processedUrls.has(item.url) ? 
+                                    item.classifications : 
+                                    this.classifierService.classifyUrl(item.url)
+                            }));
+                        });
 
                         
-                        allUrls.forEach(url => this.processedUrls.add(url));
+                        unprocessedUrls.forEach(item => this.processedUrls.add(item.url));
                         hasUpdates = true;
 
-                        console.log(`Classified ${allUrls.length} new URLs for page: ${pageUrl}`);
+                        urlParser[pageUrl] = typedPageData;
+                        console.log(`Classified ${unprocessedUrls.length} new URLs for page: ${pageUrl}`);
                     } catch (error) {
                         console.error(`Error classifying URLs for page ${pageUrl}:`, error);
-                        
                         continue;
                     }
                 }
             }
 
             if (hasUpdates) {
-                try {
-                    await browser.storage.local.set({ 'URL-PARSER': urlParser });
-                    console.log('Successfully updated URL-PARSER storage with new classifications');
-                } catch (error) {
-                    console.error('Error updating storage:', error);
-                    throw error; 
-                }
+                await browser.storage.local.set({ 'URL-PARSER': urlParser });
+                console.log('Successfully updated URL-PARSER storage with new classifications');
             }
         } catch (error) {
             console.error('Error processing URLs for classification:', error);
-            throw error; 
+            throw error;
         }
+    }
+
+    // Placeholder for clearing processed URLs
+    private clearProcessedUrls(): void {
+        // Will be implemented later
+        this.processedUrls.clear();
+        console.log('Cleared processed URLs cache');
     }
 }

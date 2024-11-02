@@ -7,19 +7,14 @@ export abstract class BaseClassifier<T extends Record<string, boolean>> {
         this.types = types;
     }
 
-    classify(url: string): ClassificationResults<T> {
+    classify(url: string): T {
         const matches = {} as T;
-        const patterns: string[] = [];
 
         for (const [key, type] of Object.entries(this.types)) {
-            const isMatch = this.matchesType(url, type);
-            matches[key as keyof T] = isMatch as T[keyof T];
-            if (isMatch) {
-                patterns.push(type.name);
-            }
+            matches[key as keyof T] = this.matchesType(url, type) as T[keyof T];
         }
 
-        return { matches, patterns };
+        return matches;
     }
 
     private matchesType(url: string, type: ClassifierType): boolean {

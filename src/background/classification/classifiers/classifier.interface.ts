@@ -1,8 +1,7 @@
-import type { ClassificationResults, URLClassification} from "./classifier.types";
+import type { URLClassification} from "./classifier.types";
 
 export interface IClassifierService {
-    classifyUrls(urls: string[]): Record<string, ClassificationResults<URLClassification>>;
+    classifyUrl(url: string): URLClassification;
     updateStorageWithClassifications(currentURL: string): Promise<void>;
-    getURLClassifications(url?: string): Promise<Record<string, ClassificationResults<URLClassification>> | null>;
-
+    getURLClassifications(url?: string): Promise<Record<string, URLClassification> | null>;
 }

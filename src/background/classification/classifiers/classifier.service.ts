@@ -12,30 +12,31 @@ export class ClassifierService implements IClassifierService {
         this.classifier = classifier;
     }
 
-    classifyUrls(urls: string[]): Record<string, ClassificationResults<URLClassification>> {
-        const classifications: Record<string, ClassificationResults<URLClassification>> = {};
-
-        for (const url of urls) {
-            classifications[url] = this.classifier.classify(url);
-        }
-
-        return classifications;
+    classifyUrl(url: string): URLClassification {
+        return this.classifier.classify(url);
     }
 
-     async updateStorageWithClassifications(currentURL: string): Promise<void> {
+    async updateStorageWithClassifications(currentURL: string): Promise<void> {
         const storage = await browser.storage.local.get('URL-PARSER');
         const urlParser = storage['URL-PARSER'] as URLParserStorage || {};
 
         if (currentURL && urlParser[currentURL]) {
             const currentPageData = urlParser[currentURL] as URLParserStorageItem;
-
-            const allUrls = [
-                ...currentPageData.currPage,
-                ...Object.values(currentPageData.externalJSFiles).flat()
-            ];
-
-            currentPageData.classifications = this.classifyUrls(allUrls);
             
+            // Update currPage URLs with classifications
+            currentPageData.currPage = currentPageData.currPage.map(item => ({
+                url: item.url,
+                classifications: this.classifyUrl(item.url)
+            }));
+
+            // Update externalJSFiles with classifications
+            Object.entries(currentPageData.externalJSFiles).forEach(([key, files]) => {
+                currentPageData.externalJSFiles[key] = files.map(item => ({
+                    url: item.url,
+                    classifications: this.classifyUrl(item.url)
+                }));
+            });
+
             await browser.storage.local.set({
                 'URL-PARSER': {
                     ...urlParser,
@@ -45,14 +46,25 @@ export class ClassifierService implements IClassifierService {
         }
     }
 
-    async getURLClassifications(url?: string): Promise<Record<string, ClassificationResults<URLClassification>> | null> {
+    async getURLClassifications(url?: string): Promise<Record<string, URLClassification> | null> {
         const storage = await browser.storage.local.get('URL-PARSER');
         const urlParser = storage['URL-PARSER'] as URLParserStorage;
         const currentURL = url || urlParser.current;
 
         if (currentURL && urlParser[currentURL]) {
             const currentPageData = urlParser[currentURL] as URLParserStorageItem;
-            return currentPageData.classifications || null;
+            const classifications: Record<string, URLClassification> = {};
+            
+            // Collect all URL classifications
+            currentPageData.currPage.forEach(item => {
+                classifications[item.url] = item.classifications;
+            });
+
+            Object.values(currentPageData.externalJSFiles).flat().forEach(item => {
+                classifications[item.url] = item.classifications;
+            });
+
+            return classifications;
         }
         return null;
     }
