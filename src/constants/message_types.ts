@@ -1,5 +1,5 @@
 import { Runtime } from 'webextension-polyfill';
-import { ClassificationResults, URLClassification } from '../background/classification/classifiers/classifier.types';
+import { URLClassification } from '../background/classification/classifiers/classifier.types';
 import React from 'react';
 
 export type MessageAction =
@@ -56,12 +56,18 @@ export interface ExtensionState {
 }
 
 export interface URLParserStorageItem {
-  currPage: string[];
+  currPage: Array<{
+    url: string;
+    classifications: URLClassification;
+  }>;
   externalJSFiles: {
-      [key: string]: string[];
+    [key: string]: Array<{
+      url: string;
+      classifications: URLClassification;
+    }>;
   };
-  classifications?: Record<string, ClassificationResults<URLClassification>>;
 }
+
 
 export interface URLParserStorage {
   current?: string;
@@ -72,6 +78,7 @@ export interface Endpoint {
   url: string;
   foundAt: string;
   webpage: string;
+  classifications: Record<string, boolean>;
 }
 
 export interface URLEntry {

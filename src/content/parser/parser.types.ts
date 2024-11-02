@@ -1,12 +1,18 @@
 import { ClassificationResults, URLClassification} from "../../background/classification/classifiers/classifier.types";
 
 export interface URLParserStorageItem {
-  currPage: string[];
+  currPage: Array<{
+    url: string;
+    classifications: URLClassification;
+  }>;
   externalJSFiles: {
-      [key: string]: string[];
+    [key: string]: Array<{
+      url: string;
+      classifications: URLClassification;
+    }>;
   };
-  classifications?: Record<string, ClassificationResults<URLClassification>>;
 }
+
 export type URLParserStorageWithOptionalCurrent = {
   [key: string]: URLParserStorageItem;
 } & {
