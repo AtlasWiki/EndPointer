@@ -18,7 +18,7 @@ export function URLsDefaultView() {
   const [filterToggle, setFilterToggle] = useState(false)
   const [selectedCategories, setSelectedCategories] = useState<Record<string, boolean>>(
     Object.keys(FILTER_CATEGORIES).reduce((acc, category) => {
-      acc[category] = true; // Start all as unchecked
+      acc[category] = true;
       return acc;
     }, {} as Record<string, boolean>)
   );
@@ -69,17 +69,17 @@ export function URLsDefaultView() {
 
   const handleSelectAllChange = () => {
     const newSelectedCategories = Object.keys(FILTER_CATEGORIES).reduce((acc, category) => {
-      acc[category] = !allSelected; // Toggle the selection based on current state
+      acc[category] = !allSelected;
       return acc;
     }, {} as Record<string, boolean>);
     
-    setSelectedCategories(newSelectedCategories); // Update state with new selections
+    setSelectedCategories(newSelectedCategories); 
   };
 
   const handleCheckboxChange = (category: string) => {
     setSelectedCategories(prev => ({
       ...prev,
-      [category]: !prev[category], // Toggle the individual checkbox
+      [category]: !prev[category], 
     }));
   };
 
@@ -188,7 +188,12 @@ export function URLsDefaultView() {
                       </td>
                     </tr>
                     {visibleUrls.map((endpoint, index) => (
-                      <URLProps key={startIndex + index} endpoint={endpoint} searchQuery={searchQuery} />
+                        <URLProps 
+                        key={startIndex + index} 
+                        endpoint={endpoint} 
+                        searchQuery={searchQuery}
+                        selectedCategories={selectedCategories}
+                        />
                     ))}
                   </tbody>
                 </table>

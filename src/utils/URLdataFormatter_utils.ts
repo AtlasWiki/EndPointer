@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { Endpoint, Location, URLParser, Webpage } from '../constants/message_types';
+import { Endpoint, Location, Webpage, URLParserStorage, URLParserStorageItem } from '../constants/message_types';
 
 interface FormattedURLData {
   allEndpoints: Endpoint[];
@@ -17,42 +17,53 @@ interface FormattedURLData {
 
 export async function formatURLData(): Promise<FormattedURLData> {
   const result = await browser.storage.local.get("URL-PARSER");
-  const urlParser: any = result["URL-PARSER"];
+  const urlParserData = result["URL-PARSER"] as URLParserStorage;
 
   let allEndpoints: Endpoint[] = [];
   let locations: Location[] = [];
   let webpages: Webpage[] = [];
   let hierarchy: FormattedURLData['hierarchy'] = {};
 
-  Object.keys(urlParser).forEach((key) => {
-    if (key !== "current") {
-      const webpage = decodeURIComponent(key);
-      const currURLEndpoints = urlParser[key].currPage;
-      const currURLExtJSFiles = urlParser[key].externalJSFiles;
+  if (!urlParserData) {
+    return {
+      allEndpoints: [],
+      locations: ['All'],
+      webpages: ['All'],
+      hierarchy: {}
+    };
+  }
 
+  Object.entries(urlParserData).forEach(([key, value]) => {
+    if (key !== "current" && typeof value !== 'string' && value !== undefined) {
+      const webpage = decodeURIComponent(key);
+      const item = value as URLParserStorageItem;
+      
       locations.push(webpage);
-      webpages.push(webpage)
+      webpages.push(webpage);
       hierarchy[webpage] = { mainPage: [], jsFiles: {} };
 
-      // Add currPage endpoints
-      const mainPageEndpoints = currURLEndpoints.map((endpoint: string): Endpoint => ({
-        url: endpoint,
+      // Handle main page endpoints
+      const mainPageEndpoints = item.currPage.map((endpoint) => ({
+        url: endpoint.url,
         foundAt: webpage,
         webpage: webpage,
+        classifications: endpoint.classifications as unknown as Record<string, boolean>
       }));
       allEndpoints.push(...mainPageEndpoints);
       hierarchy[webpage].mainPage = mainPageEndpoints;
 
-      // Add externalJSFiles endpoints
-      Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
+      // Handle JS file endpoints
+      Object.entries(item.externalJSFiles).forEach(([jsFile, endpoints]) => {
         const decodedJsFile = decodeURIComponent(jsFile);
         if (!locations.includes(decodedJsFile)) {
           locations.push(decodedJsFile);
         }
-        const jsFileEndpoints = (endpoints as string[]).map((endpoint: string): Endpoint => ({
-          url: endpoint,
+        
+        const jsFileEndpoints = endpoints.map((endpoint) => ({
+          url: endpoint.url,
           foundAt: decodedJsFile,
           webpage: webpage,
+          classifications: endpoint.classifications as unknown as Record<string, boolean>
         }));
         allEndpoints.push(...jsFileEndpoints);
         hierarchy[webpage].jsFiles[decodedJsFile] = jsFileEndpoints;
@@ -60,9 +71,9 @@ export async function formatURLData(): Promise<FormattedURLData> {
     }
   });
 
-  // Ensure "All" is included only once and other locations are unique
   const uniqueLocations = Array.from(new Set(['All', ...locations]));
   const uniqueWebpages = Array.from(new Set(['All', ...webpages]));
+
   return {
     allEndpoints,
     locations: uniqueLocations,
