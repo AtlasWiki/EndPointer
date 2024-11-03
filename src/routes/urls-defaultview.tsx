@@ -5,7 +5,7 @@ import { URLProps } from '../components/URLProps';
 import { LocationItem, WebpageItem } from '../components/Locationitem';
 import { useURLData } from '../hooks/useURLData';
 import { clearURLs } from '../utils/defaultview_utils';
-import { VISIBLE_URL_SIZE, CSS_CLASSES, FILTER_CATEGORIES } from '../constants/defaultview_contants';
+import { VISIBLE_URL_SIZE, CSS_CLASSES, FILTER_CATEGORIES, ClassificationType, ClassificationMapping } from '../constants/defaultview_contants';
 import { NavBar } from '../components/navbar';
 
 export function URLsDefaultView() {
@@ -33,26 +33,19 @@ export function URLsDefaultView() {
     webpages
   } = useURLData(selectedLocation, selectedWebpage, searchQuery, startIndex, VISIBLE_URL_SIZE, selectedCategories);
 
-  const getClassificationKey = (category: string) => {
-    return 'is' + category.toLowerCase()
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('')
-      .replace(/^Is/, '');
-  };
-
   // Updated category counting function with proper key transformation
-  const getCategoryCounts = () => {
-    const counts: Record<string, number> = {};
+  const getCategoryCounts = (): Record<ClassificationType, number> => {
+    const counts: Record<ClassificationType, number> = {} as Record<ClassificationType, number>;
     
-    Object.keys(FILTER_CATEGORIES).forEach(category => {
-      const classificationKey = getClassificationKey(category);
-      counts[category] = urls.reduce((count, urlData) => {
-        if (urlData?.classifications && urlData.classifications[classificationKey] === true) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
+    urls.forEach(urlData => {
+      if (urlData?.classifications) {
+        Object.entries(urlData.classifications).forEach(([key, value]) => {
+          if (value === true && ClassificationMapping[key]) {
+            const classificationType = ClassificationMapping[key];
+            counts[classificationType] = (counts[classificationType] || 0) + 1;
+          }
+        });
+      }
     });
     
     return counts;
@@ -167,17 +160,20 @@ export function URLsDefaultView() {
                             </label>
                             {Object.entries(FILTER_CATEGORIES).map(([category, colorClass]) => (
                               <label key={category} className={`flex w-full gap-2 font-semibold text-sm`}>
-                                {/* Custom Checkbox for each category with color codes */}
-                                <div
-                                  className={`cursor-pointer w-6 h-6 border-2 border-customFont ${selectedCategories[category] ? 'bg-[#316E7D]' : 'bg-transparent'} flex items-center justify-center`}
-                                onClick={() => handleCheckboxChange(category)} // Handle individual checkbox clicks
-                                />
-                                <span className={colorClass}>{category.replace(/_/g, ' ')}</span> {/* Use color codes for text */}
-                                <span className="text-customFont whitespace-nowrap">
-                                  ({categoryCounts[category] || 0})
-                                </span>
-                              </label>
-                            ))}
+                              <div
+                                className={`cursor-pointer w-6 h-6 border-2 border-customFont ${
+                                  selectedCategories[category] ? 'bg-[#316E7D]' : 'bg-transparent'
+                                }`}
+                                onClick={() => handleCheckboxChange(category)} 
+                              />
+                              <span className={colorClass}>
+                                {category.replace(/_/g, ' ')}
+                              </span>
+                              <span className="text-customFont whitespace-nowrap">
+                                ({categoryCounts[category as ClassificationType] || 0})
+                              </span>
+                            </label>
+                          ))}
                           </div>
                         )}
                       </td>
