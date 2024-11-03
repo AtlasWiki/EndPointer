@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Endpoint, Location, Webpage } from '../constants/message_types';
 import { formatURLData } from '../utils/URLdataFormatter_utils';
 import browser from 'webextension-polyfill';
-
+import { ClassificationMapping } from '../constants/defaultview_contants';
 export function useURLData(
   selectedLocation: string,
   selectedWebpage: string,
@@ -43,15 +43,18 @@ export function useURLData(
       const matchesLocation = selectedLocation === 'All' || endpoint.foundAt === selectedLocation;
       const matchesWebpage = selectedWebpage === 'All' || endpoint.webpage === selectedWebpage;
       const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // Updated category matching using the enum mapping
       const matchesCategories = Object.entries(selectedCategories).some(([category, isSelected]) => {
         if (!isSelected) return false;
-        const classificationKey = 'is' + category.toLowerCase()
-          .split('_')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join('')
-          .replace(/^Is/, '');
-        return endpoint.classifications[classificationKey];
+        
+        // Find the classification key that maps to this category
+        const classificationKey = Object.entries(ClassificationMapping)
+          .find(([_, value]) => value === category)?.[0];
+        
+        return classificationKey ? endpoint.classifications[classificationKey] : false;
       });
+
       return matchesLocation && matchesQuery && matchesWebpage && matchesCategories;
     });
   }, [urls, selectedLocation, selectedWebpage, searchQuery, selectedCategories]);
