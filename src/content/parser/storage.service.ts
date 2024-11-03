@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill';
 import { URLParserStorageWithOptionalCurrent, URLParserStorageItem } from './parser.types';
 import { URLClassification } from '../../background/classification/classifiers/classifier.types';
+import { decode } from 'punycode';
 
 export class StorageService {
   static async getConcurrencySetting(): Promise<number> {
@@ -21,6 +22,7 @@ export class StorageService {
     const result = await browser.storage.local.get('URL-PARSER');
     const urlParser = (result['URL-PARSER'] as URLParserStorageWithOptionalCurrent) || {};
     const currentURL = urlParser.current || '';
+    const decodedURL = decodeURIComponent(encodedURL);
     
     if (!urlParser[currentURL]) {
       urlParser[currentURL] = { 
@@ -34,7 +36,7 @@ export class StorageService {
     }
 
     urlParser[currentURL].externalJSFiles[encodedURL] = urls.map(url => ({
-      url,
+      url: decodeURIComponent(url),
       classifications: {} as URLClassification
     }));
 
