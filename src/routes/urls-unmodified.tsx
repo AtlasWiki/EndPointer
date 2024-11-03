@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
 import browser from 'webextension-polyfill';
+import { Endpoint } from "../constants/message_types";
+import { useURLData } from '../hooks/useURLData';
 
 export function URLsUnmodified() {
-  // Simplified Endpoint interface to only include 'url'
-  interface Endpoint {
-    url: string;
-  }
-
-  interface URLEntry {
-    currPage: string[];
-    externalJSFiles: { [key: string]: string[] };
-  }
-
-  interface URLParser {
-    [key: string]: URLEntry;
-  }
-
-  const [urls, setURLs] = useState<Endpoint[]>([]);
+  const { 
+    urls, 
+    jsFiles, 
+    filteredURLs, 
+    visibleUrls, 
+    setVisibleUrls,
+    webpages
+  } = useURLData("", "", "", 0, 0, {});
 
   // Function to download URLs as a .txt file
   const downloadURLsAsTxt = () => {
@@ -24,61 +19,9 @@ export function URLsUnmodified() {
     const blob = new Blob([urlStrings], { type: 'text/plain' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'urls.txt';
+    link.download = 'urls-unmodified.txt';
     link.click();
   };
-
-  useEffect(() => {
-    const fetchData = () => {
-      let allEndpoints: Endpoint[] = [];
-  
-      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
-        const urlParser = data["URL-PARSER"];
-  
-        Object.keys(urlParser).forEach((key) => {
-          if (key !== "current") {
-            const currURLEndpoints: string[] = urlParser[key].currPage; // Explicitly typing as string array
-            const currURLExtJSFiles: Record<string, string[]> = urlParser[key].externalJSFiles; // Assuming it's an object with string arrays
-  
-            // Add currPage endpoints (only store URL)
-            allEndpoints.push(
-              ...currURLEndpoints.map((endpoint: string): Endpoint => ({
-                url: endpoint,
-              }))
-            );
-  
-            // Add externalJSFiles endpoints (only store URL)
-            Object.values(currURLExtJSFiles).forEach((endpoints: string[]) => {
-              allEndpoints.push(
-                ...endpoints.map((endpoint: string): Endpoint => ({
-                  url: endpoint,
-                }))
-              );
-            });
-          }
-        });
-  
-        setURLs(allEndpoints); // Update state with URLs only
-      });
-    };
-  
-    // Initial fetch
-    fetchData();
-  
-    // Listener for storage changes
-    const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
-      if (changes["URL-PARSER"]) {
-        fetchData(); // Re-fetch data when URL-PARSER changes
-      }
-    };
-  
-    browser.storage.onChanged.addListener(handleStorageChange);
-  
-    // Cleanup listener on component unmount
-    return () => {
-      browser.storage.onChanged.removeListener(handleStorageChange);
-    };
-  }, []);
 
   return (
     <div className="mt-2 ml-1">

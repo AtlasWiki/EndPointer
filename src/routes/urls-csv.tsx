@@ -1,26 +1,19 @@
 import { useEffect, useState } from "react";
 import browser from 'webextension-polyfill';
+import { Endpoint } from "../constants/message_types";
+import { useURLData } from '../hooks/useURLData';
 
 export function URLsCSV() {
-  interface Endpoint {
-    url: string;
-    foundAt: string;
-    webpage: string;
-  }
 
-  interface URLEntry {
-    currPage: string[];
-    externalJSFiles: { [key: string]: string[] };
-  }
-
-  interface URLParser {
-    [key: string]: URLEntry;
-  }
-
-  type Location = string;
-
-  const [urls, setURLs] = useState<Endpoint[]>([]);
-
+  const { 
+    urls, 
+    jsFiles, 
+    filteredURLs, 
+    visibleUrls, 
+    setVisibleUrls,
+    webpages
+  } = useURLData("", "", "", 0, 0, {});
+  
   // Function to sanitize URLs
   const sanitizedURL = (endpoint: Endpoint) => {
     let verifiedURL: string;
@@ -50,65 +43,6 @@ export function URLsCSV() {
     link.download = 'urls.csv';
     link.click();
   };
-
-  useEffect(() => {
-    const fetchData = () => {
-      let allEndpoints: Endpoint[] = [];
-      let locations: Location[] = [];
-
-      browser.storage.local.get("URL-PARSER").then((data: { [key: string]: any }) => {
-        const urlParser = data["URL-PARSER"];
-
-        Object.keys(urlParser).forEach((key) => {
-          if (key !== "current") {
-            const currURLEndpoints = urlParser[key].currPage;
-            const currURLExtJSFiles = urlParser[key].externalJSFiles;
-            locations.push(decodeURIComponent(key));
-
-            // Add currPage endpoints
-            allEndpoints.push(...currURLEndpoints.map((endpoint: any): Endpoint => ({
-              url: endpoint,
-              foundAt: decodeURIComponent(key), // Found at the main webpage
-              webpage: decodeURIComponent(key),
-            })));
-
-            // Add externalJSFiles endpoints
-            Object.entries(currURLExtJSFiles).forEach(([jsFile, endpoints]) => {
-              const decodedJsFile = decodeURIComponent(jsFile);
-              if (!locations.includes(decodedJsFile)) {
-                locations.push(decodedJsFile);
-              }
-              allEndpoints.push(...(endpoints as any).map((endpoint: any): Endpoint => ({
-                url: endpoint,
-                foundAt: decodedJsFile, // Found at the specific JS file
-                webpage: decodeURIComponent(key),
-              })));
-            });
-          }
-        });
-
-        // Ensure "All" is included only once and other locations are unique
-        setURLs(allEndpoints);
-      });
-    };
-
-    // Initial fetch
-    fetchData();
-
-    // Listener for storage changes
-    const handleStorageChange = (changes: { [key: string]: browser.Storage.StorageChange }) => {
-      if (changes["URL-PARSER"]) {
-        fetchData(); // Re-fetch data when URL-PARSER changes
-      }
-    };
-
-    browser.storage.onChanged.addListener(handleStorageChange);
-
-    // Cleanup listener on component unmount
-    return () => {
-      browser.storage.onChanged.removeListener(handleStorageChange);
-    };
-  }, []);
 
   return (
     <div className="mt-2 ml-1">
