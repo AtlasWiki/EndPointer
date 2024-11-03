@@ -83,6 +83,7 @@ export function URLsDefaultView() {
     }));
   };
 
+  
   return (
     <div className="w-full min-h-screen flex flex-col items-center px-4 md:px-8">
       {(document.location.pathname.toLowerCase().includes("devtool") && <NavBar />)}
@@ -128,7 +129,7 @@ export function URLsDefaultView() {
                         </div>
                         {/* Filter menu */}
                         {filterToggle && (
-                          <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-2 lg:grid-cols-3 gap-8 p-8 rounded-sm">
+                          <div className="mt-2 border-2 w-full border-customFont bg-transparent grid grid-cols-2 gap-8 p-8 rounded-sm">
                             <label className="font-semibold text-sm flex gap-2 "> {/* Make the label span all columns */}
                               {/* Custom Select All Checkbox */}
                               <div
