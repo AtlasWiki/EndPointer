@@ -8,7 +8,8 @@ export function useURLData(
   selectedWebpage: string,
   searchQuery: string,
   startIndex: number,
-  visibleUrlSize: number
+  visibleUrlSize: number,
+  selectedCategories: Record<string, boolean>,
 ) {
   const [urls, setURLs] = useState<Endpoint[]>([]);
   const [jsFiles, setJSFiles] = useState<Location[]>([]);
@@ -42,9 +43,18 @@ export function useURLData(
       const matchesLocation = selectedLocation === 'All' || endpoint.foundAt === selectedLocation;
       const matchesWebpage = selectedWebpage === 'All' || endpoint.webpage === selectedWebpage;
       const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesLocation && matchesQuery && matchesWebpage;
+      const matchesCategories = Object.entries(selectedCategories).some(([category, isSelected]) => {
+        if (!isSelected) return false;
+        const classificationKey = 'is' + category.toLowerCase()
+          .split('_')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join('')
+          .replace(/^Is/, '');
+        return endpoint.classifications[classificationKey];
+      });
+      return matchesLocation && matchesQuery && matchesWebpage && matchesCategories;
     });
-  }, [urls, selectedLocation, selectedWebpage, searchQuery]);
+  }, [urls, selectedLocation, selectedWebpage, searchQuery, selectedCategories]);
 
   useEffect(() => {
     const endIndex = Math.min(startIndex + visibleUrlSize, filteredURLs.length);
@@ -58,5 +68,6 @@ export function useURLData(
     visibleUrls,
     setVisibleUrls,
     webpages,
+    selectedCategories
   };
 }

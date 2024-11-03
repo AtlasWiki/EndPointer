@@ -14,7 +14,7 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
                     /\/(graphql|rest)\//i,
                     /\.(json|xml)$/i
                 ],
-                keywords: ['api', 'service', 'endpoint']
+                keywords: ['api', 'service', 'endpoint', 'rest']
             },
             isUserDataAccess: {
                 name: "User Data Access",

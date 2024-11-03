@@ -31,7 +31,7 @@ export function URLsDefaultView() {
     visibleUrls, 
     setVisibleUrls,
     webpages
-  } = useURLData(selectedLocation, selectedWebpage, searchQuery, startIndex, VISIBLE_URL_SIZE);
+  } = useURLData(selectedLocation, selectedWebpage, searchQuery, startIndex, VISIBLE_URL_SIZE, selectedCategories);
 
   const handleSelectLocation = (url: string) => {
     setSelectedLocation(url);
