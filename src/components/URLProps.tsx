@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Endpoint } from '../constants/message_types';
 import { sanitizeURL, highlightSearchQuery } from '../utils/defaultview_utils';
-import { MODAL_NAMES, CSS_CLASSES, FILTER_CATEGORIES } from '../constants/defaultview_contants';
+import { MODAL_NAMES, CSS_CLASSES, FILTER_CATEGORIES, ClassificationType, ClassificationMapping} from '../constants/defaultview_contants';
 import { Modal } from './modals/modal';
 import { ViewCodeModal } from './modals/viewcode';
 import { SeeResponseModal } from './modals/seeResponse';
+
 
 interface URLPropsProps {
   endpoint: Endpoint;
@@ -28,25 +29,15 @@ export function URLProps({ endpoint, searchQuery, selectedCategories }: URLProps
     }
   };
 
-  const getVisibleClassifications = () => {
+  const getVisibleClassifications = (): ClassificationType[] => {
     if (!endpoint.classifications) return [];
 
-    const trueClassifications = Object.entries(endpoint.classifications)
+    return Object.entries(endpoint.classifications)
       .filter(([_, value]) => value === true)
-      .map(([key]) => key);
-
-    
-    const convertedCategories = trueClassifications.map(key => {
-      
-      return key
-        .replace(/^is/, '')
-        .replace(/([A-Z])/g, '_$1')
-        .toUpperCase()
-        .replace(/^_/, '');
-    })
-    .filter(categoryKey => selectedCategories[categoryKey]);
-
-    return convertedCategories;
+      .map(([key]) => ClassificationMapping[key])
+      .filter((category): category is ClassificationType => 
+        category !== undefined && selectedCategories[category]
+      );
   };
 
   return (
@@ -55,7 +46,7 @@ export function URLProps({ endpoint, searchQuery, selectedCategories }: URLProps
         {highlightSearchQuery(endpoint.url, searchQuery)}
         <div className="mt-2 flex flex-wrap gap-1">
           {getVisibleClassifications().map(category => (
-            <span key={category} className={CSS_CLASSES[category as keyof typeof CSS_CLASSES]}>
+            <span key={category} className={CSS_CLASSES[category]}>
               {category.replace(/_/g, ' ')}
             </span>
           ))}
