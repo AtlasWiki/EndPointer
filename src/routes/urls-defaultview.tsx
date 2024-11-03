@@ -33,6 +33,33 @@ export function URLsDefaultView() {
     webpages
   } = useURLData(selectedLocation, selectedWebpage, searchQuery, startIndex, VISIBLE_URL_SIZE, selectedCategories);
 
+  const getClassificationKey = (category: string) => {
+    return 'is' + category.toLowerCase()
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('')
+      .replace(/^Is/, '');
+  };
+
+  // Updated category counting function with proper key transformation
+  const getCategoryCounts = () => {
+    const counts: Record<string, number> = {};
+    
+    Object.keys(FILTER_CATEGORIES).forEach(category => {
+      const classificationKey = getClassificationKey(category);
+      counts[category] = urls.reduce((count, urlData) => {
+        if (urlData?.classifications && urlData.classifications[classificationKey] === true) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    });
+    
+    return counts;
+  };
+
+  const categoryCounts = getCategoryCounts();
+
   const handleSelectLocation = (url: string) => {
     setSelectedLocation(url);
     setIsOpenLocation(false);
@@ -146,6 +173,9 @@ export function URLsDefaultView() {
                                 onClick={() => handleCheckboxChange(category)} // Handle individual checkbox clicks
                                 />
                                 <span className={colorClass}>{category.replace(/_/g, ' ')}</span> {/* Use color codes for text */}
+                                <span className="text-customFont whitespace-nowrap">
+                                  ({categoryCounts[category] || 0})
+                                </span>
                               </label>
                             ))}
                           </div>
