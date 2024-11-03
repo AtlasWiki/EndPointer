@@ -67,3 +67,49 @@ export const FILTER_CATEGORIES = {
   NON_STANDARD_PORT: "text-red-800",
   BASE64_ENCODED_SEGMENT: "text-blue-600",
 };
+
+export enum ClassificationType {
+  API_ENDPOINT = 'API_ENDPOINT',
+  URL_DATA_ACCESS = 'URL_DATA_ACCESS',
+  DATABASE_OPERATION = 'DATABASE_OPERATION',
+  SENSITIVE_DATA = 'SENSITIVE_DATA',
+  UNSECURED_API = 'UNSECURED_API',
+  AUTHENTICATION_ENDPOINT = 'AUTHENTICATION_ENDPOINT',
+  DATA_TRANSFER = 'DATA_TRANSFER',
+  ADMIN_PANEL = 'ADMIN_PANEL',
+  PAYMENT_PROCESSING = 'PAYMENT_PROCESSING',
+  FILE_ACCESS = 'FILE_ACCESS',
+  LEGACY_ENDPOINT = 'LEGACY_ENDPOINT',
+  DYNAMIC_CONTENT = 'DYNAMIC_CONTENT',
+  WEBSOCKET = 'WEBSOCKET',
+  INTERNAL_NETWORK = 'INTERNAL_NETWORK',
+  THIRD_PARTY_INTEGRATION = 'THIRD_PARTY_INTEGRATION',
+  DEBUG_ENDPOINT = 'DEBUG_ENDPOINT',
+  POTENTIALLY_VULNERABLE = 'POTENTIALLY_VULNERABLE',
+  PARAMETERIZED_ENDPOINT = 'PARAMETERIZED_ENDPOINT',
+  NON_STANDARD_PORT = 'NON_STANDARD_PORT',
+  BASE64_ENCODED_SEGMENT = 'BASE64_ENCODED_SEGMENT'
+}
+
+export const ClassificationMapping: Record<string, ClassificationType> = {
+  isAPIEndpoint: ClassificationType.API_ENDPOINT,
+  isUserDataAccess: ClassificationType.URL_DATA_ACCESS,
+  isDatabaseOperation: ClassificationType.DATABASE_OPERATION,
+  isSensitiveData: ClassificationType.SENSITIVE_DATA,
+  isUnsecuredAPI: ClassificationType.UNSECURED_API,
+  isAuthEndpoint: ClassificationType.AUTHENTICATION_ENDPOINT,
+  isDataTransfer: ClassificationType.DATA_TRANSFER,
+  isAdminPanel: ClassificationType.ADMIN_PANEL,
+  isPaymentProcessing: ClassificationType.PAYMENT_PROCESSING,
+  isFileAccess: ClassificationType.FILE_ACCESS,
+  isLegacyEndpoint: ClassificationType.LEGACY_ENDPOINT,
+  isDynamicContent: ClassificationType.DYNAMIC_CONTENT,
+  isWebSocket: ClassificationType.WEBSOCKET,
+  isInternalNetwork: ClassificationType.INTERNAL_NETWORK,
+  isThirdPartyIntegration: ClassificationType.THIRD_PARTY_INTEGRATION,
+  isDebugEndpoint: ClassificationType.DEBUG_ENDPOINT,
+  isPotentiallyVulnerable: ClassificationType.POTENTIALLY_VULNERABLE,
+  isParameterizedEndpoint: ClassificationType.PARAMETERIZED_ENDPOINT,
+  isNonStandardPort: ClassificationType.NON_STANDARD_PORT,
+  isBase64EncodedSegment: ClassificationType.BASE64_ENCODED_SEGMENT
+};
