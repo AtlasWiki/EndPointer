@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "EndPointer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "An endpoint parser and extractor with many flexible features",
   "icons": {
     "16": "icons/EndPointer.png",
