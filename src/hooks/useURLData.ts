@@ -43,19 +43,19 @@ export function useURLData(
       const matchesLocation = selectedLocation === 'All' || endpoint.foundAt === selectedLocation;
       const matchesWebpage = selectedWebpage === 'All' || endpoint.webpage === selectedWebpage;
       const matchesQuery = endpoint.url.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      // Updated category matching using the enum mapping
-      const matchesCategories = Object.entries(selectedCategories).some(([category, isSelected]) => {
-        if (!isSelected) return false;
+
+      // Updated category matching logic
+      const matchesCategories = Object.keys(selectedCategories).some(category => {
+        if (!selectedCategories[category]) return false;
         
         // Find the classification key that maps to this category
         const classificationKey = Object.entries(ClassificationMapping)
           .find(([_, value]) => value === category)?.[0];
         
-        return classificationKey ? endpoint.classifications[classificationKey] : false;
+        return classificationKey ? endpoint.classifications[classificationKey] : true;
       });
 
-      return matchesLocation && matchesQuery && matchesWebpage && matchesCategories;
+      return matchesLocation && matchesQuery && matchesWebpage && (matchesCategories || Object.values(selectedCategories).every(value => value));
     });
   }, [urls, selectedLocation, selectedWebpage, searchQuery, selectedCategories]);
 
