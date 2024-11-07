@@ -25,12 +25,10 @@ export type URLClassification = {
     isLegacyEndpoint: boolean;
     isDynamicContent: boolean;
     isWebSocket: boolean;
-    isGraphQL: boolean;
     isInternalNetwork: boolean;
     isThirdPartyIntegration: boolean;
     isDebugEndpoint: boolean;
     isPotentiallyVulnerable: boolean;
     isParameterizedEndpoint: boolean;
     isNonStandardPort: boolean;
-    isBase64EncodedSegment: boolean;
 }

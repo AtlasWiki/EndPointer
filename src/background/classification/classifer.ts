@@ -12,7 +12,7 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
                     /\/api\//i,
                     /\/v[0-9]+\//i,
                     /\/(graphql|rest)\//i,
-                    /\.(json|xml)$/i
+                    /\.(json|xml)$/i,
                 ],
                 keywords: ['api', 'service', 'endpoint', 'rest']
             },
@@ -38,12 +38,17 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
             isSensitiveData: {
                 name: "Sensitive Data",
                 patterns: [
-                    /\/(password|secret|key|token)/i,
-                    /\/secure\//i,
+                    /\/(password|secret|key|token|auth|credentials|jwt|bearer)/i,
+                    /\/(secure|security|confidential)/i,
                     /\/private\//i,
-                    /\/(ssn|social-security)/i
+                    /\/(ssn|social-security|personal-info|pii|personal)/i,
+                    /\.env(\.local)?/i,
+                    /config(\.json|\.yaml|\.yml|\.xml|\.js|\.env)?/i,
+                    /settings(\.json|\.yaml|\.yml|\.xml|\.js)?/i,                  
+                    /\/(backup|dump|export|archive|db-backup)/i,
+                    /\.pem|\.crt|\.cer|\.pfx|\.p12/i
                 ],
-                keywords: ['confidential', 'private', 'sensitive']
+                keywords: ['confidential', 'private', 'sensitive', 'database']
             },
             isUnsecuredAPI: {
                 name: "Unsecured API",
@@ -128,13 +133,6 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
                 ],
                 keywords: ['websocket', 'socket', 'real-time']
             },
-            isGraphQL: {
-                name: "GraphQL",
-                patterns: [
-
-                ],
-                keywords: ['graphQL']
-            },
             isInternalNetwork: {
                 name: "Internal Network",
                 patterns: [
@@ -173,10 +171,10 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
             isParameterizedEndpoint: {
                 name: "Parameterized Endpoint",
                 patterns: [
-                    /\/:[a-zA-Z]+/,
+                    /\/:[a-zA-Z0-9_-]+/,
                     /\/\{[^}]+\}/,
-                    /\?.*=.*&/,
-                    /\/[0-9a-f]{8,}/i
+                    /\?.*?=([^&]*)/,
+                    /\/[0-9a-f]{8,}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}/i
                 ]
             },
             isNonStandardPort: {
@@ -185,13 +183,13 @@ export class URLClassifier extends BaseClassifier<URLClassification> {
                     /:(?!80|443|8080)\d{2,5}/
                 ]
             },
-            isBase64EncodedSegment: {
-                name: "Base64 Encoded Segment",
-                patterns: [
-                    /[A-Za-z0-9+/]{4}={1,2}/,
-                    /[A-Za-z0-9+/]{4,}(?:[A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)/
-                ]
-            }
+            // isBase64EncodedSegment: {
+            //     name: "Base64 Encoded Segment",
+            //     patterns: [
+            //         /[A-Za-z0-9+/]{4}={1,2}/,
+            //         /[A-Za-z0-9+/]{4,}(?:[A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)/
+            //     ]
+            // }
     
         });
     }
