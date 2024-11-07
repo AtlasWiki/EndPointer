@@ -15,7 +15,8 @@
   ],
   "action": {
     "default_popup": "PopUp/popup.html",
-    "default_title": "Endpoint Extractor for Hackers"
+    "default_title": "Endpoint Extractor for Hackers",
+    "default_icon": "icons/EndPointer.png"
   },
   "background": {
     "scripts": ["background.js"],
