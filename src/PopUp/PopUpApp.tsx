@@ -3,6 +3,7 @@ import browser from "webextension-polyfill";
 import "./App.css";
 import { MessageResponse } from "../constants/message_types";
 import Logo from "../../dist/icons/EndPointer.png";
+import LogoOff from "../../dist/icons/EndPointer-off.png";
 
 interface AppState {
   urlParser: boolean;
@@ -33,6 +34,7 @@ function PopUpApp() {
           ...prevState,
           urlParser: changes.autoParserEnabled.newValue as boolean,
         }));
+        updateExtensionBadge(changes.autoParserEnabled.newValue as boolean);
       }
     };
 
@@ -42,6 +44,13 @@ function PopUpApp() {
       browser.storage.onChanged.removeListener(listener);
     };
   }, []);
+
+  const updateExtensionBadge = async (urlParserState: boolean) => {
+    const badgeText = urlParserState ? "ON" : ""
+    const badgeColor = urlParserState ? "#82e467" : "#e63946";
+    await browser.action.setBadgeText({ text: badgeText });
+    await browser.action.setBadgeBackgroundColor({ color: badgeColor });
+  };
 
   const updateAllState = async () => {
     try {
@@ -116,6 +125,7 @@ function PopUpApp() {
     const response = await browser.runtime.sendMessage({ action: 'setAutoParserState', state: newState }) as MessageResponse;
     if (response.success) {
       setState(prevState => ({ ...prevState, urlParser: newState }));
+      updateExtensionBadge(newState);
     }
   };
 
