@@ -7,6 +7,7 @@ import { useURLData } from '../hooks/useURLData';
 import { clearURLs } from '../utils/defaultview_utils';
 import { VISIBLE_URL_SIZE, CSS_CLASSES, FILTER_CATEGORIES, ClassificationType, ClassificationMapping } from '../constants/defaultview_contants';
 import { NavBar } from '../components/navbar';
+import browser from 'webextension-polyfill';
 
 export function URLsDefaultView() {
   const [selectedLocation, setSelectedLocation] = useState<string>('All');
@@ -247,6 +248,9 @@ export function URLsDefaultView() {
             </button>
             {/* downloadURLsAsTxt */}
             <a href={document.location.origin + "/PopUp/popup.html#urls/output"} target="_blank" className="text-sm flex flex-col items-center px-5 rounded-md py-3 bg-customBg border-2 border-customFont text-white">OUTPUT</a>
+            <button className="text-center border-customFont bg-gradient-to-r from-customFont to-customBg text-white text-sm flex items-center px-5 rounded-md py-3" onClick={() => browser.runtime.reload()}>
+              Load All Classifications
+            </button>
           </div>
         </div>
       </div>
